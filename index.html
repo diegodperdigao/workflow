@@ -31,7 +31,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* MOSAICO INFINITO REAL */
+        /* MOSAICO INFINITO */
         .mosaic-wrapper {
             position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; 
             -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 15%, black 85%, transparent 100%);
@@ -58,7 +58,6 @@
         .priority-high-border { border-left: 3px solid #f43f5e; }
         .priority-medium-border { border-left: 3px solid #a855f7; }
         .priority-low-border { border-left: 3px solid #06b6d4; }
-
         .tag-high { background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
         .tag-medium { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
         .tag-low { background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2); }
@@ -69,7 +68,6 @@
         .animate-task { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CALENDÁRIO CENTRALIZADO VERTICALMENTE NO INPUT */
         .reminder-wrapper { position: relative; display: flex; align-items: center; }
         input[type="datetime-local"] { padding-right: 45px !important; width: 100%; }
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -81,11 +79,6 @@
             transform: translateY(-50%); pointer-events: none; opacity: 0.4; font-size: 14px;
         }
 
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .shake { animation: shake 0.2s ease-in-out 0s 2; border-color: #ef4444 !important; }
-
-        .edit-mode-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 8px; width: 100%; outline: none; color: #fff; }
-        
         /* NOTIFICAÇÃO ESTILO MEET */
         #browser-alert {
             display: none;
@@ -100,18 +93,12 @@
         }
         @keyframes meetPop { from { opacity: 0; transform: translate(-50%, -40px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
-        button svg { pointer-events: none; }
+        .edit-mode-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 8px; width: 100%; outline: none; color: #fff; }
+        .form-label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: #6b7280; font-style: italic; margin-left: 0.5rem; }
         
-        /* PADRONIZAÇÃO DE RÓTULOS */
-        .form-label {
-            font-size: 9px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #6b7280; /* Gray 500 */
-            font-style: italic;
-            margin-left: 0.5rem;
-        }
+        button svg { pointer-events: none; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake { animation: shake 0.2s ease-in-out 0s 2; border-color: #ef4444 !important; }
     </style>
 </head>
 <body class="antialiased selection:bg-pink-500 selection:text-white">
@@ -126,7 +113,7 @@
                 <h2 class="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 italic">inicie a sessão</h2>
             </div>
             <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl">
-                <div class="space-y-6 text-white">
+                <div class="space-y-6">
                     <input type="password" id="password-input" placeholder="••••••••" 
                         onkeypress="if(event.key === 'Enter') checkPassword()"
                         class="w-full bg-black/40 border border-white/10 px-6 py-5 rounded-2xl text-center text-white focus:outline-none focus:border-pink-500 transition-all tracking-widest font-mono">
@@ -138,14 +125,14 @@
         </div>
     </div>
 
-    <!-- NOTIFICAÇÃO INTERNA ESTILO MEET -->
+    <!-- NOTIFICAÇÃO INTERNA -->
     <div id="browser-alert">
         <div class="flex items-center gap-6 text-white">
             <div class="p-4 bg-pink-500/20 rounded-full border border-pink-500/30">
                 <i data-lucide="bell" class="w-8 h-8 text-pink-500 animate-bounce"></i>
             </div>
             <div class="flex-grow">
-                <p class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1">Missão Prioritária</p>
+                <p class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1 italic">Vai trabalhar vagabundo!</p>
                 <h3 id="alert-title" class="text-xl font-black uppercase leading-tight tracking-tight">Título da Tarefa</h3>
             </div>
             <button onclick="closeInternalAlert()" class="p-3 hover:bg-white/5 rounded-2xl transition-all">
@@ -159,19 +146,18 @@
         <nav class="fixed w-full z-50 top-0 glass-header">
             <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-30"></div>
             <div class="max-w-[1400px] mx-auto px-8 py-3 flex justify-between items-center text-white">
-                <div class="flex items-center gap-5 text-white">
+                <div class="flex items-center gap-5">
                     <img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" alt="3C" class="h-8 w-8 rounded-full border border-white/10 p-0.5 shadow-2xl">
-                    <div class="flex flex-col text-white">
+                    <div class="flex flex-col">
                         <span class="text-[0.65rem] tracking-[0.4em] uppercase font-black leading-tight">PROJETO MD</span>
-                        <span class="text-[0.45rem] tracking-[0.2em] uppercase text-gray-500 font-bold italic opacity-80 uppercase text-white">3C_Execution_Control</span>
+                        <span class="text-[0.45rem] tracking-[0.2em] uppercase text-gray-500 font-bold italic opacity-80 uppercase">3C_Execution_Control</span>
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-6 text-white">
-                    <div id="notif-status" onclick="testAlert()" class="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/10 cursor-pointer hover:bg-white/10 transition-all group">
-                        <div id="notif-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                        <i data-lucide="bell" class="w-3.5 h-3.5 text-gray-400 group-hover:text-pink-500"></i>
-                        <span class="text-[7px] font-black uppercase tracking-widest text-gray-500">Lembretes Ativos (Testar)</span>
+                <div class="flex items-center gap-6">
+                    <!-- SINO DISCRETO -->
+                    <div id="notif-btn" onclick="testAlert()" class="p-2 bg-white/5 rounded-full border border-white/10 cursor-pointer hover:bg-white/10 transition-all group">
+                        <i id="notif-bell-icon" data-lucide="bell" class="w-4 h-4 text-emerald-500 group-hover:scale-110 transition-transform"></i>
                     </div>
                     <div class="flex items-center gap-3 px-3 py-1.5 bg-white/5 rounded-xl border border-white/5">
                         <div id="status-dot" class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
@@ -182,9 +168,9 @@
         </nav>
 
         <div class="max-w-[1400px] mx-auto px-8 pt-20 pb-12 relative text-white">
-            <div class="mt-4 mb-6 ml-4 text-white">
-                <p class="font-mono text-[9px] text-gray-400 tracking-[0.4em] uppercase flex items-center gap-4 text-white">
-                    <span class="w-10 h-[1.5px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white"></span> 
+            <div class="mt-4 mb-6 ml-4">
+                <p class="font-mono text-[9px] text-gray-400 tracking-[0.4em] uppercase flex items-center gap-4">
+                    <span class="w-10 h-[1.5px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500"></span> 
                     Strategy_Creative_Production_Bizdev
                 </p>
             </div>
@@ -193,13 +179,13 @@
                 <div class="mosaic-wrapper"><div class="mosaic-container"><div class="mosaic-pattern"></div></div></div>
                 <div class="relative z-10 w-full px-12 py-10 flex flex-col md:flex-row justify-between items-center gap-12 text-white">
                     <div class="max-w-2xl text-center md:text-left flex-shrink-0 text-white">
-                        <h1 class="text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-none text-white whitespace-nowrap text-white text-white">
+                        <h1 class="text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-none text-white whitespace-nowrap">
                             Workflow <span class="text-pink-500">3C</span>
                         </h1>
                     </div>
-                    <div class="bg-black/85 p-8 rounded-2xl border border-white/10 min-w-[340px] backdrop-blur-xl shadow-2xl text-white">
-                        <div class="flex items-center justify-between mb-4">
-                            <p id="stats-text" class="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] text-white">Efficiency_Report</p>
+                    <div class="bg-black/85 p-8 rounded-2xl border border-white/10 min-w-[340px] backdrop-blur-xl shadow-2xl">
+                        <div class="flex items-center justify-between mb-4 text-white">
+                            <p id="stats-text" class="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Efficiency_Report</p>
                             <span id="percent-display" class="text-[10px] font-black text-pink-500">0%</span>
                         </div>
                         <div class="h-1.5 w-full bg-black/50 rounded-full overflow-hidden border border-white/5">
@@ -209,20 +195,19 @@
                 </div>
             </header>
 
-            <!-- COMMAND CENTER (FLUXO FINALIZADO) -->
+            <!-- COMMAND CENTER -->
             <div class="glass-card p-1 rounded-3xl mb-16 shadow-[0_30px_60px_rgba(0,0,0,0.7)] overflow-hidden">
                 <div class="bg-[#050508]/95 p-10 rounded-3xl">
-                    <div class="space-y-8 text-white">
-                        <!-- ROW 1: INPUT + PRIORITY -->
-                        <div class="flex flex-col lg:flex-row items-stretch gap-5">
-                            <div class="flex-grow flex flex-col gap-3 text-white">
+                    <div class="space-y-8">
+                        <div class="flex flex-col lg:flex-row items-stretch gap-5 text-white">
+                            <div class="flex-grow flex flex-col gap-3">
                                 <label class="form-label">Ação Principal</label>
                                 <input type="text" id="main-task-input" placeholder="O que vamos criar hoje?" 
                                     class="w-full bg-black/40 border border-white/10 rounded-xl px-6 py-6 text-white focus:outline-none command-input transition-all font-bold tracking-tight text-xl h-[72px]">
                             </div>
-                            <div class="min-w-[200px] flex flex-col gap-3 text-white">
+                            <div class="min-w-[200px] flex flex-col gap-3">
                                 <label class="form-label">Prioridade</label>
-                                <div class="relative h-[72px] text-white">
+                                <div class="relative h-[72px]">
                                     <select id="priority-select" class="w-full h-full appearance-none bg-black/40 border border-white/10 rounded-xl px-6 text-xs font-black uppercase text-gray-400 focus:outline-none cursor-pointer hover:border-white/20 transition-all text-white">
                                         <option value="high">HIGH</option>
                                         <option value="medium" selected>MEDIUM</option>
@@ -232,25 +217,21 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- ROW 2: CONTEXTO + AGENDAMENTO -->
-                        <div class="flex flex-col lg:flex-row items-stretch gap-6 text-white">
-                            <div class="flex-grow flex flex-col gap-3 text-white">
+                        <div class="flex flex-col lg:flex-row items-stretch gap-6">
+                            <div class="flex-grow flex flex-col gap-3">
                                 <label class="form-label">Contexto Estratégico</label>
-                                <textarea id="main-desc-input" placeholder="Detalhes estratégicos, links de referência e metas..." 
-                                    class="w-full bg-black/40 border border-white/10 rounded-xl px-6 py-5 text-base text-white focus:outline-none command-input transition-all min-h-[140px] resize-none text-white"></textarea>
+                                <textarea id="main-desc-input" placeholder="Detalhes estratégicos, links e metas..." 
+                                    class="w-full bg-black/40 border border-white/10 rounded-xl px-6 py-5 text-base text-white focus:outline-none command-input transition-all min-h-[140px] resize-none"></textarea>
                             </div>
-                            <div class="min-w-[300px] flex flex-col gap-3 text-white">
+                            <div class="min-w-[300px] flex flex-col gap-3">
                                 <label class="form-label">Agendar Notificação</label>
                                 <div class="reminder-wrapper flex-grow">
                                     <input type="datetime-local" id="reminder-input" 
-                                        class="bg-black/40 border border-white/10 rounded-xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-pink-500 transition-all w-full h-full cursor-pointer text-white">
+                                        class="bg-black/40 border border-white/10 rounded-xl px-6 py-5 text-sm font-bold text-white focus:outline-none focus:border-pink-500 transition-all w-full h-full cursor-pointer">
                                 </div>
                             </div>
                         </div>
-
-                        <!-- ROW 3: BOTÃO EXPANDIDO (ENCERRAMENTO) -->
-                        <div class="pt-4 text-white">
+                        <div class="pt-4">
                             <button onclick="addMainTask()" class="w-full btn-launch bg-white text-black font-black uppercase text-[11px] tracking-[0.4em] rounded-xl hover:bg-pink-500 hover:text-white active:scale-[0.99] transition-all h-[72px] shadow-2xl">
                                 Criar Tarefa
                             </button>
@@ -260,32 +241,32 @@
             </div>
 
             <!-- FILTROS -->
-            <div class="flex flex-wrap justify-between items-center gap-6 mb-8 border-b border-white/5 pb-6 text-white">
-                <div class="flex gap-10 text-[11px] font-black uppercase tracking-[0.3em] text-gray-600">
+            <div class="flex flex-wrap justify-between items-center gap-8 mb-12 border-b border-white/5 pb-8 text-white">
+                <div class="flex gap-12 text-[11px] font-black uppercase tracking-[0.3em] text-gray-600">
                     <button onclick="setFilter('all')" class="hover:text-pink-500 transition-all filter-btn active-filter text-pink-500 relative">
-                        Visão Geral <span class="absolute -bottom-[27px] left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>
+                        Visão Geral <span class="absolute -bottom-9 left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>
                     </button>
                     <button onclick="setFilter('pending')" class="hover:text-pink-500 transition-all filter-btn relative text-white">Pendentes</button>
                     <button onclick="setFilter('completed')" class="hover:text-pink-500 transition-all filter-btn relative text-white">Finalizadas</button>
                 </div>
-                <div class="flex items-center gap-4 text-[9px] font-bold text-gray-600 uppercase tracking-widest italic opacity-60">
+                <div class="flex items-center gap-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest italic opacity-60">
                     <span id="sync-status">Cloud Sync Ready</span>
-                    <div class="w-1.5 h-1.5 rounded-full bg-gray-800 text-white"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-gray-800"></div>
                     <span id="sync-time">---</span>
                 </div>
             </div>
 
-            <div id="task-list" class="space-y-6 min-h-[300px] text-white text-white text-white"></div>
+            <div id="task-list" class="space-y-6 min-h-[300px]"></div>
             <div id="empty-state" class="hidden text-center py-32 opacity-10">
-                <div class="inline-block p-10 rounded-full border-2 border-dashed border-white/20 mb-8 text-white text-white text-white"><i data-lucide="check-circle-2" class="w-20 h-20 mx-auto text-white"></i></div>
-                <p class="text-3xl font-black uppercase tracking-[0.5em] text-white">Sem pendências</p>
+                <div class="inline-block p-10 rounded-full border-2 border-dashed border-white/20 mb-8"><i data-lucide="check-circle-2" class="w-20 h-20 mx-auto"></i></div>
+                <p class="text-3xl font-black uppercase tracking-[0.5em]">Sem pendências</p>
             </div>
         </div>
 
         <footer class="py-16 bg-black border-t border-white/5 text-center mt-20 relative z-10 text-white">
-            <img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" alt="3C" class="h-10 mx-auto opacity-70 mb-6 grayscale hover:grayscale-0 transition-all duration-700 text-white">
+            <img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" alt="3C" class="h-10 mx-auto opacity-70 mb-6 grayscale hover:grayscale-0 transition-all duration-700">
             <p class="text-[10px] text-gray-600 uppercase tracking-[0.3em] font-bold mb-2">Confidencial &copy; 2026 3C Gaming BizDev</p>
-            <p class="text-[8px] text-gray-700 uppercase tracking-[0.1em] italic opacity-40 text-white">Workflow Management System v2.5.0</p>
+            <p class="text-[8px] text-gray-700 uppercase tracking-[0.1em] italic opacity-40">Workflow Management System v2.6.0</p>
         </footer>
     </div>
 
@@ -301,25 +282,44 @@
         let isCloudMode = false;
         const ACCESS_PASSWORD = "3c2026"; 
 
-        // --- SISTEMA DE ÁUDIO ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playAlertSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.3);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        // --- SISTEMA DE ÁUDIO MEME ---
+        function playMemeSound() {
+            try {
+                const utterance = new SpeechSynthesisUtterance("Vai trabalhar vagabundo!");
+                utterance.lang = "pt-BR";
+                utterance.rate = 1.1;
+                utterance.pitch = 0.9;
+                window.speechSynthesis.speak(utterance);
+            } catch(e) {}
+        }
+
+        // --- SISTEMA DE FAVICON (SLACK STYLE) ---
+        function updateFavicon(hasPending) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            // Desenha círculo base rosa
+            ctx.fillStyle = '#ec4899';
+            ctx.beginPath(); ctx.arc(16, 16, 14, 0, Math.PI * 2); ctx.fill();
+            
+            if (hasPending) {
+                // Desenha ponto vermelho (Notificação)
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath(); ctx.arc(26, 6, 7, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#030008'; ctx.lineWidth = 2; ctx.stroke();
+            }
+            
+            const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon'; link.rel = 'shortcut icon';
+            link.href = canvas.toDataURL("image/x-icon");
+            document.getElementsByTagName('head')[0].appendChild(link);
         }
 
         window.testAlert = () => {
-            document.getElementById('alert-title').innerText = "Teste de Sinal MD";
+            document.getElementById('alert-title').innerText = "Teste de Sinal";
             document.getElementById('browser-alert').style.display = 'block';
-            playAlertSound();
+            playMemeSound();
             triggerToast("Canal de alertas ativo!");
         };
 
@@ -350,7 +350,7 @@
 
         function useLocalMode() {
             isCloudMode = false;
-            const saved = localStorage.getItem('3c_tasks_v25');
+            const saved = localStorage.getItem('3c_tasks_v26');
             if (saved) tasks = JSON.parse(saved);
             renderTasks();
         }
@@ -474,11 +474,11 @@
             currentFilter = f;
             document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('text-pink-500'); b.querySelector('span')?.remove(); });
             event.target.classList.add('text-pink-500');
-            event.target.insertAdjacentHTML('beforeend', `<span class="absolute -bottom-[27px] left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>`);
+            event.target.insertAdjacentHTML('beforeend', `<span class="absolute -bottom-9 left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>`);
             renderTasks();
         };
 
-        function saveLocal() { localStorage.setItem('3c_tasks_v25', JSON.stringify(tasks)); renderTasks(); }
+        function saveLocal() { localStorage.setItem('3c_tasks_v26', JSON.stringify(tasks)); renderTasks(); }
 
         function renderTasks() {
             const container = document.getElementById('task-list'), empty = document.getElementById('empty-state');
@@ -490,6 +490,9 @@
             document.getElementById('stats-text').innerText = `${concl} DE ${total} TAREFAS FINALIZADAS`;
             document.getElementById('overall-progress').style.width = `${p}%`;
             document.getElementById('percent-display').innerText = `${p}%`;
+            
+            // ATUALIZA FAVICON
+            updateFavicon(tasks.some(t => !t.completed));
             lucide.createIcons();
         }
 
@@ -504,11 +507,11 @@
             return `
                 <div class="glass-card rounded-2xl overflow-hidden animate-task ${isC ? 'completed-task' : `priority-${t.priority}-border`}">
                     <div class="p-4 text-white">
-                        <div class="flex items-start gap-4 text-white">
-                            <button onclick="toggleTask('${t.id}')" class="mt-1 hover:scale-110 transition-all text-white"><i data-lucide="${isC ? 'check-circle-2' : 'circle'}" class="w-6 h-6 ${isC ? 'text-emerald-500' : 'text-white/10'}"></i></button>
+                        <div class="flex items-start gap-4 text-white text-white">
+                            <button onclick="toggleTask('${t.id}')" class="mt-1 hover:scale-110 transition-all text-white"><i data-lucide="${isC ? 'check-circle-2' : 'circle'}" class="w-6 h-6 ${isC ? 'text-emerald-500' : 'text-white/10'} text-white"></i></button>
                             <div class="flex-grow text-white">
-                                <div class="flex flex-wrap items-center gap-2 mb-1 text-white">
-                                    ${isEditing ? `<input type="text" id="edit-title-${t.id}" value="${t.text}" class="edit-mode-input font-bold text-lg text-white">` : `<h3 class="font-black text-lg uppercase tracking-tighter ${isC ? 'completed-text' : 'text-white'} text-white">${t.text}</h3>`}
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    ${isEditing ? `<input type="text" id="edit-title-${t.id}" value="${t.text}" class="edit-mode-input font-bold text-lg">` : `<h3 class="font-black text-lg uppercase tracking-tighter ${isC ? 'completed-text' : 'text-white'} text-white">${t.text}</h3>`}
                                     <span class="px-2 py-0.5 text-[7px] font-black uppercase tracking-widest rounded-full tag-${t.priority}">${t.priority}</span>
                                     ${reminderDate ? `<span class="flex items-center gap-1 px-2 py-0.5 bg-pink-500/10 text-pink-500 text-[7px] font-black uppercase rounded-full border border-pink-500/20 text-white"><i data-lucide="bell" class="w-2.5 h-2.5 text-white"></i> ${reminderDate}</span>` : ''}
                                 </div>
@@ -516,48 +519,47 @@
                                     ${isEditing ? `
                                         <div class="space-y-3 mt-3">
                                             <textarea id="edit-desc-${t.id}" class="edit-mode-input text-xs h-16 resize-none text-white">${t.description || ''}</textarea>
-                                            <div class="reminder-wrapper w-48 text-white"><input type="datetime-local" id="edit-reminder-${t.id}" value="${isoReminder}" class="edit-mode-input text-[10px] text-white"></div>
+                                            <div class="reminder-wrapper w-48"><input type="datetime-local" id="edit-reminder-${t.id}" value="${isoReminder}" class="edit-mode-input text-[10px]"></div>
                                         </div>` : (t.description ? `<p class="text-[11px] text-gray-400 leading-relaxed line-clamp-1 text-white">${t.description}</p>` : '')}
                                 </div>
-                                <div class="flex items-center gap-4 text-[8px] font-bold text-gray-500 uppercase tracking-widest text-white">
-                                    <span class="flex items-center gap-1 text-white text-white"><i data-lucide="calendar" class="w-2.5 h-2.5 text-white text-white"></i> ${new Date(t.createdAt).toLocaleDateString('pt-BR')}</span>
-                                    <span class="flex items-center gap-1 ${statusClass} text-white"><i data-lucide="clock-3" class="w-2.5 h-2.5 text-white"></i> ${diff === 0 ? 'HOJE' : `${diff} DIAS`}</span>
-                                    ${(t.subtasks || []).length > 0 ? `<div class="flex items-center gap-2"><div class="h-0.5 w-12 bg-black/40 rounded-full overflow-hidden text-white"><div class="h-full bg-pink-500 text-white" style="width:${p}%"></div></div><span>${p}%</span></div>` : ''}
+                                <div class="flex items-center gap-4 text-[8px] font-bold text-gray-500 uppercase tracking-widest">
+                                    <span class="flex items-center gap-1 text-white text-white"><i data-lucide="calendar" class="w-2.5 h-2.5"></i> ${new Date(t.createdAt).toLocaleDateString('pt-BR')}</span>
+                                    <span class="flex items-center gap-1 ${statusClass}"><i data-lucide="clock-3" class="w-2.5 h-2.5 text-white"></i> ${diff === 0 ? 'HOJE' : `${diff} DIAS`}</span>
+                                    ${(t.subtasks || []).length > 0 ? `<div class="flex items-center gap-2"><div class="h-0.5 w-12 bg-black/40 rounded-full overflow-hidden text-white"><div class="h-full bg-pink-500" style="width:${p}%"></div></div><span>${p}%</span></div>` : ''}
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1 text-white">
-                                ${isEditing ? `<button onclick="saveEdit('${t.id}')" class="p-2 hover:bg-emerald-500/20 rounded-lg text-emerald-500 text-white"><i data-lucide="check" class="w-4 h-4 text-white"></i></button>` : `<button onclick="startEdit('${t.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 text-white"><i data-lucide="pencil" class="w-4 h-4 text-white text-white"></i></button>`}
-                                <button onclick="toggleExpand('${t.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 text-white text-white"><i data-lucide="${t.expanded ? 'minus' : 'plus'}" class="w-4 h-4 text-white text-white"></i></button>
-                                <button onclick="deleteTask('${t.id}')" class="p-2 hover:bg-red-500/20 rounded-lg text-gray-500 group text-white text-white"><i data-lucide="trash-2" class="w-4 h-4 group-hover:text-red-500 text-white text-white"></i></button>
+                            <div class="flex items-center gap-1">
+                                ${isEditing ? `<button onclick="saveEdit('${t.id}')" class="p-2 hover:bg-emerald-500/20 rounded-lg text-emerald-500"><i data-lucide="check" class="w-4 h-4 text-white text-white text-white"></i></button>` : `<button onclick="startEdit('${t.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-500"><i data-lucide="pencil" class="w-4 h-4 text-white text-white text-white"></i></button>`}
+                                <button onclick="toggleExpand('${t.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-500"><i data-lucide="${t.expanded ? 'minus' : 'plus'}" class="w-4 h-4 text-white text-white text-white"></i></button>
+                                <button onclick="deleteTask('${t.id}')" class="p-2 hover:bg-red-500/20 rounded-lg text-gray-500 group"><i data-lucide="trash-2" class="w-4 h-4 group-hover:text-red-500 text-white text-white text-white"></i></button>
                             </div>
                         </div>
                     </div>
                     ${t.expanded ? `
                         <div class="bg-black/30 p-4 pt-2 space-y-4">
-                            <div class="space-y-3 ml-8 relative text-white">
+                            <div class="space-y-3 ml-8 relative text-white text-white">
                                 ${(t.subtasks || []).map(s => `
                                     <div class="flex items-center gap-3 group relative text-white">
                                         <div class="branch-line text-white"></div><div class="branch-node text-white text-white"></div>
-                                        <button onclick="toggleTask('${s.id}', true, '${t.id}')" class="hover:scale-110 transition-all text-white text-white"><i data-lucide="${s.completed ? 'check-square' : 'square'}" class="w-4 h-4 ${s.completed ? 'text-purple-500' : 'text-white/10'} text-white"></i></button>
+                                        <button onclick="toggleTask('${s.id}', true, '${t.id}')" class="hover:scale-110 transition-all text-white text-white text-white"><i data-lucide="${s.completed ? 'check-square' : 'square'}" class="w-4 h-4 ${s.completed ? 'text-purple-500' : 'text-white/10'}"></i></button>
                                         <span class="text-[10px] ${s.completed ? 'completed-text italic' : 'text-gray-300 font-bold'} flex-grow text-white">${s.text}</span>
-                                        <button onclick="deleteTask('${s.id}', true, '${t.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-white text-white text-white"><i data-lucide="x" class="w-3 h-3 text-gray-600 hover:text-red-500 text-white"></i></button>
+                                        <button onclick="deleteTask('${s.id}', true, '${t.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-white text-white text-white text-white"><i data-lucide="x" class="w-3 h-3 text-gray-600 hover:text-red-500"></i></button>
                                     </div>`).join('')}
                             </div>
-                            <div class="ml-8 mt-4 flex gap-3 text-white"><input type="text" id="sub-input-${t.id}" placeholder="Sub-tarefa..." class="bg-transparent border-b border-white/10 text-[10px] py-1 flex-grow focus:outline-none focus:border-pink-500 text-white text-white" onkeypress="if(event.key==='Enter')addSubTask('${t.id}')"><button onclick="addSubTask('${t.id}')" class="p-1.5 hover:bg-white/5 rounded-lg text-white text-white"><i data-lucide="plus" class="w-4 h-4 text-white text-white"></i></button></div>
+                            <div class="ml-8 mt-4 flex gap-3 text-white text-white text-white text-white"><input type="text" id="sub-input-${t.id}" placeholder="Sub-tarefa..." class="bg-transparent border-b border-white/10 text-[10px] py-1 flex-grow focus:outline-none focus:border-pink-500 text-white text-white text-white text-white" onkeypress="if(event.key==='Enter')addSubTask('${t.id}')"><button onclick="addSubTask('${t.id}')" class="p-1.5 hover:bg-white/5 rounded-lg text-white text-white text-white text-white text-white"><i data-lucide="plus" class="w-4 h-4 text-white text-white text-white text-white"></i></button></div>
                         </div>` : ''}
                 </div>`;
         }
 
-        // --- MONITOR DE ALERTAS (CHECA A CADA 3 SEGUNDOS) ---
+        // --- MONITOR DE ALERTAS (3 SEG) ---
         setInterval(() => {
             const now = Date.now();
             tasks.forEach(task => {
                 if (!task.completed && task.reminderAt && !task.reminderSent) {
                     if (now >= task.reminderAt) {
-                        // DISPARA ALERTA VISUAL/SONORO INTERNO (GARANTIDO)
                         document.getElementById('alert-title').innerText = task.text;
                         document.getElementById('browser-alert').style.display = 'block';
-                        playAlertSound();
+                        playMemeSound();
                         markReminderAsSent(task.id);
                     }
                 }
