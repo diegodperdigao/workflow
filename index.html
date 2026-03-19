@@ -1,176 +1,154 @@
-<script type="module">
-        // 1. CONFIGURAÇÕES INICIAIS
-        let tasks = [];
-        let editingId = null;
-        let currentFilter = 'all';
-        const ACCESS_PASSWORD = "3c2026"; 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3C - Sistema de Tarefas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hidden { display: none; }
+        body { background-color: #0f172a; color: white; min-height: 100vh; }
+    </style>
+</head>
+<body>
 
-        // --- SISTEMA DE ÁUDIO DINÂMICO ---
-        window.playMemeSound = function(tituloTarefa = "") {
-            try {
-                window.speechSynthesis.cancel();
-                const prefixos = [
-                    "Vai trabalhar vagabundo! Você tem que ",
-                    "Para de ser herdeiro e vai logo ",
-                    "O boleto não se paga sozinho! Vai agora ",
-                    "Larga esse celular e foca em ",
-                    "Status de hoje: pobre! Anda logo e vai ",
-                    "Seu futuro self está passando fome porque você não quer "
-                ];
+    <div id="lock-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
+        <div class="text-center p-8 glass-card rounded-3xl">
+            <h1 class="text-2xl font-bold mb-6">🔒 Acesso Restrito 3C</h1>
+            <input type="password" id="password-input" placeholder="Digite a senha" 
+                   class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 mb-4 block w-full text-center">
+            <button onclick="checkPassword()" class="bg-cyan-600 hover:bg-cyan-500 px-6 py-2 rounded-lg font-bold w-full transition">
+                Entrar
+            </button>
+        </div>
+    </div>
 
-                const prefixoAleatorio = prefixos[Math.floor(Math.random() * prefixos.length)];
-                const mensagemCompleta = prefixoAleatorio + (tituloTarefa || "fazer suas obrigações");
-                const utterance = new SpeechSynthesisUtterance(mensagemCompleta);
-                
-                utterance.lang = "pt-BR";
-                const voices = window.speechSynthesis.getVoices();
-                const femaleVoice = voices.find(v => v.lang.includes('pt') && 
-                    (v.name.toLowerCase().includes('maria') || v.name.toLowerCase().includes('luciana') || v.name.toLowerCase().includes('victoria')));
-                
-                if (femaleVoice) utterance.voice = femaleVoice;
-                else utterance.pitch = 1.3;
-                
-                utterance.rate = 1.1;
-                window.speechSynthesis.speak(utterance);
-            } catch(e) { console.error(e); }
+    <main id="main-content" class="hidden p-4 max-w-2xl mx-auto">
+        <header class="flex justify-between items-center mb-8 pt-4">
+            <h1 class="text-3xl font-black tracking-tiled text-cyan-400">3C <span class="text-white text-sm font-normal">v2026</span></h1>
+            <div class="text-right">
+                <p class="text-xs text-gray-400">Progresso Geral</p>
+                <div class="w-32 h-2 bg-gray-800 rounded-full mt-1">
+                    <div id="overall-progress" class="h-full bg-cyan-500 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="glass-card p-4 rounded-2xl mb-6">
+            <input type="text" id="main-task-input" placeholder="O que você precisa fazer?" class="w-full bg-transparent border-b border-gray-700 py-2 mb-3 outline-none focus:border-cyan-500 transition">
+            <textarea id="main-desc-input" placeholder="Detalhes (opcional)" class="w-full bg-transparent text-sm text-gray-400 mb-3 outline-none"></textarea>
+            <div class="flex justify-between items-center">
+                <select id="priority-select" class="bg-slate-800 text-xs rounded p-1">
+                    <option value="low">Baixa</option>
+                    <option value="medium">Média</option>
+                    <option value="high">ALTA 🔥</option>
+                </select>
+                <input type="datetime-local" id="reminder-input" class="bg-slate-800 text-xs rounded p-1">
+                <button onclick="addMainTask()" class="bg-cyan-600 p-2 rounded-full hover:scale-110 transition">
+                    <i data-lucide="plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="task-list"></div>
+    </main>
+
+    <script>
+        // CONFIGURAÇÕES
+        let tasks = JSON.parse(localStorage.getItem('3c_tasks_v26')) || [];
+        const ACCESS_PASSWORD = "3c2026";
+
+        // Inicializar ícones
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
         }
 
-        // --- FUNÇÕES DE INTERFACE ---
-        window.checkPassword = () => {
-            const input = document.getElementById('password-input');
-            if(input.value === ACCESS_PASSWORD) {
-                document.getElementById('lock-screen').style.display = 'none';
+        // SENHA
+        window.checkPassword = function() {
+            const val = document.getElementById('password-input').value;
+            if(val === ACCESS_PASSWORD) {
+                document.getElementById('lock-screen').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
-                document.getElementById('main-content').style.opacity = '1';
                 renderTasks();
             } else {
-                input.classList.add('shake');
-                setTimeout(() => input.classList.remove('shake'), 400);
-                input.value = '';
+                alert("Senha incorreta!");
             }
         };
 
-        window.addMainTask = () => {
-            const titleInput = document.getElementById('main-task-input');
-            const descInput = document.getElementById('main-desc-input');
-            const priority = document.getElementById('priority-select').value;
-            const reminderInput = document.getElementById('reminder-input');
+        // VOZ
+        window.playMemeSound = function(txt) {
+            const msg = new SpeechSynthesisUtterance("Vai trabalhar! Você tem que " + txt);
+            msg.lang = "pt-BR";
+            window.speechSynthesis.speak(msg);
+        };
 
-            if (!titleInput.value.trim()) return;
+        // ADICIONAR
+        window.addMainTask = function() {
+            const title = document.getElementById('main-task-input');
+            if(!title.value) return;
 
             const newTask = {
                 id: Date.now().toString(),
-                text: titleInput.value,
-                description: descInput.value,
-                priority: priority,
+                text: title.value,
+                description: document.getElementById('main-desc-input').value,
+                priority: document.getElementById('priority-select').value,
                 completed: false,
-                createdAt: Date.now(),
-                reminderAt: reminderInput.value ? new Date(reminderInput.value).getTime() : null,
-                reminderSent: false
+                reminderAt: document.getElementById('reminder-input').value ? new Date(document.getElementById('reminder-input').value).getTime() : null
             };
 
             tasks.unshift(newTask);
-            saveLocal();
+            save();
+            title.value = '';
             playMemeSound(newTask.text);
-            titleInput.value = ''; descInput.value = ''; reminderInput.value = '';
         };
 
-        window.toggleTask = (id) => {
+        window.toggleTask = function(id) {
             const t = tasks.find(x => x.id === id);
-            if (t) t.completed = !t.completed;
-            saveLocal();
+            if(t) t.completed = !t.completed;
+            save();
         };
 
-        window.deleteTask = (id) => {
+        window.deleteTask = function(id) {
             tasks = tasks.filter(x => x.id !== id);
-            saveLocal();
+            save();
         };
 
-        window.startEdit = (id) => { editingId = id; renderTasks(); };
-        window.saveEdit = (id) => {
-            const t = tasks.find(x => x.id === id);
-            t.text = document.getElementById(`edit-title-${id}`).value;
-            t.description = document.getElementById(`edit-desc-${id}`).value;
-            editingId = null;
-            saveLocal();
-        };
-
-        window.setFilter = (f) => {
-            currentFilter = f;
-            renderTasks();
-        };
-
-        window.testAlert = () => playMemeSound("testar o sistema");
-
-        function saveLocal() {
+        function save() {
             localStorage.setItem('3c_tasks_v26', JSON.stringify(tasks));
             renderTasks();
         }
 
         function renderTasks() {
-            const container = document.getElementById('task-list');
-            const filtered = tasks.filter(t => 
-                currentFilter === 'pending' ? !t.completed : 
-                currentFilter === 'completed' ? t.completed : true
-            );
-            
-            container.innerHTML = filtered.map(t => `
-                <div class="glass-card rounded-2xl p-4 mb-4 border-l-4 ${t.completed ? 'opacity-40 border-gray-600' : (t.priority === 'high' ? 'border-pink-600' : 'border-cyan-600')}">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-4">
-                            <button onclick="toggleTask('${t.id}')">
-                                <i data-lucide="${t.completed ? 'check-circle' : 'circle'}" class="w-6 h-6"></i>
-                            </button>
-                            <div>
-                                ${editingId === t.id ? 
-                                    `<input id="edit-title-${t.id}" class="bg-black/20 border border-white/10 rounded p-1 mb-2" value="${t.text}">` : 
-                                    `<h3 class="font-bold uppercase ${t.completed ? 'line-through' : ''}">${t.text}</h3>`}
-                                
-                                ${editingId === t.id ? 
-                                    `<textarea id="edit-desc-${t.id}" class="bg-black/20 border border-white/10 rounded p-1 w-full text-xs">${t.description}</textarea>` : 
-                                    `<p class="text-xs text-gray-400">${t.description || ''}</p>`}
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="playMemeSound('${t.text}')" class="p-1 hover:bg-white/10 rounded"><i data-lucide="volume-2" class="w-4 h-4 text-pink-500"></i></button>
-                            ${editingId === t.id ? 
-                                `<button onclick="saveEdit('${t.id}')"><i data-lucide="save" class="w-4 h-4 text-green-500"></i></button>` : 
-                                `<button onclick="startEdit('${t.id}')"><i data-lucide="pencil" class="w-4 h-4 text-gray-500"></i></button>`}
-                            <button onclick="deleteTask('${t.id}')"><i data-lucide="trash" class="w-4 h-4 text-red-800"></i></button>
-                        </div>
+            const list = document.getElementById('task-list');
+            list.innerHTML = tasks.map(t => `
+                <div class="glass-card p-4 rounded-xl mb-3 flex justify-between items-center ${t.completed ? 'opacity-50' : ''}">
+                    <div>
+                        <h3 class="font-bold ${t.completed ? 'line-through' : ''}">${t.text}</h3>
+                        <p class="text-xs text-gray-500">${t.description || ''}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleTask('${t.id}')" class="text-green-500"><i data-lucide="check"></i></button>
+                        <button onclick="deleteTask('${t.id}')" class="text-red-500"><i data-lucide="trash"></i></button>
                     </div>
                 </div>
             `).join('');
-
-            // Atualiza progresso
-            const total = tasks.length;
-            const done = tasks.filter(x => x.completed).length;
-            const p = total ? Math.round((done / total) * 100) : 0;
-            document.getElementById('overall-progress').style.width = p + '%';
-            document.getElementById('percent-display').innerText = p + '%';
             
-            lucide.createIcons();
+            // Atualiza barra de progresso
+            const done = tasks.filter(x => x.completed).length;
+            const percent = tasks.length ? (done / tasks.length) * 100 : 0;
+            document.getElementById('overall-progress').style.width = percent + '%';
+            
+            refreshIcons();
         }
 
-        // --- INICIALIZAÇÃO ---
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('3c_tasks_v26');
-            if (saved) tasks = JSON.parse(saved);
-            
-            // Corrige o bug do Lucide que às vezes não carrega ícones dinâmicos
-            setTimeout(() => lucide.createIcons(), 500);
-        });
-
-        // Checagem de Lembretes
-        setInterval(() => {
-            const now = Date.now();
-            tasks.forEach(t => {
-                if (!t.completed && t.reminderAt && !t.reminderSent && now >= t.reminderAt) {
-                    t.reminderSent = true;
-                    playMemeSound(t.text);
-                    alert("🚨 HORA DE TRABALHAR: " + t.text);
-                    saveLocal();
-                }
-            });
-        }, 5000);
+        // Executa ao carregar
+        window.onload = refreshIcons;
     </script>
+</body>
+</html>
