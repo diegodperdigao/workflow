@@ -285,6 +285,11 @@
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'workflow-3c-app-default';
 
+        // --- SISTEMA DE LOCAL STORAGE (Para GitHub Pages) ---
+        const saveToLocalStorage = () => {
+            localStorage.setItem('workflow3c_tasks', JSON.stringify(tasks));
+        };
+
         // --- SISTEMA DE ÁUDIO MEME FEMININO ---
         const alertPrefixes = [
             "Vai trabalhar vagabundo! Você tem que ",
@@ -457,9 +462,10 @@
                     console.error("Erro ao adicionar tarefa:", error);
                 }
             } else {
-                // Modo Offline (GitHub Pages)
+                // Modo Offline (GitHub Pages / Local Storage)
                 newTask.id = Math.random().toString(36).substring(2, 11);
                 tasks.unshift(newTask);
+                saveToLocalStorage();
                 renderTasks();
             }
 
@@ -478,6 +484,7 @@
             } else {
                 // Modo Offline
                 tasks = tasks.filter(t => t.id !== id);
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -497,6 +504,7 @@
             } else {
                 // Modo Offline
                 task.completed = !task.completed;
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -547,6 +555,7 @@
                     task.reminder = newReminder;
                 }
                 editingId = null;
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -580,6 +589,7 @@
                 // Modo Offline
                 task.subtasks = updatedSubtasks;
                 input.value = '';
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -603,6 +613,7 @@
             } else {
                 // Modo Offline
                 task.subtasks = updatedSubtasks;
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -624,6 +635,7 @@
             } else {
                 // Modo Offline
                 task.subtasks = updatedSubtasks;
+                saveToLocalStorage();
                 renderTasks();
             }
         };
@@ -813,9 +825,21 @@
                      throw new Error("Fora do Canvas. Sem credenciais do Firebase.");
                 }
             } catch (error) {
-                console.warn("Rodando no GitHub Pages: O banco de dados em nuvem interno foi desativado.");
-                document.getElementById('sync-status').innerText = "OFFLINE (GitHub Pages)";
-                document.getElementById('status-dot').classList.replace('bg-gray-500', 'bg-red-500');
+                console.warn("Rodando no GitHub Pages: O banco de dados em nuvem interno foi desativado. Utilizando Local Storage.");
+                document.getElementById('sync-status').innerText = "OFFLINE (Local Storage)";
+                document.getElementById('status-dot').classList.replace('bg-gray-500', 'bg-yellow-500');
+                
+                // Tenta carregar as tarefas salvas no navegador
+                const savedTasks = localStorage.getItem('workflow3c_tasks');
+                if (savedTasks) {
+                    try {
+                        tasks = JSON.parse(savedTasks);
+                    } catch(e) {
+                        console.error("Erro ao carregar do Local Storage", e);
+                        tasks = [];
+                    }
+                }
+                
                 renderTasks(); // Renderiza interface limpa para funcionamento offline
             }
         };
