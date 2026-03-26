@@ -192,7 +192,7 @@
     </div>
 
     <!-- TELA DE SELEÇÃO DE MÓDULO -->
-    <div id="app-selection" class="fixed inset-0 z-[90] items-center justify-center bg-[#030008] transition-opacity duration-700 hidden opacity-0 flex-col px-4">
+    <div id="app-selection" class="fixed inset-0 z-[90] flex items-center justify-center bg-[#030008] transition-opacity duration-700 hidden opacity-0 flex-col px-4">
         <div class="mb-16 flex flex-col items-center">
             <img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
             <h2 class="text-xs font-black tracking-[0.4em] uppercase text-gray-400 italic">Selecione o Módulo de Trabalho</h2>
@@ -794,8 +794,10 @@
                 document.getElementById('lock-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
-                    document.getElementById('app-selection').classList.remove('hidden');
-                    setTimeout(() => document.getElementById('app-selection').style.opacity = '1', 50);
+                    const appSel = document.getElementById('app-selection');
+                    appSel.classList.remove('hidden');
+                    appSel.classList.add('flex');
+                    setTimeout(() => appSel.style.opacity = '1', 50);
                 }, 700);
             } else {
                 input.classList.add('shake', 'border-red-500');
@@ -849,6 +851,7 @@
                 const appSel = document.getElementById('app-selection');
                 if(appSel) {
                     appSel.classList.remove('hidden');
+                    appSel.classList.add('flex');
                     setTimeout(() => appSel.style.opacity = '1', 50);
                 }
             }, 700);
