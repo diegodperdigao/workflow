@@ -67,6 +67,7 @@
 <body class="antialiased selection:bg-pink-500 selection:text-white">
     <div class="bg-fluid"></div><div class="bg-noise"></div>
 
+    <!-- TOAST E ALERTAS -->
     <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
 
     <div id="browser-alert">
@@ -76,10 +77,11 @@
                 <p id="alert-prefix" class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1 italic">Notificação</p>
                 <h3 id="alert-title" class="text-xl font-black uppercase leading-tight tracking-tight">Título da Tarefa</h3>
             </div>
-            <button onclick="$hide('browser-alert')" class="p-3 hover:bg-white/5 rounded-2xl transition-all"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
+            <button onclick="window.$hide('browser-alert')" class="p-3 hover:bg-white/5 rounded-2xl transition-all"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
         </div>
     </div>
 
+    <!-- MODAL CONFIRMAÇÃO -->
     <div id="modal-confirm" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6" onclick="if(event.target === this) window.closeConfirm()">
         <div class="glass-card w-full max-w-sm p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col text-center">
             <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30 mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i></div>
@@ -92,6 +94,7 @@
         </div>
     </div>
 
+    <!-- LOCK SCREEN -->
     <div id="lock-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#030008] transition-opacity duration-700">
         <div class="max-w-md w-full px-10 text-center">
             <div class="mb-8 flex flex-col items-center">
@@ -105,6 +108,7 @@
         </div>
     </div>
 
+    <!-- APP SELECTION -->
     <div id="app-selection" class="fixed inset-0 z-[90] flex items-center justify-center bg-[#030008] transition-opacity duration-700 hidden opacity-0 flex-col px-4">
         <div class="mb-16 flex flex-col items-center"><img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-[0_0_20px_rgba(236,72,153,0.3)]"><h2 class="text-xs font-black tracking-[0.4em] uppercase text-gray-400 italic">Selecione o Módulo</h2></div>
         <div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
@@ -152,6 +156,7 @@
                     </div>
                 </header>
 
+                <!-- TAB: DASHBOARD GERAL E MARCAS -->
                 <div id="standard-module">
                     <div class="flex flex-wrap justify-between items-end gap-8 mb-12">
                         <div class="flex flex-wrap gap-4 items-end bg-black/40 p-6 rounded-2xl border border-white/5 shadow-lg">
@@ -207,6 +212,7 @@
                     </div>
                 </div>
 
+                <!-- TAB: AFILIADOS / CRM -->
                 <div id="crm-module" class="hidden">
                     <div class="flex justify-between items-center mb-8">
                         <div class="bg-black/40 p-2 rounded-xl border border-white/5 flex items-center w-full max-w-md"><i data-lucide="search" class="w-5 h-5 text-gray-500 ml-3"></i><input type="text" id="search-affiliate" placeholder="Buscar afiliado..." class="bg-transparent border-none text-white px-4 py-2 w-full focus:outline-none" oninput="window.renderAffiliatesCRM()"></div>
@@ -216,6 +222,7 @@
                     <div id="crm-empty-state" class="hidden text-center py-24 opacity-30"><i data-lucide="users" class="w-20 h-20 mx-auto mb-6 text-pink-500"></i><p class="text-2xl font-black uppercase tracking-widest">Nenhum encontrado</p></div>
                 </div>
 
+                <!-- TAB: FECHAMENTOS E FATURAS -->
                 <div id="fechamento-module" class="hidden">
                     <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl mb-12">
                         <h2 class="text-2xl font-black uppercase tracking-widest mb-8 border-b border-white/10 pb-5 flex items-center gap-3"><i data-lucide="file-check" class="w-6 h-6 text-emerald-400"></i> Gerador de Faturas (Extrato)</h2>
@@ -234,9 +241,9 @@
                     <div id="closure-result-card" class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl hidden fade-content mb-12">
                         <div class="bg-emerald-500/10 px-10 py-8 border-b border-emerald-500/20 flex justify-between items-center">
                             <div><h2 class="text-xl font-black uppercase tracking-widest text-emerald-400">Extrato Consolidado</h2><p id="closure-meta" class="text-sm text-gray-400 mt-2 font-mono">Afiliado: --- | Período: ---</p></div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="window.exportClosureCSV()" class="px-6 py-3 bg-white/10 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-white/20 transition-all flex items-center gap-2"><i data-lucide="download" class="w-5 h-5"></i> Exportar CSV</button>
-                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-5 h-5"></i> Registrar Fechamento</button>
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="window.exportClosureCSV()" class="px-6 py-3 bg-white/10 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-white/20 transition-all flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Exportar CSV</button>
+                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-4 h-4"></i> Registrar Pagamento</button>
                             </div>
                         </div>
                         <div class="p-10">
@@ -253,7 +260,7 @@
                         </div>
                     </div>
 
-                    <!-- HISTÓRICO GLOBAL DE FECHAMENTOS -->
+                    <!-- HISTÓRICO GLOBAL DE FECHAMENTOS (ACORDEÃO) -->
                     <div class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
                         <div class="bg-black/60 px-8 py-6 border-b border-white/5 flex justify-between items-center"><h2 class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="history" class="w-4 h-4 text-emerald-400"></i> Histórico de Pagamentos por Afiliado</h2></div>
                         <div id="grouped-payments-container" class="p-6 space-y-4"></div>
@@ -348,7 +355,7 @@
             <div class="space-y-8 shrink-0">
                 <div>
                     <div class="flex justify-between items-center mb-3"><h3 class="text-[10px] font-black uppercase tracking-widest text-gray-500">Informações e Anotações</h3><button id="btn-edit-notes" onclick="window.enableProfileEdit()" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-[9px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-1"><i data-lucide="pencil" class="w-3 h-3"></i> Editar</button><button id="btn-save-notes" onclick="window.saveProfileNotes()" class="hidden px-4 py-1.5 bg-pink-500 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-1 shadow-[0_0_10px_rgba(236,72,153,0.4)]"><i data-lucide="save" class="w-3 h-3"></i> Salvar</button></div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="flex flex-col"><label class="form-label !ml-0 text-pink-400 flex items-center gap-2 mb-2"><i data-lucide="share-2" class="w-3 h-3"></i> Fontes de Tráfego / Social</label><textarea id="profile-social" class="edit-mode-input w-full text-sm min-h-[80px] custom-scrollbar flex-grow resize-none transition-all duration-300" placeholder="Nenhuma informação registrada."></textarea></div><div class="flex flex-col"><label class="form-label !ml-0 text-amber-400 flex items-center gap-2 mb-2"><i data-lucide="sticky-note" class="w-3 h-3"></i> Observações Live</label><textarea id="profile-notes" class="edit-mode-input w-full text-sm min-h-[80px] custom-scrollbar flex-grow resize-none transition-all duration-300" placeholder="Nenhuma anotação registrada."></textarea></div></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="flex flex-col"><label class="form-label !ml-0 text-pink-400 flex items-center gap-2 mb-2"><i data-lucide="share-2" class="w-3 h-3"></i> Fontes de Tráfego / Social</label><textarea id="profile-social" class="edit-mode-input w-full text-sm min-h-[80px] custom-scrollbar flex-grow resize-none"></textarea></div><div class="flex flex-col"><label class="form-label !ml-0 text-amber-400 flex items-center gap-2 mb-2"><i data-lucide="sticky-note" class="w-3 h-3"></i> Observações</label><textarea id="profile-notes" class="edit-mode-input w-full text-sm min-h-[80px] custom-scrollbar flex-grow resize-none"></textarea></div></div>
                 </div>
                 <div>
                     <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-3">Performance Vitalícia</h3>
@@ -733,7 +740,7 @@
                     else { const q=typeof r.qftd==='object'?(r.qftd.l1||0):r.qftd; sQ+=q; bC+=(q*(mD.cpa||0))+(r.netRev*(mD.rs/100)); }
                 });
                 tQ+=sQ; tRev+=sR; tComm+=bC; const cfg = window.getBrandConfig(brand)||{color:'#fff'}, mD = aff.deals[brand]||{cpa:0,rs:0}, isT = window.dataStore.brands[brand]?.type==='tiered';
-                return `<tr class="border-b border-white/5 hover:bg-white/5"><td class="py-4 font-bold" style="color: ${cfg.color}">${brand}</td><td class="py-4 text-center font-mono text-xs text-gray-400">${isT?`L1: R$ ${mD.cpa_l1||mD.cpa||0}/${mD.rs}%`:`R$ ${mD.cpa}/${mD.rs}%`}</td><td class="py-4 text-center font-bold text-gray-300">${sQ}</td><td class="py-4 text-right font-mono text-gray-400">${window.formatCurrency(sR)}</td><td class="py-4 text-right font-mono font-bold text-emerald-400">${window.formatCurrency(bC)}</td></tr>`;
+                return `<tr class="border-b border-white/5 hover:bg-white/5 transition-colors"><td class="py-4 font-bold" style="color: ${cfg.color}">${brand}</td><td class="py-4 text-center font-mono text-xs text-gray-400">${isT?`L1: R$ ${mD.cpa_l1||mD.cpa||0}/${mD.rs}%`:`R$ ${mD.cpa}/${mD.rs}%`}</td><td class="py-4 text-center font-bold text-gray-300">${sQ}</td><td class="py-4 text-right font-mono text-gray-400">${window.formatCurrency(sR)}</td><td class="py-4 text-right font-mono font-bold text-emerald-400">${window.formatCurrency(bC)}</td></tr>`;
             }).join('') || '<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">Nenhum dado gerador de receita.</td></tr>');
             text('closure-total', window.formatCurrency(tComm)); text('closure-summary', `${tQ} QFTDs | Receita: ${window.formatCurrency(tRev)}`); text('closure-meta', `Afiliado: ${aff.name} | Período: ${s.split('-').reverse().join('/')} até ${e.split('-').reverse().join('/')}`);
             window.currentPendingClosure = { affiliateId: aff.id, affiliateName: aff.name, startDate: s, endDate: e, totalAmount: tComm };
@@ -750,7 +757,7 @@
 
         window.saveClosureToHistory = () => {
             if(!window.currentPendingClosure) return window.showToast("Nenhum fechamento calculado.", "error");
-            const p = { id: Math.random().toString(36).substr(2,9), ...window.currentPendingClosure, status: 'pending', invoiceUrl: '', createdAt: Date.now() };
+            const p = { id: Math.random().toString(36).substr(2,9), ...window.currentPendingClosure, status: 'pending', invoiceUrl: '', invoiceName: '', createdAt: Date.now() };
             window.dataStore.payments.push(p); window.saveMDData(); window.logAction('Fechamento Salvo', `Valor: R$ ${p.totalAmount}`);
             window.showToast("Registrado com sucesso!", "success"); window.currentPendingClosure = null; window.$('closure-result-card').classList.add('hidden'); window.renderGlobalPaymentHistory();
         };
@@ -766,7 +773,7 @@
                     const pi = x.status==='paid'&&x.paidAt ? `<br><span class="text-[8px] text-emerald-500 font-mono mt-1 block">Pago: ${new Date(x.paidAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}</span>` : '';
                     const sb = x.status==='paid' ? `<button onclick="window.togglePaymentStatus('${x.id}')" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500/30 transition-all border border-emerald-500/30 w-24"><i data-lucide="check-circle-2" class="w-3 h-3 inline pb-0.5"></i> Pago</button>` : `<button onclick="window.togglePaymentStatus('${x.id}')" class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-amber-500/30 transition-all border border-amber-500/30 w-24"><i data-lucide="clock" class="w-3 h-3 inline pb-0.5"></i> Pendente</button>`;
                     const inDisplay = x.invoiceName ? `<br><span class="text-[8px] text-blue-300 truncate max-w-[120px] block mx-auto">${x.invoiceName}</span>` : '';
-                    const ib = x.invoiceUrl ? `<div class="flex flex-col items-center justify-center gap-1"><a href="${x.invoiceUrl}" target="_blank" ${x.invoiceUrl.startsWith('data:')?'download="nota_fiscal"':''} class="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 font-bold text-xs"><i data-lucide="external-link" class="w-3 h-3 inline"></i> Abrir N.F.</a><button onclick="window.updateInvoice('${x.id}')" class="text-gray-500 hover:text-white text-[9px] uppercase font-bold"><i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Trocar</button>${inDisplay}</div>` : `<button onclick="window.updateInvoice('${x.id}')" class="text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1 mx-auto bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[9px] uppercase font-bold"><i data-lucide="upload" class="w-3 h-3 inline"></i> Anexar N.F.</button>`;
+                    const ib = x.invoiceUrl ? `<div class="flex flex-col items-center justify-center gap-1"><a href="${x.invoiceUrl}" target="_blank" ${x.invoiceUrl.startsWith('data:')?'download="nota_fiscal"':''} class="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 font-bold text-xs"><i data-lucide="external-link" class="w-3 h-3"></i> Abrir N.F.</a><button onclick="window.updateInvoice('${x.id}')" class="text-gray-500 hover:text-white text-[9px] uppercase font-bold"><i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Trocar</button>${inDisplay}</div>` : `<button onclick="window.updateInvoice('${x.id}')" class="text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1 mx-auto bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[9px] uppercase font-bold"><i data-lucide="upload" class="w-3 h-3 inline"></i> Anexar N.F.</button>`;
                     return `<tr class="border-t border-white/5 hover:bg-white/5 transition-colors"><td class="py-4 px-4 text-gray-300 text-xs">${x.startDate.split('-').reverse().join('/')} a ${x.endDate.split('-').reverse().join('/')}</td><td class="py-4 px-4 text-right text-white font-bold text-xs">${window.formatCurrency(x.totalAmount)}</td><td class="py-4 px-4 text-center align-middle">${sb}${pi}</td><td class="py-4 px-4 text-center">${ib}</td><td class="py-4 px-4 text-center"><button onclick="window.deletePayment('${x.id}', '${id}')" class="p-2 text-gray-500 hover:text-red-500 transition-colors rounded-lg hover:bg-red-500/10" title="Excluir Registro"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td></tr>`;
                 }).join('');
                 return `<div class="bg-black/40 border border-white/10 rounded-2xl overflow-hidden mb-4"><div class="bg-white/5 px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-colors" onclick="window.$('aff-pays-${id}').classList.toggle('hidden')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 border border-pink-500/30"><i data-lucide="user" class="w-5 h-5"></i></div><h3 class="font-black uppercase tracking-widest text-sm text-white">${d.name}</h3></div><div class="flex items-center gap-6 text-right"><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pendente</p><p class="text-amber-400 font-mono font-bold text-sm">${window.formatCurrency(tpn)}</p></div><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pago</p><p class="text-emerald-400 font-mono font-bold text-sm">${window.formatCurrency(tp)}</p></div><i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 ml-4"></i></div></div><div id="aff-pays-${id}" class="hidden p-2"><div class="overflow-x-auto custom-scrollbar"><table class="w-full text-left"><thead><tr class="text-[9px] uppercase tracking-widest text-gray-500"><th class="px-4 py-3 font-bold">Período de Fatura</th><th class="px-4 py-3 font-bold text-right">Valor</th><th class="px-4 py-3 font-bold text-center">Status de Pagamento</th><th class="px-4 py-3 font-bold text-center">Documento Fiscal</th><th class="px-4 py-3 font-bold text-center">Ações</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
