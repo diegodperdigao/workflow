@@ -759,6 +759,20 @@
         import { getFirestore, collection, doc, onSnapshot, addDoc, deleteDoc, updateDoc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
         // =========================================
+        // CONFIGURAÇÃO DO SEU PRÓPRIO BANCO DE DADOS (OPCIONAL)
+        // =========================================
+        // Se quiser hospedar este arquivo por conta própria (fora do chat) e ter salvamento em nuvem,
+        // crie um projeto gratuito no Google Firebase e cole as suas chaves aqui:
+        const MY_OWN_FIREBASE_CONFIG = {
+          apiKey: "AIzaSyDuiup15ELAcm78GFJ0w7pdeYu2DHy-6Zk",
+          authDomain: "hub-3c.firebaseapp.com",
+          projectId: "hub-3c",
+          storageBucket: "hub-3c.firebasestorage.app",
+          messagingSenderId: "340842089459",
+          appId: "1:340842089459:web:c2072752324c52f998a086"
+        }; 
+
+        // =========================================
         // VARIAVEIS GLOBAIS E CONSTANTES (MD & WF)
         // =========================================
         
@@ -789,7 +803,9 @@
         window.editingId = null;
         window.currentFilter = 'all';
         window.isCloudMode = false;
-        const wfAppId = typeof __app_id !== 'undefined' ? __app_id : 'workflow-3c-app-default';
+        
+        // Garante que a pasta na nuvem é a mesma independentemente de onde abrir (Preview ou GitHub)
+        const wfAppId = (MY_OWN_FIREBASE_CONFIG && MY_OWN_FIREBASE_CONFIG.apiKey) ? 'hub3c-production' : (typeof __app_id !== 'undefined' ? __app_id : 'workflow-3c-app-default');
 
         // =========================================
         // INICIALIZAÇÃO FIREBASE GLOBAL
@@ -799,9 +815,18 @@
             window.speechSynthesis.onvoiceschanged = () => {};
             
             try {
-                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    const app = initializeApp(firebaseConfig);
+                let configToUse = null;
+                // PRIORIDADE 1: Usar a sua Base de Dados privada
+                if (MY_OWN_FIREBASE_CONFIG && MY_OWN_FIREBASE_CONFIG.apiKey) {
+                    configToUse = MY_OWN_FIREBASE_CONFIG;
+                } 
+                // PRIORIDADE 2: Usar a nuvem do Canvas (apenas se a sua não estiver lá)
+                else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    configToUse = JSON.parse(__firebase_config);
+                }
+
+                if (configToUse) {
+                    const app = initializeApp(configToUse);
                     wfAuth = getAuth(app);
                     wfDb = getFirestore(app);
                     window.isCloudMode = true;
@@ -913,6 +938,7 @@
 
                     if (configSnap.exists() && configSnap.data().master_password) {
                         isValid = (pass === configSnap.data().master_password);
+                        if (!isValid) window.showToast("Senha Mestre incorreta!", "error");
                     } else {
                         // Configuração da primeira senha (se o banco for novo)
                         await setDoc(configRef, { master_password: pass });
