@@ -20,20 +20,25 @@
         .mosaic-container { position: absolute; top: -25%; left: -25%; width: 150%; height: 150%; transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) rotateZ(2deg); }
         .mosaic-pattern { width: 100%; height: 100%; background-size: 150px; background-repeat: repeat; animation: panMosaic 60s linear infinite; transition: background-image 0.5s ease; }
         @keyframes panMosaic { from { background-position: 0px 0px; } to { background-position: -300px -300px; } }
+        
         .glass-header { background: rgba(5, 5, 10, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .glass-card { background: rgba(15, 15, 20, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .edit-mode-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 8px; width: 100%; outline: none; color: #fff; transition: border-color 0.3s ease; }
         .edit-mode-input:focus { border-color: var(--theme-color); }
         .form-label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: #6b7280; font-style: italic; margin-left: 0.5rem; }
+        
         button svg { pointer-events: none; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
         .shake { animation: shake 0.2s ease-in-out 0s 2; border-color: #ef4444 !important; }
+        
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--theme-color); border-radius: 10px; opacity: 0.5; }
+        
         .table-row-hover:hover { background-color: rgba(255,255,255,0.02); }
         .card-hover { transition: all 0.3s ease; cursor: pointer; }
         .card-hover:hover { transform: translateY(-5px); border-color: var(--theme-color); box-shadow: 0 10px 30px var(--theme-color-glow); }
+        
         .theme-text { color: var(--theme-color); }
         .theme-border { border-color: var(--theme-color); }
         .theme-bg { background-color: var(--theme-color); }
@@ -42,24 +47,26 @@
         .active-tab { background: rgba(255,255,255,0.1); border-bottom: 2px solid var(--theme-color); color: #fff; }
         .fade-content { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         input[type="date"]::-webkit-calendar-picker-indicator, input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
         input[type="date"]::-webkit-calendar-picker-indicator:hover, input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+        
+        /* WORKFLOW */
         .command-input:focus { border-color: rgba(236, 72, 153, 0.4); background: rgba(0, 0, 0, 0.85); color: #fff; }
         .command-input::placeholder { color: #a1a1aa !important; opacity: 1; }
         .priority-high-border { border-left: 3px solid #f43f5e; }
         .priority-medium-border { border-left: 3px solid #a855f7; }
         .priority-low-border { border-left: 3px solid #06b6d4; }
-        .tag-high { background: rgba(244, 63, 94, 0.1); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); }
-        .tag-medium { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
-        .tag-low { background: rgba(6, 182, 212, 0.1); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.2); }
         .completed-task { opacity: 0.25; filter: grayscale(1); }
         .completed-text { text-decoration: line-through; color: #71717a; }
         .animate-task { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
         .reminder-wrapper { position: relative; display: flex; align-items: center; }
         input[type="datetime-local"] { padding-right: 45px !important; width: 100%; }
         input[type="datetime-local"]::-webkit-calendar-picker-indicator { background: transparent; bottom: 0; color: transparent; cursor: pointer; height: auto; left: 0; position: absolute; right: 0; top: 0; width: auto; z-index: 10; }
         .reminder-wrapper::after { content: '📅'; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0.4; font-size: 14px; }
+        
         #browser-alert { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 90%; max-width: 550px; background: rgba(20, 20, 25, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 4px solid #ec4899; padding: 24px; border-radius: 24px; box-shadow: 0 40px 80px rgba(0,0,0,0.9); animation: meetPop 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
         @keyframes meetPop { from { opacity: 0; transform: translate(-50%, -40px); } to { opacity: 1; transform: translate(-50%, 0); } }
     </style>
@@ -76,10 +83,11 @@
                 <p id="alert-prefix" class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1 italic">Notificação</p>
                 <h3 id="alert-title" class="text-xl font-black uppercase leading-tight tracking-tight">Título da Tarefa</h3>
             </div>
-            <button onclick="window.$hide('browser-alert')" class="p-3 hover:bg-white/5 rounded-2xl transition-all"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
+            <button onclick="document.getElementById('browser-alert').style.display='none'" class="p-3 hover:bg-white/5 rounded-2xl transition-all"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
         </div>
     </div>
 
+    <!-- MODAL DE CONFIRMAÇÃO -->
     <div id="modal-confirm" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6" onclick="if(event.target === this) window.closeConfirm()">
         <div class="glass-card w-full max-w-sm p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col text-center">
             <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30 mx-auto mb-4"><i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i></div>
@@ -92,6 +100,7 @@
         </div>
     </div>
 
+    <!-- LOCK SCREEN -->
     <div id="lock-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#030008] transition-opacity duration-700">
         <div class="max-w-md w-full px-10 text-center">
             <div class="mb-8 flex flex-col items-center">
@@ -105,6 +114,7 @@
         </div>
     </div>
 
+    <!-- SELEÇÃO DE APP -->
     <div id="app-selection" class="fixed inset-0 z-[90] flex items-center justify-center bg-[#030008] transition-opacity duration-700 hidden opacity-0 flex-col px-4">
         <div class="mb-16 flex flex-col items-center"><img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-[0_0_20px_rgba(236,72,153,0.3)]"><h2 class="text-xs font-black tracking-[0.4em] uppercase text-gray-400 italic">Selecione o Módulo</h2></div>
         <div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
@@ -144,6 +154,7 @@
 
         <div class="max-w-[1400px] mx-auto px-4 sm:px-8 pt-32 pb-20 relative text-white">
             <div class="flex gap-4 mb-10 border-b border-white/10 pb-4 overflow-x-auto custom-scrollbar" id="brand-tabs-container"></div>
+            
             <div id="dynamic-view-wrapper" class="fade-content">
                 <header class="mb-12 relative overflow-hidden rounded-3xl bg-white/[0.01] border border-white/[0.03] shadow-2xl flex items-center min-h-[220px]">
                     <div class="mosaic-wrapper"><div class="mosaic-container"><div id="dynamic-mosaic" class="mosaic-pattern"></div></div></div>
@@ -152,7 +163,7 @@
                     </div>
                 </header>
 
-                <!-- TAB: DASHBOARD GERAL E MARCAS -->
+                <!-- TAB: DASHBOARD -->
                 <div id="standard-module">
                     <div class="flex flex-wrap justify-between items-end gap-8 mb-12">
                         <div class="flex flex-wrap gap-4 items-end bg-black/40 p-6 rounded-2xl border border-white/5 shadow-lg">
@@ -199,7 +210,17 @@
                         <div class="overflow-x-auto custom-scrollbar">
                             <table class="w-full text-left border-collapse min-w-[1000px]">
                                 <thead>
-                                    <tr class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400"><th class="px-6 py-5 font-bold whitespace-nowrap">Afiliado</th><th id="th-deal" class="px-6 py-5 font-bold text-center whitespace-nowrap">Deal Afiliado</th><th class="px-6 py-5 font-bold text-center">FTDs</th><th class="px-6 py-5 font-bold text-center">QFTDs</th><th class="px-6 py-5 font-bold text-right">Depósitos</th><th class="px-6 py-5 font-bold text-right">Net Rev</th><th class="px-6 py-5 font-bold text-right text-red-400">Comissão Gerada</th><th class="px-6 py-5 font-bold text-right text-emerald-400">Lucro 3C</th><th class="px-6 py-5 font-bold text-center">Ações</th></tr>
+                                    <tr class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400">
+                                        <th class="px-6 py-5 font-bold whitespace-nowrap">Afiliado</th>
+                                        <th id="th-deal" class="px-6 py-5 font-bold text-center whitespace-nowrap">Deal Afiliado</th>
+                                        <th class="px-6 py-5 font-bold text-center">FTDs</th>
+                                        <th class="px-6 py-5 font-bold text-center">QFTDs</th>
+                                        <th class="px-6 py-5 font-bold text-right">Depósitos</th>
+                                        <th class="px-6 py-5 font-bold text-right">Net Rev</th>
+                                        <th class="px-6 py-5 font-bold text-right text-red-400">Comissão Gerada</th>
+                                        <th class="px-6 py-5 font-bold text-right text-emerald-400">Lucro 3C</th>
+                                        <th class="px-6 py-5 font-bold text-center">Ações</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="affiliates-table-body" class="text-sm"></tbody>
                             </table>
@@ -239,7 +260,7 @@
                             <div><h2 class="text-xl font-black uppercase tracking-widest text-emerald-400">Extrato Consolidado</h2><p id="closure-meta" class="text-sm text-gray-400 mt-2 font-mono">Afiliado: --- | Período: ---</p></div>
                             <div class="flex flex-wrap gap-3">
                                 <button onclick="window.exportClosureCSV()" class="px-6 py-3 bg-white/10 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-white/20 transition-all flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Exportar CSV</button>
-                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-4 h-4"></i> Registrar Pagamento</button>
+                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-4 h-4"></i> Registrar Fechamento</button>
                             </div>
                         </div>
                         <div class="p-10">
@@ -264,7 +285,7 @@
                 </div>
             </div>
         </div>
-        <footer class="py-16 border-t border-white/5 text-center mt-20 text-white relative z-10 bg-black/50"><img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" class="h-10 mx-auto opacity-70 mb-6 grayscale hover:grayscale-0 transition-all"><p class="text-[10px] text-gray-600 uppercase tracking-[0.3em] font-bold mb-2">Confidencial &copy; 2026 3C Gaming</p><button onclick="window.$show('modal-audit')" class="absolute right-6 bottom-6 p-3 text-gray-700 hover:text-gray-400 hover:bg-white/5 rounded-full transition-all"><i data-lucide="activity" class="w-5 h-5"></i></button></footer>
+        <footer class="py-16 border-t border-white/5 text-center mt-20 text-white relative z-10 bg-black/50"><img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" class="h-10 mx-auto opacity-70 mb-6 grayscale hover:grayscale-0 transition-all"><p class="text-[10px] text-gray-600 uppercase tracking-[0.3em] font-bold mb-2">Confidencial &copy; 2026 3C Gaming</p><button onclick="window.openModal('modal-audit')" class="absolute right-6 bottom-6 p-3 text-gray-700 hover:text-gray-400 hover:bg-white/5 rounded-full transition-all"><i data-lucide="activity" class="w-5 h-5"></i></button></footer>
     </div>
 
     <!-- MÓDULO 2: WORKFLOW -->
@@ -327,9 +348,9 @@
     </div>
 
     <!-- MODAIS DO SISTEMA -->
-    <div id="modal-daily" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-daily')">
+    <div id="modal-daily" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-lg p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar flex flex-col">
-            <button onclick="window.$hide('modal-daily')" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="database" class="w-5 h-5 theme-text"></i> Lançar Resultado</h2>
             <div class="space-y-6 shrink-0">
                 <div class="bg-blue-500/10 p-4 rounded-2xl border border-blue-500/20 shadow-inner"><label class="form-label !ml-0 text-blue-400">1. Marca</label><select id="daily-brand" class="edit-mode-input mt-2 w-full py-3 appearance-none cursor-pointer border-blue-500/50 text-white font-bold tracking-widest uppercase" onchange="window.updateDailyModalFields()"></select></div>
@@ -341,9 +362,9 @@
         </div>
     </div>
 
-    <div id="modal-affiliate-profile" class="fixed inset-0 z-[250] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-affiliate-profile')">
+    <div id="modal-affiliate-profile" class="fixed inset-0 z-[250] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-2xl p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar flex flex-col">
-            <button onclick="window.$hide('modal-affiliate-profile')" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
             <div class="flex items-center gap-6 border-b border-white/10 pb-6 mb-6 shrink-0">
                 <div class="w-16 h-16 rounded-full bg-pink-500/20 border border-pink-500/50 flex items-center justify-center shrink-0"><i data-lucide="user" class="w-8 h-8 text-pink-400"></i></div>
                 <div><h2 id="profile-name" class="text-3xl font-black uppercase tracking-tighter text-white">NOME DO AFILIADO</h2><div class="flex items-center gap-4 mt-2"><p id="profile-date" class="text-xs text-gray-400 font-mono">Parceiro desde: ---</p><button onclick="window.deleteAffiliate(window.currentProfileAffId)" class="text-red-500/80 hover:text-red-400 text-[9px] font-bold uppercase tracking-widest flex items-center gap-1 transition-colors bg-red-500/10 px-2 py-1 rounded"><i data-lucide="trash-2" class="w-3 h-3"></i> Excluir</button></div></div>
@@ -373,35 +394,35 @@
         </div>
     </div>
 
-    <div id="modal-audit" class="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-audit')">
-        <div class="glass-card w-full max-w-xl p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col max-h-[90vh]"><button onclick="window.$hide('modal-audit')" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button><h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="activity" class="w-5 h-5 text-gray-400"></i> Log de Ações</h2><div id="audit-list" class="space-y-3 overflow-y-auto custom-scrollbar pr-2 flex-grow"></div></div>
+    <div id="modal-audit" class="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
+        <div class="glass-card w-full max-w-xl p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col max-h-[90vh]"><button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button><h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="activity" class="w-5 h-5 text-gray-400"></i> Log de Ações</h2><div id="audit-list" class="space-y-3 overflow-y-auto custom-scrollbar pr-2 flex-grow"></div></div>
     </div>
 
-    <div id="modal-history" class="fixed inset-0 z-[250] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-history')">
+    <div id="modal-history" class="fixed inset-0 z-[250] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-5xl p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col max-h-[90vh]">
-            <button onclick="window.$hide('modal-history')" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             <h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="list" class="w-5 h-5 theme-text"></i> Histórico de Lançamentos</h2>
             <div class="overflow-x-auto custom-scrollbar flex-grow bg-black/30 rounded-2xl border border-white/5"><table class="w-full text-left border-collapse"><thead><tr class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400"><th class="px-5 py-4 font-bold whitespace-nowrap">Data</th><th class="px-5 py-4 font-bold">Marca</th><th class="px-5 py-4 font-bold">Afiliado</th><th class="px-5 py-4 font-bold text-center">FTD / QFTD</th><th class="px-5 py-4 font-bold text-right">Depósitos</th><th class="px-5 py-4 font-bold text-right">Net Rev</th><th class="px-5 py-4 font-bold text-center">Ações</th></tr></thead><tbody id="history-table-body" class="text-xs"></tbody></table></div>
         </div>
     </div>
 
-    <div id="modal-config" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-config')">
+    <div id="modal-config" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-2xl p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar flex flex-col">
-            <button onclick="window.$hide('modal-config')" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="settings" class="w-5 h-5 theme-text"></i> Configuração Master</h2>
             <div class="space-y-6 shrink-0">
                 <div class="bg-black/30 p-5 rounded-2xl border border-white/10"><h3 class="text-xs font-black uppercase tracking-widest text-emerald-400 mb-3">+ Nova Casa</h3><div class="grid grid-cols-1 md:grid-cols-5 gap-3"><div class="col-span-2"><label class="form-label !ml-0">Nome</label><input type="text" id="new-brand-name" placeholder="Ex: Betano" class="edit-mode-input mt-1 w-full py-2"></div><div class="col-span-2"><label class="form-label !ml-0">Logo URL</label><input type="text" id="new-brand-logo" class="edit-mode-input mt-1 w-full py-2"></div><div><label class="form-label !ml-0">Cor Hex</label><input type="text" id="new-brand-color" placeholder="#ff0000" class="edit-mode-input mt-1 w-full py-2 font-mono"></div><div class="md:col-span-5 flex justify-end mt-2"><button onclick="window.addNewBrand()" class="bg-emerald-500 text-white font-black uppercase text-[10px] tracking-widest px-6 py-2.5 rounded-lg hover:bg-emerald-600 transition-all">Adicionar</button></div></div></div>
                 <div><h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 border-b border-white/10 pb-2">Deals da 3C com as Casas</h3><div id="brands-config-list" class="space-y-4 max-h-[35vh] overflow-y-auto custom-scrollbar pr-2"></div></div>
                 <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20 mt-6"><button onclick="window.forceCloudSync(event)" class="w-full bg-blue-500 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-600 flex items-center justify-center gap-2"><i data-lucide="cloud-upload" class="w-4 h-4"></i> Forçar Envio para Nuvem</button></div>
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 mt-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button onclick="window.exportBackup()" class="w-full bg-white/10 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/20 border border-white/10 flex justify-center gap-2"><i data-lucide="download-cloud" class="w-4 h-4"></i> Exportar JSON</button><div><input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importBackup(event)"><button onclick="window.$('import-file').click()" class="w-full bg-blue-500/20 text-blue-400 font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-500/30 border border-blue-500/30 flex justify-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Restaurar</button></div></div></div>
+                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 mt-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button onclick="window.exportBackup()" class="w-full bg-white/10 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/20 border border-white/10 flex justify-center gap-2"><i data-lucide="download-cloud" class="w-4 h-4"></i> Exportar JSON</button><div><input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importBackup(event)"><button onclick="document.getElementById('import-file').click()" class="w-full bg-blue-500/20 text-blue-400 font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-500/30 border border-blue-500/30 flex justify-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Restaurar</button></div></div></div>
                 <button onclick="window.saveBrandsConfig()" class="w-full mt-4 theme-bg text-white font-black uppercase text-xs tracking-widest py-4 rounded-xl hover:brightness-110 transition-all theme-shadow">Salvar Deals Globais</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-affiliate" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-affiliate')">
+    <div id="modal-affiliate" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-xl p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar flex flex-col">
-            <button onclick="window.$hide('modal-affiliate')" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             <h2 class="text-xl font-black uppercase tracking-widest mb-6 border-b border-white/10 pb-4 flex items-center gap-2 shrink-0"><i data-lucide="user-cog" class="w-5 h-5 theme-text"></i> Gerenciar Afiliado</h2>
             <div class="space-y-6 shrink-0">
                 <div class="bg-black/40 p-5 rounded-2xl border border-white/5"><label class="form-label !ml-0">Ação</label><select id="aff-action-select" class="edit-mode-input mt-1 w-full py-3 cursor-pointer" onchange="window.toggleAffiliateAction()"></select></div>
@@ -413,9 +434,9 @@
         </div>
     </div>
 
-    <div id="modal-invoice" class="fixed inset-0 z-[400] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.$hide('modal-invoice')">
+    <div id="modal-invoice" class="fixed inset-0 z-[400] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6 md-modal" onclick="if(event.target === this) window.closeModals()">
         <div class="glass-card w-full max-w-md p-6 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col">
-            <button onclick="window.$hide('modal-invoice')" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="window.closeModals()" class="absolute top-6 right-6 text-gray-500 hover:text-white z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <h2 class="text-lg font-black uppercase tracking-widest mb-4 border-b border-white/10 pb-4 text-white"><i data-lucide="file-text" class="w-5 h-5 inline text-blue-400 mr-2"></i> Anexar Nota Fiscal</h2>
             <div class="space-y-4">
                 <div class="bg-black/30 p-4 rounded-xl border border-white/5">
@@ -433,19 +454,14 @@
         </div>
     </div>
 
-    <!-- SCRIPT GERAL (Descomprimido e Defensivo) -->
+    <!-- SCRIPT GERAL -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
         import { getFirestore, collection, doc, onSnapshot, addDoc, deleteDoc, updateDoc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
-        window.$ = id => document.getElementById(id);
-        const val = id => window.$(id)?.value || '';
-        const setVal = (id, v) => { if(window.$(id)) window.$(id).value = v; };
-        const html = (id, h) => { if(window.$(id)) window.$(id).innerHTML = h; };
-        const text = (id, t) => { if(window.$(id)) window.$(id).innerText = t; };
-        window.$show = id => { window.$(id)?.classList.remove('hidden'); setTimeout(()=>window.$(id)?.classList.remove('opacity-0'),10); };
-        window.$hide = id => { window.$(id)?.classList.add('opacity-0'); setTimeout(()=>window.$(id)?.classList.add('hidden'),300); };
+        window.openModal = (id) => { document.getElementById(id).classList.remove('hidden'); setTimeout(() => document.getElementById(id).classList.remove('opacity-0'), 10); };
+        window.closeModals = () => { document.querySelectorAll('.md-modal').forEach(m => { m.classList.add('opacity-0'); setTimeout(() => m.classList.add('hidden'), 300); }); };
         window.parseMoney = s => parseFloat(s?.toString().replace(/\./g, '').replace(',', '.')) || 0;
         window.formatCurrency = v => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
@@ -476,53 +492,50 @@
         window.initFirebaseSystem = async () => {
             window.workflowInitialized = true;
             try {
-                let c = FB_CFG;
-                if(c) {
-                    const app = initializeApp(c); wfAuth = getAuth(app); wfDb = getFirestore(app); window.isCloudMode = true;
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(wfAuth, __initial_auth_token); else await signInAnonymously(wfAuth); 
-                    
-                    onAuthStateChanged(wfAuth, (u) => {
-                        wfUser = u;
-                        if (u) {
-                            if(window.$('password-input')) { window.$('password-input').placeholder = "••••••••"; window.$('password-input').disabled = false; }
-                            if(window.$('btn-login')) { window.$('btn-login').innerText = "Acessar Portal"; window.$('btn-login').disabled = false; }
-                            text('user-id-text', u.uid.substring(0, 8) + '...');
-                            window.$('wf-status-dot')?.classList.replace('bg-gray-500', 'bg-emerald-500');
-                            text('wf-sync-status', "Cloud Sync Online");
+                const app = initializeApp(FB_CFG); wfAuth = getAuth(app); wfDb = getFirestore(app); window.isCloudMode = true;
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(wfAuth, __initial_auth_token); else await signInAnonymously(wfAuth); 
+                
+                onAuthStateChanged(wfAuth, (u) => {
+                    wfUser = u;
+                    if (u) {
+                        if(document.getElementById('password-input')) { document.getElementById('password-input').placeholder = "••••••••"; document.getElementById('password-input').disabled = false; }
+                        if(document.getElementById('btn-login')) { document.getElementById('btn-login').innerText = "Acessar Portal"; document.getElementById('btn-login').disabled = false; }
+                        document.getElementById('user-id-text').innerText = u.uid.substring(0, 8) + '...';
+                        document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500', 'bg-emerald-500');
+                        document.getElementById('wf-sync-status').innerText = "Cloud Sync Online";
 
-                            onSnapshot(collection(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks'), (s) => {
-                                window.tasks = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt - a.createdAt); 
-                                window.renderTasks(); window.updateSyncTime();
-                            }, e => console.error("Erro Workflow Firebase:", e));
+                        onSnapshot(collection(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks'), (s) => {
+                            window.tasks = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt - a.createdAt); 
+                            window.renderTasks(); window.updateSyncTime();
+                        });
 
-                            onSnapshot(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main'), (s) => {
-                                if (s.exists()) {
-                                    const p = s.data();
-                                    Object.assign(window.dataStore, { brands: p.brands||window.dataStore.brands, affiliates: p.affiliates||[], dailyReports: p.dailyReports||[], auditLogs: p.auditLogs||[], payments: p.payments||[] });
-                                    if (!window.$('dashboard-app').classList.contains('hidden')) {
-                                        window.initMDTabs();
-                                        if (window.currentMDEnv === 'Afiliados') window.renderAffiliatesCRM();
-                                        else if (window.currentMDEnv === 'Fechamento') { window.initFechamentoUI(); window.renderGlobalPaymentHistory(); }
-                                        else if (window.currentMDEnv !== 'Visão Geral') window.switchMDEnv(window.currentMDEnv);
-                                        else window.renderDashboard();
-                                    }
+                        onSnapshot(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main'), (s) => {
+                            if (s.exists()) {
+                                const p = s.data();
+                                Object.assign(window.dataStore, { brands: p.brands||window.dataStore.brands, affiliates: p.affiliates||[], dailyReports: p.dailyReports||[], auditLogs: p.auditLogs||[], payments: p.payments||[] });
+                                if (!document.getElementById('dashboard-app').classList.contains('hidden')) {
+                                    window.initMDTabs();
+                                    if (window.currentMDEnv === 'Afiliados') window.renderAffiliatesCRM();
+                                    else if (window.currentMDEnv === 'Fechamento') { window.initFechamentoUI(); window.renderGlobalPaymentHistory(); }
+                                    else if (window.currentMDEnv !== 'Visão Geral') window.switchMDEnv(window.currentMDEnv);
+                                    else window.renderDashboard();
                                 }
-                            }, e => console.error("Erro MD Firebase:", e));
-                        }
-                    });
-                } else throw new Error("No FB Config");
+                            }
+                        });
+                    }
+                });
             } catch (e) {
-                text('wf-sync-status', "OFFLINE (Local Storage)"); window.$('wf-status-dot')?.classList.replace('bg-gray-500', 'bg-yellow-500');
-                if(window.$('password-input')) { window.$('password-input').placeholder = "••••••••"; window.$('password-input').disabled = false; }
-                if(window.$('btn-login')) { window.$('btn-login').innerText = "Acessar Portal"; window.$('btn-login').disabled = false; }
+                document.getElementById('wf-sync-status').innerText = "OFFLINE (Local Storage)"; document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500', 'bg-yellow-500');
+                if(document.getElementById('password-input')) { document.getElementById('password-input').placeholder = "••••••••"; document.getElementById('password-input').disabled = false; }
+                if(document.getElementById('btn-login')) { document.getElementById('btn-login').innerText = "Acessar Portal"; document.getElementById('btn-login').disabled = false; }
                 try { window.tasks = JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]'); } catch(err){}
                 window.renderTasks(); 
             }
         };
 
         window.checkPassword = async () => {
-            const p = val('password-input').trim(); if (!p) return;
-            window.$('btn-login').innerText = "Verificando..."; window.$('btn-login').disabled = true;
+            const p = document.getElementById('password-input').value.trim(); if (!p) return;
+            document.getElementById('btn-login').innerText = "Verificando..."; document.getElementById('btn-login').disabled = true;
             let isValid = false;
             if (window.isCloudMode && wfUser) {
                 try {
@@ -534,50 +547,42 @@
             } else isValid = (p === "3cMD123@");
 
             if (isValid) {
-                window.$('lock-screen').style.opacity = '0';
-                setTimeout(() => { window.$('lock-screen').style.display = 'none'; window.$('app-selection').classList.replace('hidden','flex'); setTimeout(()=>window.$('app-selection').style.opacity='1',50); }, 700);
+                document.getElementById('lock-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('lock-screen').style.display = 'none'; document.getElementById('app-selection').classList.replace('hidden','flex'); setTimeout(()=>document.getElementById('app-selection').style.opacity='1',50); }, 700);
             } else {
-                window.$('password-input').classList.add('shake', 'border-red-500'); window.$('btn-login').innerText = "Acessar Portal"; window.$('btn-login').disabled = false;
-                setTimeout(() => window.$('password-input').classList.remove('shake', 'border-red-500'), 400);
+                document.getElementById('password-input').classList.add('shake', 'border-red-500'); document.getElementById('btn-login').innerText = "Acessar Portal"; document.getElementById('btn-login').disabled = false;
+                setTimeout(() => document.getElementById('password-input').classList.remove('shake', 'border-red-500'), 400);
             }
         };
 
         window.launchApp = (id) => {
-            window.$('app-selection').style.opacity = '0';
+            document.getElementById('app-selection').style.opacity = '0';
             if(id==='workflow-main-content'){ const r=document.documentElement; r.style.setProperty('--theme-color','#ec4899'); r.style.setProperty('--theme-color-glow','rgba(236, 72, 153, 0.4)'); r.style.setProperty('--bg-grad-1','rgba(255, 0, 127, 0.08)'); r.style.setProperty('--bg-grad-2','rgba(106, 13, 173, 0.1)'); }
             setTimeout(() => {
-                window.$('app-selection').classList.add('hidden'); window.$(id).classList.remove('hidden');
-                setTimeout(() => { window.$(id).style.opacity = '1'; if(id==='dashboard-app') window.initMD(); }, 50);
+                document.getElementById('app-selection').classList.add('hidden'); document.getElementById(id).classList.remove('hidden');
+                setTimeout(() => { document.getElementById(id).style.opacity = '1'; if(id==='dashboard-app') window.initMD(); }, 50);
             }, 700);
         };
 
         window.returnToSelection = () => {
-            window.$('dashboard-app').style.opacity = '0'; window.$('workflow-main-content').style.opacity = '0';
+            document.getElementById('dashboard-app').style.opacity = '0'; document.getElementById('workflow-main-content').style.opacity = '0';
             setTimeout(() => {
-                window.$('dashboard-app').classList.add('hidden'); window.$('workflow-main-content').classList.add('hidden');
-                window.$('app-selection').classList.replace('hidden','flex'); setTimeout(() => window.$('app-selection').style.opacity = '1', 50);
+                document.getElementById('dashboard-app').classList.add('hidden'); document.getElementById('workflow-main-content').classList.add('hidden');
+                document.getElementById('app-selection').classList.replace('hidden','flex'); setTimeout(() => document.getElementById('app-selection').style.opacity = '1', 50);
             }, 700);
         };
 
-        window.closeModals = () => document.querySelectorAll('.md-modal').forEach(m => { m.classList.add('opacity-0'); setTimeout(() => m.classList.add('hidden'), 300); });
-        
         window.showToast = (msg, type = 'error') => {
             const c = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
             const i = type === 'error' ? 'alert-triangle' : type === 'success' ? 'check-circle' : 'info';
-            const t = document.createElement('div'); 
-            t.className = `${c} text-white px-5 py-3 rounded-xl shadow-2xl text-[10px] font-black uppercase tracking-widest transform transition-all duration-300 translate-x-full opacity-0 flex items-center gap-3 border border-white/20 z-[9999]`;
-            t.innerHTML = `<i data-lucide="${i}" class="w-4 h-4"></i> ${msg}`; 
-            window.$('toast-container').appendChild(t); 
-            lucide.createIcons();
-            setTimeout(() => t.classList.remove('translate-x-full', 'opacity-0'), 10); 
-            setTimeout(() => { t.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => t.remove(), 300); }, 3500);
+            const t = document.createElement('div'); t.className = `${c} text-white px-5 py-3 rounded-xl shadow-2xl text-[10px] font-black uppercase tracking-widest transform transition-all duration-300 translate-x-full opacity-0 flex items-center gap-3 border border-white/20 z-[9999]`;
+            t.innerHTML = `<i data-lucide="${i}" class="w-4 h-4"></i> ${msg}`; document.getElementById('toast-container').appendChild(t); lucide.createIcons();
+            setTimeout(() => t.classList.remove('translate-x-full', 'opacity-0'), 10); setTimeout(() => { t.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => t.remove(), 300); }, 3500);
         };
-
-        window.closeConfirm = () => window.$hide('modal-confirm');
-        window.showConfirm = (msg, cb) => { text('confirm-msg', msg); window.$('btn-confirm-action').onclick = () => { window.closeConfirm(); cb(); }; window.$show('modal-confirm'); };
+        window.closeConfirm = () => window.closeModals();
+        window.showConfirm = (msg, cb) => { document.getElementById('confirm-msg').innerText = msg; document.getElementById('btn-confirm-action').onclick = () => { window.closeConfirm(); cb(); }; window.openModal('modal-confirm'); };
 
         window.logAction = (action, details) => { window.dataStore.auditLogs.unshift({ id: Math.random().toString(36).substr(2, 9), timestamp: Date.now(), action, details }); if(window.dataStore.auditLogs.length > 100) window.dataStore.auditLogs.pop(); window.saveMDData(); };
-        
         window.getBrandConfig = (n) => {
             if (MD_BASE_CONFIG[n]) return MD_BASE_CONFIG[n]; const d = window.dataStore.brands[n]; if(!d) return null;
             let h = d.color.replace('#', ''); if(h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
@@ -585,16 +590,15 @@
             const bg = d.logo ? `url('${d.logo}')` : `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><text x='50%' y='50%' font-family='Montserrat' font-weight='900' font-size='28' fill='rgba(${rgb},0.15)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-25, 100, 100)'>${n.toUpperCase()}</text></svg>`;
             return { color: d.color, colorRGB: rgb, grad1: `rgba(${rgb}, 0.12)`, grad2: `rgba(${rgb}, 0.05)`, title: n.toUpperCase(), subtitle: '', logo: d.logo || '', mosaic: bg, deal: d };
         };
-
         window.getBrandList = () => Object.keys(window.dataStore.brands).sort((a,b)=> { let qa=0, qb=0; window.dataStore.dailyReports.forEach(r=>{ if(r.brand===a) qa += typeof r.qftd==='object'?r.qftd.l1||0:r.qftd; if(r.brand===b) qb += typeof r.qftd==='object'?r.qftd.l1||0:r.qftd;}); return qb-qa; });
 
         window.saveMDData = async () => {
             localStorage.setItem(MD_KEY, JSON.stringify(window.dataStore));
             if (window.isCloudMode && wfUser) {
-                text('md-sync-status', "Salvando...");
-                try { await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main'), window.dataStore); text('md-sync-status', "Salvo (Nuvem)"); setTimeout(() => text('md-sync-status', "Cloud Sync Online"), 2000); } 
-                catch(e) { text('md-sync-status', "Erro na Nuvem"); }
-            } else { text('md-sync-status', "Salvo (Local)"); setTimeout(() => text('md-sync-status', "Offline (Local)"), 2000); }
+                document.getElementById('md-sync-status').innerText = "Salvando...";
+                try { await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main'), window.dataStore); document.getElementById('md-sync-status').innerText = "Salvo (Nuvem)"; setTimeout(() => document.getElementById('md-sync-status').innerText = "Cloud Sync Online", 2000); } 
+                catch(e) { document.getElementById('md-sync-status').innerText = "Erro na Nuvem"; }
+            } else { document.getElementById('md-sync-status').innerText = "Salvo (Local)"; setTimeout(() => document.getElementById('md-sync-status').innerText = "Offline (Local)", 2000); }
         };
 
         window.loadMDData = () => {
@@ -605,80 +609,36 @@
 
         window.initMDTabs = () => {
             const list = window.getBrandList();
-            let tabsHtml = '';
-            ['Visão Geral', ...list, 'Fechamento'].forEach(t => { 
-                const c = window.getBrandConfig(t); 
-                const specialClass = t === 'Fechamento' ? 'ml-auto border border-emerald-500/30' : '';
-                tabsHtml += `<button onclick="window.switchMDEnv('${t}')" id="tab-${t.replace(/\s+/g, '')}" class="px-6 py-3 rounded-t-xl font-black uppercase tracking-widest text-xs text-gray-500 hover:text-white transition-all flex items-center gap-2 whitespace-nowrap ${specialClass}"><div class="w-2 h-2 rounded-full shadow-[0_0_10px_rgba(${c.colorRGB},0.8)]" style="background-color: ${c.color}"></div> ${t}</button>`; 
-            });
-            html('brand-tabs-container', tabsHtml);
-            
-            let dropdownHtml = '';
-            list.forEach(b => { 
-                const c = window.getBrandConfig(b); 
-                dropdownHtml += `<button onclick="window.switchMDEnv('${b}')" class="w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-3"><div class="w-2 h-2 rounded-full shadow-[0_0_10px_rgba(${c.colorRGB},0.8)]" style="background-color: ${c.color}"></div> ${b}</button>`; 
-            });
-            html('header-brands-dropdown', dropdownHtml);
-            lucide.createIcons();
+            document.getElementById('brand-tabs-container').innerHTML = ['Visão Geral', ...list, 'Fechamento'].map(t => { const c = window.getBrandConfig(t); return `<button onclick="window.switchMDEnv('${t}')" id="tab-${t.replace(/\s+/g, '')}" class="px-6 py-3 rounded-t-xl font-black uppercase tracking-widest text-xs text-gray-500 hover:text-white transition-all flex items-center gap-2 whitespace-nowrap ${t==='Fechamento'?'ml-auto border border-emerald-500/30':''}"><div class="w-2 h-2 rounded-full shadow-[0_0_10px_rgba(${c.colorRGB},0.8)]" style="background-color: ${c.color}"></div> ${t}</button>`; }).join('');
+            document.getElementById('header-brands-dropdown').innerHTML = list.map(b => { const c = window.getBrandConfig(b); return `<button onclick="window.switchMDEnv('${b}')" class="w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-colors flex items-center gap-3"><div class="w-2 h-2 rounded-full shadow-[0_0_10px_rgba(${c.colorRGB},0.8)]" style="background-color: ${c.color}"></div> ${b}</button>`; }).join(''); lucide.createIcons();
         };
 
         window.switchMDEnv = (env) => {
-            window.currentMDEnv = env; 
-            const c = window.getBrandConfig(env);
-            window.$('dynamic-view-wrapper').classList.remove('fade-content'); void window.$('dynamic-view-wrapper').offsetWidth; window.$('dynamic-view-wrapper').classList.add('fade-content');
+            window.currentMDEnv = env; const c = window.getBrandConfig(env);
+            document.getElementById('dynamic-view-wrapper').classList.remove('fade-content'); void document.getElementById('dynamic-view-wrapper').offsetWidth; document.getElementById('dynamic-view-wrapper').classList.add('fade-content');
+            const r = document.documentElement; r.style.setProperty('--theme-color', c.color); r.style.setProperty('--theme-color-glow', `rgba(${c.colorRGB}, 0.4)`); r.style.setProperty('--bg-grad-1', c.grad1); r.style.setProperty('--bg-grad-2', c.grad2);
+            document.getElementById('brand-title').innerHTML = `${c.title} ${['Visão Geral','Fechamento','Afiliados'].includes(env) ? '' : '<span class="text-sm font-medium tracking-widest text-gray-400 border border-white/10 px-3 py-1 rounded-lg ml-4">Operação Ativa</span>'}`; document.getElementById('brand-subtitle').innerText = c.subtitle; document.getElementById('brand-subtitle').style.display = c.subtitle ? 'block' : 'none';
+            if(document.getElementById('nav-logo')) document.getElementById('nav-logo').src = c.logo || MD_BASE_CONFIG['Visão Geral'].logo;
+            if(document.getElementById('dynamic-mosaic')) { document.getElementById('dynamic-mosaic').style.opacity = 0; setTimeout(() => { document.getElementById('dynamic-mosaic').style.backgroundImage = c.mosaic.startsWith('url') ? c.mosaic : `url("${c.mosaic}")`; if(document.querySelector('.mosaic-wrapper')) document.querySelector('.mosaic-wrapper').style.opacity = '0.75'; document.getElementById('dynamic-mosaic').style.opacity = 1; }, 300); }
+            ['Visão Geral', 'Afiliados', ...window.getBrandList(), 'Fechamento'].forEach(t => { const el = document.getElementById(`tab-${t.replace(/\s+/g, '')}`); if(el) { el.className = el.className.replace(/active-tab|text-gray-500/g, '').trim(); el.classList.add(t === env ? 'active-tab' : 'text-gray-500'); } });
+            if (document.getElementById('nav-afiliados')) document.getElementById('nav-afiliados').className = document.getElementById('nav-afiliados').className.replace(/text-white|text-gray-400/g, '').trim() + (env === 'Afiliados' ? ' text-white' : ' text-gray-400');
             
-            const r = document.documentElement; 
-            r.style.setProperty('--theme-color', c.color); r.style.setProperty('--theme-color-glow', `rgba(${c.colorRGB}, 0.4)`); r.style.setProperty('--bg-grad-1', c.grad1); r.style.setProperty('--bg-grad-2', c.grad2);
-            
-            const isSpecial = ['Visão Geral','Fechamento','Afiliados'].includes(env);
-            html('brand-title', `${c.title} ${isSpecial ? '' : '<span class="text-sm font-medium tracking-widest text-gray-400 border border-white/10 px-3 py-1 rounded-lg ml-4">Operação Ativa</span>'}`); 
-            text('brand-subtitle', c.subtitle); 
-            window.$('brand-subtitle').style.display = c.subtitle ? 'block' : 'none';
-            
-            if(window.$('nav-logo')) window.$('nav-logo').src = c.logo || MD_BASE_CONFIG['Visão Geral'].logo;
-            if(window.$('dynamic-mosaic')) { 
-                window.$('dynamic-mosaic').style.opacity = 0; 
-                setTimeout(() => { 
-                    window.$('dynamic-mosaic').style.backgroundImage = c.mosaic.startsWith('url') ? c.mosaic : `url("${c.mosaic}")`; 
-                    if(document.querySelector('.mosaic-wrapper')) document.querySelector('.mosaic-wrapper').style.opacity = '0.75'; 
-                    window.$('dynamic-mosaic').style.opacity = 1; 
-                }, 300); 
-            }
-            
-            ['Visão Geral', 'Afiliados', ...window.getBrandList(), 'Fechamento'].forEach(t => { 
-                const el = window.$(`tab-${t.replace(/\s+/g, '')}`); 
-                if(el) { 
-                    el.className = el.className.replace(/active-tab|text-gray-500/g, '').trim(); 
-                    el.classList.add(t === env ? 'active-tab' : 'text-gray-500'); 
-                } 
-            });
-            
-            if (window.$('nav-afiliados')) window.$('nav-afiliados').className = window.$('nav-afiliados').className.replace(/text-white|text-gray-400/g, '').trim() + (env === 'Afiliados' ? ' text-white' : ' text-gray-400');
-            
-            window.$('standard-module').classList.add('hidden'); window.$('fechamento-module').classList.add('hidden'); window.$('crm-module').classList.add('hidden');
-            
-            if (env === 'Fechamento') { 
-                window.$('fechamento-module').classList.remove('hidden'); window.initFechamentoUI(); window.renderGlobalPaymentHistory(); 
-            } else if (env === 'Afiliados') { 
-                window.$('crm-module').classList.remove('hidden'); window.renderAffiliatesCRM(); 
-            } else { 
-                window.$('standard-module').classList.remove('hidden'); 
-                if(window.$('th-deal')) env === 'Visão Geral' ? window.$('th-deal').classList.add('hidden') : window.$('th-deal').classList.remove('hidden'); 
-                html('table-title', `<i data-lucide="bar-chart-2" class="w-4 h-4 theme-text"></i> Performance ${env === 'Visão Geral' ? 'por Afiliado (Top Ranking)' : `na ${env}`}`); 
-                window.renderDashboard(); 
-            }
+            document.getElementById('standard-module').classList.add('hidden'); document.getElementById('fechamento-module').classList.add('hidden'); document.getElementById('crm-module').classList.add('hidden');
+            if (env === 'Fechamento') { document.getElementById('fechamento-module').classList.remove('hidden'); window.initFechamentoUI(); window.renderGlobalPaymentHistory(); } 
+            else if (env === 'Afiliados') { document.getElementById('crm-module').classList.remove('hidden'); window.renderAffiliatesCRM(); } 
+            else { document.getElementById('standard-module').classList.remove('hidden'); if(document.getElementById('th-deal')) env === 'Visão Geral' ? document.getElementById('th-deal').classList.add('hidden') : document.getElementById('th-deal').classList.remove('hidden'); document.getElementById('table-title').innerHTML = `<i data-lucide="bar-chart-2" class="w-4 h-4 theme-text"></i> Performance ${env === 'Visão Geral' ? 'por Afiliado (Top Ranking)' : `na ${env}`}`; window.renderDashboard(); }
         };
 
         window.setDateRange = (type) => {
             const d = new Date(), y = d.getFullYear(), m = d.getMonth();
-            if(type==='month') { setVal('filter-start', new Date(y, m, 1).toISOString().split('T')[0]); setVal('filter-end', new Date(y, m + 1, 0).toISOString().split('T')[0]); }
-            if(type==='last') { setVal('filter-start', new Date(y, m - 1, 1).toISOString().split('T')[0]); setVal('filter-end', new Date(y, m, 0).toISOString().split('T')[0]); }
-            if(type==='all') { setVal('filter-start', '2023-01-01'); const e = new Date(); e.setFullYear(e.getFullYear()+1); setVal('filter-end', e.toISOString().split('T')[0]); }
+            if(type==='month') { document.getElementById('filter-start').value = new Date(y, m, 1).toISOString().split('T')[0]; document.getElementById('filter-end').value = new Date(y, m + 1, 0).toISOString().split('T')[0]; }
+            if(type==='last') { document.getElementById('filter-start').value = new Date(y, m - 1, 1).toISOString().split('T')[0]; document.getElementById('filter-end').value = new Date(y, m, 0).toISOString().split('T')[0]; }
+            if(type==='all') { document.getElementById('filter-start').value = '2023-01-01'; const e = new Date(); e.setFullYear(e.getFullYear()+1); document.getElementById('filter-end').value = e.toISOString().split('T')[0]; }
             window.renderDashboard();
         };
 
         window.renderDashboard = () => {
-            const s = val('filter-start'), e = val('filter-end'); if (!s || !e) return;
+            const s = document.getElementById('filter-start').value, e = document.getElementById('filter-end').value; if (!s || !e) return;
             const start = new Date(s+'T00:00:00'), end = new Date(e+'T23:59:59');
             let reps = window.dataStore.dailyReports.filter(r => { const d = new Date(r.date+'T12:00:00'); return d>=start && d<=end; });
             if (window.currentMDEnv !== 'Visão Geral') reps = reps.filter(r => r.brand === window.currentMDEnv);
@@ -714,12 +674,12 @@
                 data.push({ ...aff, sFtd, sQftd, sDep, sRev, comm, profit: hGross-comm });
             });
 
-            text('kpi-qftds', gQftd); text('kpi-ftds', `${gFtd} FTDs Totais`); text('kpi-deposits', window.formatCurrency(gDep)); text('kpi-aff-comm', window.formatCurrency(tComm)); text('kpi-profit', window.formatCurrency(tGross-tComm)); text('kpi-gross', `Receita Bruta: ${window.formatCurrency(tGross)}`);
+            document.getElementById('kpi-qftds').innerText = gQftd; document.getElementById('kpi-ftds').innerText = `${gFtd} FTDs Totais`; document.getElementById('kpi-deposits').innerText = window.formatCurrency(gDep); document.getElementById('kpi-aff-comm').innerText = window.formatCurrency(tComm); document.getElementById('kpi-profit').innerText = window.formatCurrency(tGross-tComm); document.getElementById('kpi-gross').innerText = `Receita Bruta: ${window.formatCurrency(tGross)}`;
             
             data.sort((a, b) => b.profit - a.profit);
-            if (!data.length) { html('affiliates-table-body', ''); window.$('md-empty-state').classList.remove('hidden'); } 
+            if (!data.length) { document.getElementById('affiliates-table-body').innerHTML = ''; document.getElementById('md-empty-state').classList.remove('hidden'); } 
             else {
-                window.$('md-empty-state').classList.add('hidden');
+                document.getElementById('md-empty-state').classList.add('hidden');
                 let rowsHtml = '';
                 data.forEach((d, i) => {
                     let dt = '<td class="px-6 py-5 text-center text-gray-600 font-mono text-sm italic whitespace-nowrap">Vários</td>';
@@ -754,15 +714,15 @@
                     rowsHtml += '<td class="px-6 py-5 text-right font-mono font-black text-emerald-400">' + window.formatCurrency(d.profit) + '</td>';
                     rowsHtml += '<td class="px-6 py-5 text-center" onclick="event.stopPropagation()"><button onclick="window.openAffiliateModal(\'' + d.id + '\')" class="p-2 text-gray-400 hover:text-white transition-colors mr-2"><i data-lucide="pencil" class="w-5 h-5"></i></button><button onclick="window.deleteAffiliate(\'' + d.id + '\')" class="p-2 text-gray-500 hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-5 h-5"></i></button></td></tr>';
                 });
-                html('affiliates-table-body', rowsHtml); 
+                document.getElementById('affiliates-table-body').innerHTML = rowsHtml; 
                 lucide.createIcons();
             }
         };
 
         window.renderAffiliatesCRM = () => {
-            const s = val('search-affiliate').toLowerCase(), list = window.dataStore.affiliates.filter(a => a.name.toLowerCase().includes(s));
-            if(!list.length) { html('crm-cards-grid', ''); window.$('crm-empty-state').classList.remove('hidden'); return; }
-            window.$('crm-empty-state').classList.add('hidden');
+            const s = document.getElementById('search-affiliate').value.toLowerCase(), list = window.dataStore.affiliates.filter(a => a.name.toLowerCase().includes(s));
+            if(!list.length) { document.getElementById('crm-cards-grid').innerHTML = ''; document.getElementById('crm-empty-state').classList.remove('hidden'); return; }
+            document.getElementById('crm-empty-state').classList.add('hidden');
             
             let gridHtml = '';
             list.forEach(aff => {
@@ -788,32 +748,32 @@
                 gridHtml += '<div class="flex flex-wrap gap-2 mb-6 min-h-[24px]">' + brandsHtml + '</div>';
                 gridHtml += '<div class="border-t border-white/5 pt-4 flex justify-between items-end"><div><p class="text-[10px] uppercase font-bold tracking-widest text-gray-500">Total QFTDs (All Time)</p><p class="text-2xl font-mono font-black text-white mt-1">' + tQftd + '</p></div><button class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-pink-500 hover:text-white transition-colors"><i data-lucide="arrow-right" class="w-4 h-4"></i></button></div></div>';
             });
-            html('crm-cards-grid', gridHtml); 
+            document.getElementById('crm-cards-grid').innerHTML = gridHtml; 
             lucide.createIcons();
         };
 
-        window.enableProfileEdit = () => { ['profile-social', 'profile-notes'].forEach(id => { window.$(id).readOnly = false; window.$(id).classList.replace('bg-transparent', 'bg-black/30'); window.$(id).classList.replace('pointer-events-none', 'pointer-events-auto'); window.$(id).classList.replace('text-gray-400', 'text-white'); }); window.$('btn-save-notes').classList.remove('hidden'); window.$('btn-edit-notes').classList.add('hidden'); window.$('profile-social').focus(); };
+        window.enableProfileEdit = () => { ['profile-social', 'profile-notes'].forEach(id => { document.getElementById(id).readOnly = false; document.getElementById(id).classList.replace('bg-transparent', 'bg-black/30'); document.getElementById(id).classList.replace('pointer-events-none', 'pointer-events-auto'); document.getElementById(id).classList.replace('text-gray-400', 'text-white'); }); document.getElementById('btn-save-notes').classList.remove('hidden'); document.getElementById('btn-edit-notes').classList.add('hidden'); document.getElementById('profile-social').focus(); };
         window.saveProfileNotes = () => {
             const aff = window.dataStore.affiliates.find(a => a.id === window.currentProfileAffId);
-            if(aff) { aff.social = val('profile-social'); aff.notes = val('profile-notes'); window.saveMDData(); window.logAction('Anotações Editadas', `Para ${aff.name}.`); }
-            ['profile-social', 'profile-notes'].forEach(id => { window.$(id).readOnly = true; window.$(id).classList.replace('bg-black/30', 'bg-transparent'); window.$(id).classList.replace('pointer-events-auto', 'pointer-events-none'); window.$(id).classList.replace('text-white', 'text-gray-400'); });
-            const btn = window.$('btn-save-notes'); btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Salvo!'; btn.classList.replace('bg-pink-500', 'bg-emerald-500'); lucide.createIcons();
-            setTimeout(() => { btn.innerHTML = '<i data-lucide="save" class="w-3 h-3"></i> Salvar'; btn.classList.replace('bg-emerald-500', 'bg-pink-500'); btn.classList.add('hidden'); window.$('btn-edit-notes').classList.remove('hidden'); lucide.createIcons(); }, 1500);
+            if(aff) { aff.social = document.getElementById('profile-social').value; aff.notes = document.getElementById('profile-notes').value; window.saveMDData(); window.logAction('Anotações Editadas', `Para ${aff.name}.`); }
+            ['profile-social', 'profile-notes'].forEach(id => { document.getElementById(id).readOnly = true; document.getElementById(id).classList.replace('bg-black/30', 'bg-transparent'); document.getElementById(id).classList.replace('pointer-events-auto', 'pointer-events-none'); document.getElementById(id).classList.replace('text-white', 'text-gray-400'); });
+            const btn = document.getElementById('btn-save-notes'); btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Salvo!'; btn.classList.replace('bg-pink-500', 'bg-emerald-500'); lucide.createIcons();
+            setTimeout(() => { btn.innerHTML = '<i data-lucide="save" class="w-3 h-3"></i> Salvar'; btn.classList.replace('bg-emerald-500', 'bg-pink-500'); btn.classList.add('hidden'); document.getElementById('btn-edit-notes').classList.remove('hidden'); lucide.createIcons(); }, 1500);
         };
 
         window.openAffiliateProfile = (id) => {
             const aff = window.dataStore.affiliates.find(a => a.id === id); if(!aff) return; window.currentProfileAffId = id;
-            text('profile-name', aff.name); text('profile-date', `Parceiro desde: ${new Date(aff.createdAt).toLocaleDateString('pt-BR')}`);
-            setVal('profile-social', aff.social||''); setVal('profile-notes', aff.notes||'');
-            ['profile-social', 'profile-notes'].forEach(el => { window.$(el).readOnly = true; window.$(el).className = window.$(el).className.replace(/bg-black\/30|pointer-events-auto|text-white/g, '').trim() + ' bg-transparent pointer-events-none text-gray-400 border-transparent'; });
-            window.$('btn-save-notes').classList.add('hidden'); window.$('btn-edit-notes').classList.remove('hidden');
+            document.getElementById('profile-name').innerText = aff.name; document.getElementById('profile-date').innerText = `Parceiro desde: ${new Date(aff.createdAt).toLocaleDateString('pt-BR')}`;
+            document.getElementById('profile-social').value = aff.social || ''; document.getElementById('profile-notes').value = aff.notes || '';
+            ['profile-social', 'profile-notes'].forEach(el => { document.getElementById(el).readOnly = true; document.getElementById(el).className = document.getElementById(el).className.replace(/bg-black\/30|pointer-events-auto|text-white/g, '').trim() + ' bg-transparent pointer-events-none text-gray-400 border-transparent'; });
+            document.getElementById('btn-save-notes').classList.add('hidden'); document.getElementById('btn-edit-notes').classList.remove('hidden');
             let tQ=0, tC=0, tP=0; window.dataStore.dailyReports.filter(r=>r.affiliateId===id).forEach(r => {
                 const cfg = window.getBrandConfig(r.brand)?.deal; if(!cfg) return; const ad = aff.deals[r.brand] || { cpa:0, rs:0 }; let q=0, hC=0, rC=0;
                 if (cfg.type === 'tiered') { q = (r.qftd&&r.qftd.l1)?r.qftd.l1:0; hC = (q*(cfg.levels[0]?.cpa||0))+(((r.qftd&&r.qftd.l2)||0)*(cfg.levels[1]?.cpa||0))+(((r.qftd&&r.qftd.l3)||0)*(cfg.levels[2]?.cpa||0)); rC = (q*(ad.cpa_l1||ad.cpa||0))+(((r.qftd&&r.qftd.l2)||0)*(ad.cpa_l2||0))+(((r.qftd&&r.qftd.l3)||0)*(ad.cpa_l3||0))+(r.netRev*((ad.rs||0)/100)); } 
                 else { q = typeof r.qftd==='object'?(r.qftd.l1||0):(r.qftd||0); hC = q*(cfg.cpa||0); rC = (q*(ad.cpa||0))+(r.netRev*((ad.rs||0)/100)); }
                 tQ+=q; tC+=rC; tP+=((hC+(r.netRev*((cfg.rs||0)/100)))-rC);
             });
-            text('profile-qftds', tQ); text('profile-comm', window.formatCurrency(tC)); text('profile-profit', window.formatCurrency(tP));
+            document.getElementById('profile-qftds').innerText = tQ; document.getElementById('profile-comm').innerText = window.formatCurrency(tC); document.getElementById('profile-profit').innerText = window.formatCurrency(tP);
             
             let dealsHtml = '';
             window.getBrandList().forEach(b => {
@@ -826,26 +786,27 @@
                     dealsHtml += '<td class="p-3 text-center text-gray-300">' + (d.rs || 0) + '%</td></tr>';
                 }
             });
-            html('profile-deals-tbody', dealsHtml || '<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Sem deals.</td></tr>');
+            document.getElementById('profile-deals-tbody').innerHTML = dealsHtml || '<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Sem deals.</td></tr>';
             
             window.openAffiliateModalFromProfile = () => { window.closeModals(); setTimeout(()=>window.openAffiliateModal(aff.id), 300); };
-            window.renderPaymentHistory(id); window.$show('modal-affiliate-profile');
+            window.renderPaymentHistory(id); window.openModal('modal-affiliate-profile');
         };
 
         window.initFechamentoUI = () => {
             let ops = '<option value="">Nenhum afiliado</option>';
-            if (window.dataStore.affiliates.length) {
+            if (window.dataStore.affiliates.length > 0) {
                 ops = '<option value="">Selecione um afiliado...</option>';
                 window.dataStore.affiliates.forEach(a => { ops += '<option value="' + a.id + '">' + a.name + '</option>'; });
             }
-            html('close-affiliate', ops);
-            const d = new Date(); setVal('close-start', new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0]); setVal('close-end', new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0]);
-            window.$('closure-result-card').classList.add('hidden'); html('close-brands-container', '<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>');
+            document.getElementById('close-affiliate').innerHTML = ops;
+            const d = new Date(); document.getElementById('close-start').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0]; document.getElementById('close-end').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
+            document.getElementById('closure-result-card').classList.add('hidden'); document.getElementById('close-brands-container').innerHTML = '<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>';
         };
 
         window.updateClosureBrands = () => {
-            const affId = val('close-affiliate'), aff = window.dataStore.affiliates.find(a => a.id === affId);
-            if(!aff) return html('close-brands-container', '<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>');
+            const affId = document.getElementById('close-affiliate').value;
+            const aff = window.dataStore.affiliates.find(a => a.id === affId);
+            if(!aff) return document.getElementById('close-brands-container').innerHTML = '<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>';
             
             let brandsHtml = '';
             window.getBrandList().forEach(b => {
@@ -853,13 +814,13 @@
                     brandsHtml += '<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="' + b + '" class="closure-brand-cb w-4 h-4 accent-emerald-500" checked><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">' + b + '</span></label>';
                 }
             });
-            html('close-brands-container', brandsHtml || '<span class="text-xs text-gray-500 italic">Sem deals.</span>');
+            document.getElementById('close-brands-container').innerHTML = brandsHtml || '<span class="text-xs text-gray-500 italic">Sem deals.</span>';
         };
 
         window.generateClosure = () => {
-            const id = val('close-affiliate');
-            const s = val('close-start');
-            const e = val('close-end');
+            const id = document.getElementById('close-affiliate').value;
+            const s = document.getElementById('close-start').value;
+            const e = document.getElementById('close-end').value;
             const cbNodes = document.querySelectorAll('.closure-brand-cb:checked');
             const b = Array.from(cbNodes).map(cb => cb.value);
 
@@ -929,21 +890,21 @@
 
             if (rowsHtml === '') rowsHtml = '<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">Nenhum dado gerador de receita neste período.</td></tr>';
 
-            html('closure-table-body', rowsHtml);
-            text('closure-total', window.formatCurrency(tComm)); 
-            text('closure-summary', tQ + ' QFTDs | Receita: ' + window.formatCurrency(tRev)); 
-            text('closure-meta', 'Afiliado: ' + aff.name + ' | Período: ' + s.split('-').reverse().join('/') + ' até ' + e.split('-').reverse().join('/'));
+            document.getElementById('closure-table-body').innerHTML = rowsHtml;
+            document.getElementById('closure-total').innerText = window.formatCurrency(tComm); 
+            document.getElementById('closure-summary').innerText = tQ + ' QFTDs | Receita: ' + window.formatCurrency(tRev); 
+            document.getElementById('closure-meta').innerText = 'Afiliado: ' + aff.name + ' | Período: ' + s.split('-').reverse().join('/') + ' até ' + e.split('-').reverse().join('/');
             
             window.currentPendingClosure = { affiliateId: aff.id, affiliateName: aff.name, startDate: s, endDate: e, totalAmount: tComm };
-            const rc = window.$('closure-result-card'); rc.classList.remove('hidden', 'fade-content'); void rc.offsetWidth; rc.classList.add('fade-content'); window.logAction('Extrato', `Para ${aff.name}`);
+            const rc = document.getElementById('closure-result-card'); rc.classList.remove('hidden', 'fade-content'); void rc.offsetWidth; rc.classList.add('fade-content'); window.logAction('Extrato', `Para ${aff.name}`);
         };
 
         window.exportClosureCSV = () => {
-            const m = window.$('closure-meta').innerText.split('|');
+            const m = document.getElementById('closure-meta').innerText.split('|');
             const n = m[0].replace('Afiliado: ','').trim();
             let csv = 'Extrato de Fechamento - ' + n + '\nPeríodo: ' + m[1].replace('Período: ','').trim() + '\n\nMarca,Deal CPA,Deal RS (%),QFTDs,Net Revenue,Comissao Gerada\n';
             document.querySelectorAll('#closure-table-body tr').forEach(r => { if(r.cells.length===5) csv += r.cells[0].innerText + ',' + r.cells[1].innerText.split('/')[0].replace('R$','').trim() + ',' + r.cells[1].innerText.split('/')[1].replace('%','').trim() + ',' + r.cells[2].innerText + ',' + r.cells[3].innerText.replace('R$','').replace(/\./g,'').replace(',','.').trim() + ',' + r.cells[4].innerText.replace('R$','').replace(/\./g,'').replace(',','.').trim() + '\n'; });
-            csv += '\nTOTAL A PAGAR,,,,,' + window.$('closure-total').innerText.replace('R$','').replace(/\./g,'').replace(',','.').trim() + '\n';
+            csv += '\nTOTAL A PAGAR,,,,,' + document.getElementById('closure-total').innerText.replace('R$','').replace(/\./g,'').replace(',','.').trim() + '\n';
             const a = document.createElement("a"); a.href = encodeURI("data:text/csv;charset=utf-8,"+csv); a.download = 'Extrato_' + n.replace(/\s+/g,'_') + '.csv'; document.body.appendChild(a); a.click(); a.remove();
         };
 
@@ -951,13 +912,15 @@
             if(!window.currentPendingClosure) return window.showToast("Nenhum fechamento calculado.", "error");
             const p = { id: Math.random().toString(36).substr(2,9), ...window.currentPendingClosure, status: 'pending', invoiceUrl: '', invoiceName: '', createdAt: Date.now() };
             window.dataStore.payments.push(p); window.saveMDData(); window.logAction('Fechamento Salvo', `Valor: R$ ${p.totalAmount}`);
-            window.showToast("Registrado com sucesso!", "success"); window.currentPendingClosure = null; window.$('closure-result-card').classList.add('hidden'); window.renderGlobalPaymentHistory();
+            window.showToast("Registrado com sucesso!", "success"); window.currentPendingClosure = null; document.getElementById('closure-result-card').classList.add('hidden'); window.renderGlobalPaymentHistory();
         };
 
+        window.toggleAcordeon = (id) => { const el = document.getElementById('aff-pays-'+id); if(el) el.classList.toggle('hidden'); };
+
         window.renderGlobalPaymentHistory = () => {
-            if(!window.$('grouped-payments-container')) return; 
+            if(!document.getElementById('grouped-payments-container')) return; 
             const p = window.dataStore.payments || [];
-            if(!p.length) { html('grouped-payments-container', '<p class="text-center text-gray-500 italic py-8">Nenhum pagamento registrado.</p>'); return; }
+            if(!p.length) { document.getElementById('grouped-payments-container').innerHTML = '<p class="text-center text-gray-500 italic py-8">Nenhum pagamento registrado.</p>'; return; }
             const g = {}; p.forEach(x => { if(!g[x.affiliateId]) g[x.affiliateId] = { name: x.affiliateName, p: [] }; g[x.affiliateId].p.push(x); });
             
             let finalHtml = '';
@@ -977,7 +940,7 @@
                     let ib = '';
                     if (x.invoiceUrl) {
                         const downAttr = x.invoiceUrl.startsWith('data:') ? 'download="nota_fiscal"' : '';
-                        ib = '<div class="flex flex-col items-center justify-center gap-1"><a href="'+x.invoiceUrl+'" target="_blank" '+downAttr+' class="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 font-bold text-xs"><i data-lucide="external-link" class="w-3 h-3 inline"></i> Abrir N.F.</a><button onclick="window.updateInvoice(\''+x.id+'\')" class="text-gray-500 hover:text-white text-[9px] uppercase font-bold"><i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Trocar</button>'+inDisplay+'</div>';
+                        ib = '<div class="flex flex-col items-center justify-center gap-1"><a href="'+x.invoiceUrl+'" target="_blank" '+downAttr+' class="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-1 font-bold text-xs"><i data-lucide="external-link" class="w-3 h-3"></i> Abrir N.F.</a><button onclick="window.updateInvoice(\''+x.id+'\')" class="text-gray-500 hover:text-white text-[9px] uppercase font-bold"><i data-lucide="refresh-cw" class="w-3 h-3 inline"></i> Trocar</button>'+inDisplay+'</div>';
                     } else {
                         ib = '<button onclick="window.updateInvoice(\''+x.id+'\')" class="text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-1 mx-auto bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[9px] uppercase font-bold"><i data-lucide="upload" class="w-3 h-3 inline"></i> Anexar N.F.</button>';
                     }
@@ -991,19 +954,19 @@
                 });
 
                 finalHtml += '<div class="bg-black/40 border border-white/10 rounded-2xl overflow-hidden mb-4">';
-                finalHtml += '<div class="bg-white/5 px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-colors" onclick="window.$(\'aff-pays-'+id+'\').classList.toggle(\'hidden\')">';
+                finalHtml += '<div class="bg-white/5 px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-colors" onclick="window.toggleAcordeon(\''+id+'\')">';
                 finalHtml += '<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 border border-pink-500/30"><i data-lucide="user" class="w-5 h-5"></i></div><h3 class="font-black uppercase tracking-widest text-sm text-white">' + d.name + '</h3></div>';
                 finalHtml += '<div class="flex items-center gap-6 text-right"><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pendente</p><p class="text-amber-400 font-mono font-bold text-sm">' + window.formatCurrency(tpn) + '</p></div><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pago</p><p class="text-emerald-400 font-mono font-bold text-sm">' + window.formatCurrency(tp) + '</p></div><i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 ml-4"></i></div></div>';
                 finalHtml += '<div id="aff-pays-' + id + '" class="hidden p-2"><div class="overflow-x-auto custom-scrollbar"><table class="w-full text-left"><thead><tr class="text-[9px] uppercase tracking-widest text-gray-500"><th class="px-4 py-3 font-bold">Período de Fatura</th><th class="px-4 py-3 font-bold text-right">Valor</th><th class="px-4 py-3 font-bold text-center">Status de Pagamento</th><th class="px-4 py-3 font-bold text-center">Documento Fiscal</th><th class="px-4 py-3 font-bold text-center">Ações</th></tr></thead><tbody>' + rowsHtml + '</tbody></table></div></div></div>';
             });
-            html('grouped-payments-container', finalHtml);
+            document.getElementById('grouped-payments-container').innerHTML = finalHtml;
             lucide.createIcons();
         };
 
         window.renderPaymentHistory = (id) => {
-            if(!window.$('profile-payments-tbody')) return; 
+            if(!document.getElementById('profile-payments-tbody')) return; 
             const p = window.dataStore.payments.filter(x=>x.affiliateId===id).sort((a,b)=>b.createdAt-a.createdAt);
-            if(!p.length) { html('profile-payments-tbody', '<tr><td colspan="5" class="p-5 text-center text-gray-500 italic">Sem histórico.</td></tr>'); return; }
+            if(!p.length) { document.getElementById('profile-payments-tbody').innerHTML = '<tr><td colspan="5" class="p-5 text-center text-gray-500 italic">Sem histórico.</td></tr>'; return; }
             
             let rowsHtml = '';
             p.forEach(x => {
@@ -1026,17 +989,17 @@
 
                 rowsHtml += '<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-4 text-gray-300">' + x.startDate.split('-').reverse().join('/') + ' a ' + x.endDate.split('-').reverse().join('/') + '</td><td class="p-4 text-right text-white font-bold">' + window.formatCurrency(x.totalAmount) + '</td><td class="p-4 text-center align-middle">' + sb + pi + '</td><td class="p-4 text-center">' + ib + '</td><td class="p-4 text-center"><button onclick="window.deletePayment(\''+x.id+'\', \''+id+'\')" class="p-2 text-gray-500 hover:text-red-500 rounded-lg hover:bg-red-500/10"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td></tr>';
             });
-            html('profile-payments-tbody', rowsHtml);
+            document.getElementById('profile-payments-tbody').innerHTML = rowsHtml;
             lucide.createIcons();
         };
 
         window.togglePaymentStatus = (id) => { const p = window.dataStore.payments.find(x=>x.id===id); if(p) { if(p.status==='paid'){ p.status='pending'; delete p.paidAt; }else{ p.status='paid'; p.paidAt=Date.now(); } window.saveMDData(); window.renderPaymentHistory(p.affiliateId); window.renderGlobalPaymentHistory(); } };
         
         window.currentInvoicePayId = null;
-        window.updateInvoice = (id) => { window.currentInvoicePayId = id; setVal('invoice-file-input', ''); setVal('invoice-url-input', ''); window.$show('modal-invoice'); };
+        window.updateInvoice = (id) => { window.currentInvoicePayId = id; document.getElementById('invoice-file-input').value=''; document.getElementById('invoice-url-input').value=''; window.openModal('modal-invoice'); };
         
         window.submitInvoiceFile = () => { 
-            const f = window.$('invoice-file-input').files[0]; 
+            const f = document.getElementById('invoice-file-input').files[0]; 
             if(!f) return window.showToast("Selecione um arquivo.", "error"); 
             if(f.size > 800 * 1024) return window.showToast("Máx 800KB. Use link.", "error"); 
             const r = new FileReader(); 
@@ -1049,14 +1012,14 @@
                     window.renderPaymentHistory(p.affiliateId); 
                     window.renderGlobalPaymentHistory(); 
                     window.showToast("Nota Fiscal anexada!", "success"); 
-                    window.$hide('modal-invoice'); 
+                    window.closeModals(); 
                 } 
             }; 
             r.readAsDataURL(f); 
         };
         
         window.submitInvoiceUrl = () => { 
-            const u = val('invoice-url-input').trim(); 
+            const u = document.getElementById('invoice-url-input').value.trim(); 
             if(!u) return window.showToast("Insira um link válido.", "error"); 
             const p = window.dataStore.payments.find(x => x.id === window.currentInvoicePayId); 
             if(p){ 
@@ -1066,7 +1029,7 @@
                 window.renderPaymentHistory(p.affiliateId); 
                 window.renderGlobalPaymentHistory(); 
                 window.showToast("Link anexado com sucesso!", "success"); 
-                window.$hide('modal-invoice'); 
+                window.closeModals(); 
             } 
         };
         
@@ -1097,13 +1060,13 @@
                 }
                 configHtml += '</div>';
             });
-            html('brands-config-list', configHtml);
-            window.$show('modal-config'); lucide.createIcons();
+            document.getElementById('brands-config-list').innerHTML = configHtml;
+            window.openModal('modal-config'); lucide.createIcons();
         };
 
         window.deleteBrand = (b) => window.showConfirm(`Excluir ${b}?`, () => { delete window.dataStore.brands[b]; window.dataStore.dailyReports = window.dataStore.dailyReports.filter(r=>r.brand!==b); window.dataStore.affiliates.forEach(a=>{if(a.deals[b]) delete a.deals[b];}); window.saveMDData(); window.logAction('Casa Excluída', b); if (window.currentMDEnv === b) window.switchMDEnv('Visão Geral'); else { window.initMDTabs(); window.openConfigModal(); } window.showToast("Excluída!", "success"); });
-        window.saveBrandsConfig = () => { window.getBrandList().forEach(b => { const d = window.dataStore.brands[b]; if(d.type==='tiered'){ d.levels.forEach((l,i)=>{ l.cpa=parseFloat(val(`cfg-${b}-cpa-${i}`))||0; l.baseline=parseFloat(val(`cfg-${b}-base-${i}`))||0; }); d.rs=parseFloat(val(`cfg-${b}-rs`))||0; } else { d.cpa=parseFloat(val(`cfg-${b}-cpa`))||0; d.rs=parseFloat(val(`cfg-${b}-rs`))||0; } }); window.saveMDData(); window.closeModals(); window.showToast("Salvo!", "success"); if(window.currentMDEnv!=='Fechamento'&&window.currentMDEnv!=='Afiliados') window.renderDashboard(); };
-        window.addNewBrand = () => { const n=val('new-brand-name').trim(), l=val('new-brand-logo').trim(), c=val('new-brand-color').trim()||'#fff'; if(!n)return; if(window.dataStore.brands[n])return window.showToast("Já existe!", "error"); window.dataStore.brands[n] = { color:c, type:'standard', cpa:0, rs:0, logo:l }; window.saveMDData(); window.initMDTabs(); setVal('new-brand-name',''); setVal('new-brand-logo',''); setVal('new-brand-color',''); window.openConfigModal(); window.showToast("Adicionada!", "success"); };
+        window.saveBrandsConfig = () => { window.getBrandList().forEach(b => { const d = window.dataStore.brands[b]; if(d.type==='tiered'){ d.levels.forEach((l,i)=>{ l.cpa=parseFloat(document.getElementById(`cfg-${b}-cpa-${i}`).value)||0; l.baseline=parseFloat(document.getElementById(`cfg-${b}-base-${i}`).value)||0; }); d.rs=parseFloat(document.getElementById(`cfg-${b}-rs`).value)||0; } else { d.cpa=parseFloat(document.getElementById(`cfg-${b}-cpa`).value)||0; d.rs=parseFloat(document.getElementById(`cfg-${b}-rs`).value)||0; } }); window.saveMDData(); window.closeModals(); window.showToast("Salvo!", "success"); if(window.currentMDEnv!=='Fechamento'&&window.currentMDEnv!=='Afiliados') window.renderDashboard(); };
+        window.addNewBrand = () => { const n=document.getElementById('new-brand-name').value.trim(), l=document.getElementById('new-brand-logo').value.trim(), c=document.getElementById('new-brand-color').value.trim()||'#fff'; if(!n)return; if(window.dataStore.brands[n])return window.showToast("Já existe!", "error"); window.dataStore.brands[n] = { color:c, type:'standard', cpa:0, rs:0, logo:l }; window.saveMDData(); window.initMDTabs(); document.getElementById('new-brand-name').value=''; document.getElementById('new-brand-logo').value=''; document.getElementById('new-brand-color').value=''; window.openConfigModal(); window.showToast("Adicionada!", "success"); };
         window.exportBackup = () => { const a=document.createElement('a'); a.href='data:application/json;charset=utf-8,'+encodeURIComponent(localStorage.getItem(MD_KEY)); a.download=`bkp_${Date.now()}.json`; a.click(); window.showToast("Exportado!", "success"); };
         window.forceCloudSync = async (e) => { if(!window.isCloudMode||!wfUser)return; const b=e.currentTarget, t=b.innerHTML; b.innerHTML='Enviando...'; b.disabled=true; try{ await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main'), window.dataStore); const l = JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]'); for(let t of l){ if(!window.tasks.find(x=>x.id===t.id)) await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', t.id), t); } window.showToast("Enviado!", "success"); } catch(err){} b.innerHTML=t; b.disabled=false; lucide.createIcons(); };
         window.importBackup = (e) => { const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=ev=>{ try{ const p=JSON.parse(ev.target.result); if(p.brands) window.showConfirm("Substituir tudo pelo backup?", async ()=>{ window.dataStore=p; await window.saveMDData(); window.initMDTabs(); window.switchMDEnv('Visão Geral'); window.closeModals(); window.showToast("Restaurado!", "success"); }); else window.showToast("Inválido.", "error"); }catch(err){} }; r.readAsText(f); };
@@ -1114,7 +1077,7 @@
                 const c = window.getBrandConfig(b); 
                 cbHtml += '<label class="flex items-center gap-2 cursor-pointer px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/5 select-none bg-black/40" style="border-bottom: 2px solid ' + c.color + '"><input type="checkbox" id="cb-brand-' + b + '" value="' + b + '" class="w-4 h-4 accent-pink-500 rounded" onchange="window.toggleBrandDealConfig(\'' + b + '\')"><span class="text-xs font-black uppercase tracking-widest text-gray-300">' + b + '</span></label>'; 
             });
-            html('brand-checkboxes', cbHtml); 
+            document.getElementById('brand-checkboxes').innerHTML = cbHtml; 
             
             let dealsHtml = '';
             window.getBrandList().forEach(b => {
@@ -1130,40 +1093,45 @@
                 dealsHtml += '<div><label class="form-label !ml-0">RevShare (%)</label><input type="number" id="aff-rs-' + b + '" class="edit-mode-input w-full py-2.5"></div></div></div>';
             });
 
-            html('affiliate-deals-container', dealsHtml); 
+            document.getElementById('affiliate-deals-container').innerHTML = dealsHtml; 
             lucide.createIcons(); 
         };
 
-        window.toggleBrandDealConfig = (b) => { const d = window.$(`deal-config-${b}`); if (window.$(`cb-brand-${b}`)?.checked) d?.classList.remove('hidden'); else d?.classList.add('hidden'); };
-        window.openAffiliateModal = (eId = null) => { html('aff-action-select', `<option value="new">+ Cadastrar Novo Afiliado</option>` + window.dataStore.affiliates.map(a => `<option value="${a.id}">Editar: ${a.name}</option>`).join('')); setVal('aff-action-select', eId || 'new'); window.generateDealInputsForModal(); window.toggleAffiliateAction(); window.$show('modal-affiliate'); };
+        window.toggleBrandDealConfig = (b) => { const d = document.getElementById(`deal-config-${b}`); if (document.getElementById(`cb-brand-${b}`)?.checked) d?.classList.remove('hidden'); else d?.classList.add('hidden'); };
+        window.openAffiliateModal = (eId = null) => { document.getElementById('aff-action-select').innerHTML = `<option value="new">+ Cadastrar Novo Afiliado</option>` + window.dataStore.affiliates.map(a => `<option value="${a.id}">Editar: ${a.name}</option>`).join(''); document.getElementById('aff-action-select').value = eId || 'new'; window.generateDealInputsForModal(); window.toggleAffiliateAction(); window.openModal('modal-affiliate'); };
         window.toggleAffiliateAction = () => {
-            const id = val('aff-action-select'), isN = id === 'new', a = isN ? null : window.dataStore.affiliates.find(x=>x.id===id);
-            setVal('aff-name', isN ? '' : a.name); window.$('aff-name').disabled = !isN; window.$('aff-name').classList[isN?'remove':'add']('opacity-50');
-            setVal('aff-start-date', isN ? new Date().toISOString().split('T')[0] : (a.createdAt ? new Date(a.createdAt).toISOString().split('T')[0] : '')); setVal('aff-social', isN ? '' : a.social||''); setVal('aff-notes', isN ? '' : a.notes||'');
+            const id = document.getElementById('aff-action-select').value;
+            const isN = id === 'new';
+            const a = isN ? null : window.dataStore.affiliates.find(x=>x.id===id);
+            document.getElementById('aff-name').value = isN ? '' : a.name; document.getElementById('aff-name').disabled = !isN; document.getElementById('aff-name').classList[isN?'remove':'add']('opacity-50');
+            document.getElementById('aff-start-date').value = isN ? new Date().toISOString().split('T')[0] : (a.createdAt ? new Date(a.createdAt).toISOString().split('T')[0] : ''); document.getElementById('aff-social').value = isN ? '' : (a.social||''); document.getElementById('aff-notes').value = isN ? '' : (a.notes||'');
             window.getBrandList().forEach(b => {
-                const cb = window.$(`cb-brand-${b}`); if(!cb) return; const md = isN ? null : a.deals[b], t = window.dataStore.brands[b].type === 'tiered';
+                const cb = document.getElementById(`cb-brand-${b}`); if(!cb) return; const md = isN ? null : a.deals[b], t = window.dataStore.brands[b].type === 'tiered';
                 cb.checked = !!md;
-                if(t) { setVal(`aff-cpa-l1-${b}`, md?md.cpa_l1||md.cpa||0:0); setVal(`aff-cpa-l2-${b}`, md?md.cpa_l2||0:0); setVal(`aff-cpa-l3-${b}`, md?md.cpa_l3||0:0); } 
-                else { setVal(`aff-cpa-${b}`, md?md.cpa||0:0); setVal(`aff-base-${b}`, md?md.baseline||0:0); }
-                setVal(`aff-rs-${b}`, md?md.rs||0:0); window.toggleBrandDealConfig(b);
+                if(t) { document.getElementById(`aff-cpa-l1-${b}`).value = md?md.cpa_l1||md.cpa||0:0; document.getElementById(`aff-cpa-l2-${b}`).value = md?md.cpa_l2||0:0; document.getElementById(`aff-cpa-l3-${b}`).value = md?md.cpa_l3||0:0; } 
+                else { document.getElementById(`aff-cpa-${b}`).value = md?md.cpa||0:0; document.getElementById(`aff-base-${b}`).value = md?md.baseline||0:0; }
+                document.getElementById(`aff-rs-${b}`).value = md?md.rs||0:0; window.toggleBrandDealConfig(b);
             });
         };
         window.saveAffiliate = () => {
-            const id = val('aff-action-select'), n = val('aff-name').trim(), d = {}; if(!n) return window.showToast("Nome obrigatório", "error");
-            window.getBrandList().forEach(b => { if (window.$(`cb-brand-${b}`)?.checked) { const t = window.dataStore.brands[b].type === 'tiered'; d[b] = t ? { cpa_l1: parseFloat(val(`aff-cpa-l1-${b}`))||0, cpa_l2: parseFloat(val(`aff-cpa-l2-${b}`))||0, cpa_l3: parseFloat(val(`aff-cpa-l3-${b}`))||0, rs: parseFloat(val(`aff-rs-${b}`))||0, cpa: parseFloat(val(`aff-cpa-l1-${b}`))||0 } : { cpa: parseFloat(val(`aff-cpa-${b}`))||0, baseline: parseFloat(val(`aff-base-${b}`))||0, rs: parseFloat(val(`aff-rs-${b}`))||0 }; } });
-            const cAt = val('aff-start-date') ? new Date(val('aff-start-date')+'T12:00:00').getTime() : Date.now();
-            if(id==='new') { window.dataStore.affiliates.push({ id: Math.random().toString(36).substr(2,9), name: n, social: val('aff-social'), notes: val('aff-notes'), createdAt: cAt, deals: d }); window.logAction('Afiliado Cadastrado', n); window.showToast("Salvo!", "success"); } 
-            else { const a = window.dataStore.affiliates.find(x=>x.id===id); if(a) { Object.assign(a, { deals: d, social: val('aff-social'), notes: val('aff-notes'), createdAt: cAt }); window.logAction('Afiliado Editado', n); window.showToast("Atualizado!", "success"); } }
+            const id = document.getElementById('aff-action-select').value;
+            const n = document.getElementById('aff-name').value.trim();
+            const d = {}; if(!n) return window.showToast("Nome obrigatório", "error");
+            window.getBrandList().forEach(b => { if (document.getElementById(`cb-brand-${b}`)?.checked) { const t = window.dataStore.brands[b].type === 'tiered'; d[b] = t ? { cpa_l1: parseFloat(document.getElementById(`aff-cpa-l1-${b}`).value)||0, cpa_l2: parseFloat(document.getElementById(`aff-cpa-l2-${b}`).value)||0, cpa_l3: parseFloat(document.getElementById(`aff-cpa-l3-${b}`).value)||0, rs: parseFloat(document.getElementById(`aff-rs-${b}`).value)||0, cpa: parseFloat(document.getElementById(`aff-cpa-l1-${b}`).value)||0 } : { cpa: parseFloat(document.getElementById(`aff-cpa-${b}`).value)||0, baseline: parseFloat(document.getElementById(`aff-base-${b}`).value)||0, rs: parseFloat(document.getElementById(`aff-rs-${b}`).value)||0 }; } });
+            const sd = document.getElementById('aff-start-date').value;
+            const cAt = sd ? new Date(sd+'T12:00:00').getTime() : Date.now();
+            if(id==='new') { window.dataStore.affiliates.push({ id: Math.random().toString(36).substr(2,9), name: n, social: document.getElementById('aff-social').value, notes: document.getElementById('aff-notes').value, createdAt: cAt, deals: d }); window.logAction('Afiliado Cadastrado', n); window.showToast("Salvo!", "success"); } 
+            else { const a = window.dataStore.affiliates.find(x=>x.id===id); if(a) { Object.assign(a, { deals: d, social: document.getElementById('aff-social').value, notes: document.getElementById('aff-notes').value, createdAt: cAt }); window.logAction('Afiliado Editado', n); window.showToast("Atualizado!", "success"); } }
             window.saveMDData(); window.closeModals(); window.currentMDEnv === 'Afiliados' ? window.renderAffiliatesCRM() : window.renderDashboard();
         };
         window.deleteAffiliate = (id) => { const a=window.dataStore.affiliates.find(x=>x.id===id); window.showConfirm("Apagar e perder histórico?", ()=>{ window.dataStore.affiliates = window.dataStore.affiliates.filter(x=>x.id!==id); window.dataStore.dailyReports = window.dataStore.dailyReports.filter(x=>x.affiliateId!==id); window.saveMDData(); window.showToast("Excluído!", "success"); window.closeModals(); window.currentMDEnv === 'Afiliados' ? window.renderAffiliatesCRM() : window.renderDashboard(); }); };
 
-        window.openDailyDataModal = () => { if(!window.dataStore.affiliates.length) return window.showToast("Cadastre afiliado.", "error"); html('daily-brand', `<option value="" disabled selected>Marca...</option>` + window.getBrandList().map(b=>`<option value="${b}">${b}</option>`).join('')); setVal('daily-brand', ['Visão Geral','Fechamento','Afiliados'].includes(window.currentMDEnv) ? '' : window.currentMDEnv); window.updateDailyModalFields(); setVal('daily-date', new Date().toISOString().split('T')[0]); setVal('daily-ftd',''); setVal('daily-dep',''); setVal('daily-rev',''); window.$show('modal-daily'); };
-        window.updateDailyModalFields = () => { const b = val('daily-brand'), a = val('daily-affiliate'); html('daily-affiliate', window.dataStore.affiliates.length ? `<option value="" disabled ${!a?'selected':''}>Afiliado...</option>` + window.dataStore.affiliates.map(x=>`<option value="${x.id}" ${a===x.id?'selected':''}>${x.name}</option>`).join('') : '<option>Nenhum</option>'); if(!b) return html('qftd-container', `<label class="form-label !ml-0 text-gray-500">QFTDs</label><input disabled class="edit-mode-input py-3 opacity-50">`); const t = window.dataStore.brands[b]?.type === 'tiered'; html('qftd-container', t ? window.dataStore.brands[b].levels.map(l=>`<div class="mb-2"><label class="form-label !ml-0 text-pink-400">${l.name} (QFTDs)</label><input type="number" id="daily-qftd-${l.key}" class="edit-mode-input py-3"></div>`).join('') : `<div><label class="form-label !ml-0 text-pink-400">Qualificados (QFTDs)</label><input type="number" id="daily-qftd-standard" class="edit-mode-input py-3"></div>`); };
-        window.saveDailyData = () => { const b = val('daily-brand'), a = val('daily-affiliate'), d = val('daily-date'), f = parseInt(val('daily-ftd'))||0, dep = window.parseMoney(val('daily-dep')), rev = window.parseMoney(val('daily-rev')); if(!b||!a||!d) return window.showToast("Preencha Marca, Afiliado e Data.", "error"); const t = window.dataStore.brands[b]?.type === 'tiered', q = t ? { l1:parseInt(val('daily-qftd-l1'))||0, l2:parseInt(val('daily-qftd-l2'))||0, l3:parseInt(val('daily-qftd-l3'))||0 } : parseInt(val('daily-qftd-standard'))||0; window.dataStore.dailyReports.push({ id: Math.random().toString(36).substr(2,9), brand: b, affiliateId: a, date: d, ftd: f, qftd: q, deposits: dep, netRev: rev, insertedAt: Date.now() }); window.saveMDData(); window.showToast("Salvo!", "success"); window.closeModals(); window.currentMDEnv === 'Afiliados' ? window.renderAffiliatesCRM() : window.renderDashboard(); };
+        window.openDailyDataModal = () => { if(!window.dataStore.affiliates.length) return window.showToast("Cadastre afiliado.", "error"); document.getElementById('daily-brand').innerHTML = `<option value="" disabled selected>Marca...</option>` + window.getBrandList().map(b=>`<option value="${b}">${b}</option>`).join(''); document.getElementById('daily-brand').value = ['Visão Geral','Fechamento','Afiliados'].includes(window.currentMDEnv) ? '' : window.currentMDEnv; window.updateDailyModalFields(); document.getElementById('daily-date').value = new Date().toISOString().split('T')[0]; document.getElementById('daily-ftd').value = ''; document.getElementById('daily-dep').value = ''; document.getElementById('daily-rev').value = ''; window.openModal('modal-daily'); };
+        window.updateDailyModalFields = () => { const b = document.getElementById('daily-brand').value, a = document.getElementById('daily-affiliate').value; document.getElementById('daily-affiliate').innerHTML = window.dataStore.affiliates.length ? `<option value="" disabled ${!a?'selected':''}>Afiliado...</option>` + window.dataStore.affiliates.map(x=>`<option value="${x.id}" ${a===x.id?'selected':''}>${x.name}</option>`).join('') : '<option>Nenhum</option>'; if(!b) return document.getElementById('qftd-container').innerHTML = `<label class="form-label !ml-0 text-gray-500">QFTDs</label><input disabled class="edit-mode-input py-3 opacity-50">`; const t = window.dataStore.brands[b]?.type === 'tiered'; document.getElementById('qftd-container').innerHTML = t ? window.dataStore.brands[b].levels.map(l=>`<div class="mb-2"><label class="form-label !ml-0 text-pink-400">${l.name} (QFTDs)</label><input type="number" id="daily-qftd-${l.key}" class="edit-mode-input py-3"></div>`).join('') : `<div><label class="form-label !ml-0 text-pink-400">Qualificados (QFTDs)</label><input type="number" id="daily-qftd-standard" class="edit-mode-input py-3"></div>`; };
+        window.saveDailyData = () => { const b = document.getElementById('daily-brand').value, a = document.getElementById('daily-affiliate').value, d = document.getElementById('daily-date').value, f = parseInt(document.getElementById('daily-ftd').value)||0, dep = window.parseMoney(document.getElementById('daily-dep').value), rev = window.parseMoney(document.getElementById('daily-rev').value); if(!b||!a||!d) return window.showToast("Preencha Marca, Afiliado e Data.", "error"); const t = window.dataStore.brands[b]?.type === 'tiered', q = t ? { l1:parseInt(document.getElementById('daily-qftd-l1').value)||0, l2:parseInt(document.getElementById('daily-qftd-l2').value)||0, l3:parseInt(document.getElementById('daily-qftd-l3').value)||0 } : parseInt(document.getElementById('daily-qftd-standard').value)||0; window.dataStore.dailyReports.push({ id: Math.random().toString(36).substr(2,9), brand: b, affiliateId: a, date: d, ftd: f, qftd: q, deposits: dep, netRev: rev, insertedAt: Date.now() }); window.saveMDData(); window.showToast("Salvo!", "success"); window.closeModals(); window.currentMDEnv === 'Afiliados' ? window.renderAffiliatesCRM() : window.renderDashboard(); };
 
         window.openHistoryModal = () => { 
-            const tb = window.$('history-table-body'), r = [...window.dataStore.dailyReports].sort((a,b)=>b.insertedAt-a.insertedAt); 
+            const tb = document.getElementById('history-table-body'), r = [...window.dataStore.dailyReports].sort((a,b)=>b.insertedAt-a.insertedAt); 
             if(!r.length) { tb.innerHTML = '<tr><td colspan="7" class="p-5 text-center text-gray-500">Vazio.</td></tr>'; } 
             else { 
                 let tbHtml = '';
@@ -1171,12 +1139,12 @@
                     const af = window.dataStore.affiliates.find(a=>a.id===x.affiliateId);
                     const c = window.getBrandConfig(x.brand)?.color; 
                     const qTot = typeof x.qftd==='object' ? ((x.qftd.l1||0)+(x.qftd.l2||0)+(x.qftd.l3||0)) : (x.qftd||0);
-                    tbHtml += '<tr class="border-b border-white/5"><td class="p-4">' + x.date + '</td><td class="p-4" style="color:' + c + '">' + x.brand + '</td><td class="p-4">' + (af?af.name:'Excluído') + '</td><td class="p-4 text-center">' + x.ftd + ' / <span class="text-pink-400">' + qTot + '</span></td><td class="p-4 text-right">' + window.formatCurrency(x.deposits) + '</td><td class="p-4 text-right">' + window.formatCurrency(x.netRev) + '</td><td class="p-4 text-center"><button onclick="window.deleteReport(\'' + x.id + '\')" class="p-2 text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>'; 
+                    tbHtml += '<tr class="border-b border-white/5"><td class="p-4">' + x.date.split('-').reverse().join('/') + '</td><td class="p-4" style="color:' + c + '">' + x.brand + '</td><td class="p-4">' + (af?af.name:'Excluído') + '</td><td class="p-4 text-center">' + x.ftd + ' / <span class="text-pink-400">' + qTot + '</span></td><td class="p-4 text-right">' + window.formatCurrency(x.deposits) + '</td><td class="p-4 text-right">' + window.formatCurrency(x.netRev) + '</td><td class="p-4 text-center"><button onclick="window.deleteReport(\'' + x.id + '\')" class="p-2 text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>'; 
                 });
                 tb.innerHTML = tbHtml;
                 lucide.createIcons(); 
             } 
-            window.$show('modal-history'); 
+            window.openModal('modal-history'); 
         };
         window.deleteReport = (id) => window.showConfirm("Excluir lançamento?", () => { window.dataStore.dailyReports = window.dataStore.dailyReports.filter(r=>r.id!==id); window.saveMDData(); window.openHistoryModal(); window.currentMDEnv === 'Afiliados' ? window.renderAffiliatesCRM() : window.renderDashboard(); });
 
@@ -1189,30 +1157,36 @@
             } else {
                 auditHtml = '<p class="text-gray-500 text-center">Vazio.</p>';
             }
-            html('audit-list', auditHtml); 
-            window.$show('modal-audit'); 
+            document.getElementById('audit-list').innerHTML = auditHtml; 
+            window.openModal('modal-audit'); 
             lucide.createIcons(); 
         };
 
-        // WORKFLOW MINIFICADO
+        // WORKFLOW
         window.saveToLocalStorageWF = () => localStorage.setItem('workflow3c_tasks', JSON.stringify(window.tasks));
-        window.updateSyncTime = () => text('sync-time', new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}));
+        window.updateSyncTime = () => { if(document.getElementById('sync-time')) document.getElementById('sync-time').innerText = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'}); };
         const alerts = ["Vai trabalhar!", "Foca no projeto!", "O boleto não se paga sozinho!", "Agiliza isso: "];
-        window.triggerTaskAlert = (t) => { text('alert-prefix', alerts[Math.floor(Math.random()*alerts.length)]); text('alert-title', t); window.$('browser-alert').style.display='block'; try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='pt-BR'; window.speechSynthesis.speak(u); }catch(e){} };
+        window.triggerTaskAlert = (t) => { document.getElementById('alert-prefix').innerText = alerts[Math.floor(Math.random()*alerts.length)]; document.getElementById('alert-title').innerText = t; document.getElementById('browser-alert').style.display='block'; try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='pt-BR'; window.speechSynthesis.speak(u); }catch(e){} };
         const notifs = new Set(); setInterval(() => { if(!window.workflowInitialized)return; const n = new Date(); window.tasks.forEach(t => { if(!t.completed && t.reminder && n >= new Date(t.reminder) && (n - new Date(t.reminder)) < 60000 && !notifs.has(t.id)) { window.triggerTaskAlert(t.title); notifs.add(t.id); } }); }, 15000);
-        window.testAlert = () => window.triggerTaskAlert("Teste MD"); window.closeInternalAlert = () => window.$('browser-alert').style.display='none';
+        window.testAlert = () => window.triggerTaskAlert("Teste MD"); window.closeInternalAlert = () => { document.getElementById('browser-alert').style.display='none'; };
 
         window.updateProgress = () => {
             const t=window.tasks.length, c=window.tasks.filter(x=>x.completed).length, p=t?Math.round((c/t)*100):0;
-            if(window.$('overall-progress')) window.$('overall-progress').style.width=`${p}%`; text('percent-display', `${p}%`);
-            const hP=t>c; if(window.$('notif-dot')) window.$('notif-dot').className = window.$('notif-dot').className.replace('hidden','') + (hP?'':' hidden');
+            if(document.getElementById('overall-progress')) document.getElementById('overall-progress').style.width=`${p}%`; 
+            if(document.getElementById('percent-display')) document.getElementById('percent-display').innerText = `${p}%`;
+            const hP=t>c; 
+            if(document.getElementById('notif-dot')) {
+                if (hP) document.getElementById('notif-dot').classList.remove('hidden');
+                else document.getElementById('notif-dot').classList.add('hidden');
+            }
             const cv=document.createElement('canvas'); cv.width=64; cv.height=64; const cx=cv.getContext('2d'), img=new Image(); img.crossOrigin="anonymous"; img.src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg";
             img.onload=()=>{ cx.save(); cx.beginPath(); cx.arc(32,32,30,0,Math.PI*2); cx.clip(); cx.drawImage(img,0,0,64,64); cx.restore(); if(hP){ cx.beginPath(); cx.arc(52,12,12,0,2*Math.PI); cx.fillStyle='#ec4899'; cx.fill(); cx.lineWidth=2; cx.strokeStyle='#030008'; cx.stroke(); } const l=document.querySelector("link[rel*='icon']")||document.createElement('link'); l.type='image/x-icon'; l.rel='shortcut icon'; l.href=cv.toDataURL(); document.head.appendChild(l); };
         };
 
         window.renderTasks = () => {
             let f = window.tasks.filter(t => window.currentFilter==='all' || (window.currentFilter==='pending'?!t.completed:t.completed));
-            if(!f.length) { html('task-list',''); window.$show('work-empty-state'); return; } window.$hide('work-empty-state');
+            if(!f.length) { document.getElementById('task-list').innerHTML=''; window.openModal('work-empty-state'); return; } window.closeModals(); // Reuse hide for empty state
+            document.getElementById('work-empty-state').classList.add('hidden');
             
             let listHtml = '';
             f.forEach(t => {
@@ -1220,16 +1194,16 @@
                 const r = t.reminder ? '<div class="mt-2 text-[10px] text-gray-500"><i data-lucide="bell" class="w-3 h-3 inline"></i> ' + new Date(t.reminder).toLocaleString('pt-BR') + '</div>' : '';
                 listHtml += '<div class="glass-card p-6 rounded-2xl border-l-4 border-l-' + c + '-500 ' + (t.completed?'completed-task':'') + ' group"><div class="flex items-start gap-4"><button onclick="window.toggleTask(\'' + t.id + '\')" class="text-gray-400 hover:text-pink-500"><i data-lucide="' + (t.completed?'check-circle-2':'circle') + '" class="w-6 h-6 ' + (t.completed?'text-pink-500':'') + '"></i></button><div class="flex-grow"><div class="flex gap-3 items-center"><h3 class="font-black text-lg ' + (t.completed?'completed-text':'text-white') + '">' + t.title + '</h3><span class="text-[8px] px-2 py-0.5 rounded text-' + c + '-500 bg-' + c + '-500/10">' + t.priority + '</span></div>' + (t.desc?'<p class="text-sm text-gray-400 mt-1">'+t.desc+'</p>':'') + r + '</div><button onclick="window.deleteTask(\'' + t.id + '\')" class="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-5 h-5"></i></button></div></div>';
             });
-            html('task-list', listHtml);
+            document.getElementById('task-list').innerHTML = listHtml;
             lucide.createIcons(); window.updateProgress();
         };
 
-        window.addMainTask = async () => { const t = val('main-task-input').trim(); if(!t) return; const n = { id: Math.random().toString(36).substr(2,9), title: t, desc: val('main-desc-input'), priority: val('priority-select'), reminder: val('reminder-input')||null, completed: false, createdAt: Date.now() }; window.tasks.unshift(n); if (window.isCloudMode&&wfUser) { try{ await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',n.id), n); }catch(e){ window.saveToLocalStorageWF(); } } else window.saveToLocalStorageWF(); setVal('main-task-input',''); setVal('main-desc-input',''); setVal('reminder-input',''); window.renderTasks(); };
+        window.addMainTask = async () => { const t = document.getElementById('main-task-input').value.trim(); if(!t) return; const n = { id: Math.random().toString(36).substr(2,9), title: t, desc: document.getElementById('main-desc-input').value, priority: document.getElementById('priority-select').value, reminder: document.getElementById('reminder-input').value||null, completed: false, createdAt: Date.now() }; window.tasks.unshift(n); if (window.isCloudMode&&wfUser) { try{ await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',n.id), n); }catch(e){ window.saveToLocalStorageWF(); } } else window.saveToLocalStorageWF(); document.getElementById('main-task-input').value=''; document.getElementById('main-desc-input').value=''; document.getElementById('reminder-input').value=''; window.renderTasks(); };
         window.toggleTask = async (id) => { const t = window.tasks.find(x=>x.id===id); if(t) { t.completed = !t.completed; window.renderTasks(); if(window.isCloudMode&&wfUser) try{ await updateDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',id),{completed:t.completed}); }catch(e){ window.saveToLocalStorageWF(); } else window.saveToLocalStorageWF(); } };
         window.deleteTask = async (id) => { window.showConfirm("Excluir tarefa?", async () => { window.tasks = window.tasks.filter(x=>x.id!==id); window.renderTasks(); if(window.isCloudMode&&wfUser) try{ await deleteDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',id)); }catch(e){ window.saveToLocalStorageWF(); } else window.saveToLocalStorageWF(); }); };
         window.setFilter = (f) => { window.currentFilter = f; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('text-pink-500', 'active-filter')); const a = Array.from(document.querySelectorAll('.filter-btn')).find(b => b.innerText.toLowerCase().includes(f==='all'?'visão':f==='pending'?'pendentes':'finalizadas')); if(a) a.classList.add('text-pink-500', 'active-filter'); window.renderTasks(); };
 
-        window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); setTimeout(() => { if(window.$('lock-screen')) window.$('lock-screen').style.opacity = '1'; window.initFirebaseSystem(); }, 500); });
+        window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); setTimeout(() => { if(document.getElementById('lock-screen')) document.getElementById('lock-screen').style.opacity = '1'; window.initFirebaseSystem(); }, 500); });
     </script>
 </body>
 </html>
