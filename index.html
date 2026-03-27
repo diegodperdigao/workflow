@@ -180,11 +180,11 @@
             </div>
             <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl">
                 <div class="space-y-6">
-                    <input type="password" id="password-input" placeholder="••••••••" 
+                    <input type="password" id="password-input" placeholder="Conectando ao servidor..." disabled
                         onkeypress="if(event.key === 'Enter') window.checkPassword()"
-                        class="w-full bg-black/40 border border-white/10 px-6 py-5 rounded-2xl text-center text-white focus:outline-none focus:border-pink-500 transition-all tracking-widest font-mono">
-                    <button onclick="window.checkPassword()" class="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.3em] py-5 rounded-2xl hover:bg-pink-500 hover:text-white transition-all duration-300 active:scale-95">
-                        Acessar Portal
+                        class="w-full bg-black/40 border border-white/10 px-6 py-5 rounded-2xl text-center text-white focus:outline-none focus:border-pink-500 transition-all tracking-widest font-mono disabled:opacity-50">
+                    <button id="btn-login" onclick="window.checkPassword()" disabled class="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.3em] py-5 rounded-2xl hover:bg-pink-500 hover:text-white transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Aguarde...
                     </button>
                 </div>
             </div>
@@ -749,12 +749,11 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'
-        import { getFirestore, collection, doc, onSnapshot, addDoc, deleteDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
+        import { getFirestore, collection, doc, onSnapshot, addDoc, deleteDoc, updateDoc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'
 
         // =========================================
         // VARIAVEIS GLOBAIS E CONSTANTES (MD & WF)
         // =========================================
-        const ACCESS_PASSWORD = "3cMD123@"; 
         
         // --- Variáveis MD ---
         const MD_STORAGE_KEY = 'igaming3c_data_v15'; 
@@ -786,11 +785,142 @@
         const wfAppId = typeof __app_id !== 'undefined' ? __app_id : 'workflow-3c-app-default';
 
         // =========================================
+        // INICIALIZAÇÃO FIREBASE GLOBAL
+        // =========================================
+        window.initFirebaseSystem = async () => {
+            window.workflowInitialized = true;
+            window.speechSynthesis.onvoiceschanged = () => {};
+            
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    wfAuth = getAuth(app);
+                    wfDb = getFirestore(app);
+                    window.isCloudMode = true;
+                    
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(wfAuth, __initial_auth_token);
+                    } else { 
+                        await signInAnonymously(wfAuth); 
+                    }
+                    
+                    onAuthStateChanged(wfAuth, (user) => {
+                        wfCurrentUser = user;
+                        if (user) {
+                            // Libera a tela de login
+                            const passInput = document.getElementById('password-input');
+                            const loginBtn = document.getElementById('btn-login');
+                            if(passInput) {
+                                passInput.placeholder = "••••••••";
+                                passInput.disabled = false;
+                            }
+                            if(loginBtn) {
+                                loginBtn.innerText = "Acessar Portal";
+                                loginBtn.disabled = false;
+                            }
+
+                            // Setup Workflow Snapshot (Público para equipe)
+                            const userEl = document.getElementById('user-id-text');
+                            if(userEl) userEl.innerText = user.uid.substring(0, 8) + '...';
+                            const dotEl = document.getElementById('wf-status-dot');
+                            if(dotEl) dotEl.classList.replace('bg-gray-500', 'bg-emerald-500');
+                            const syncEl = document.getElementById('wf-sync-status');
+                            if(syncEl) syncEl.innerText = "Cloud Sync Online";
+
+                            const tasksRef = collection(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks');
+                            onSnapshot(tasksRef, (snapshot) => {
+                                window.tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                                window.tasks.sort((a, b) => b.createdAt - a.createdAt); 
+                                window.renderTasks();
+                                window.updateSyncTime();
+                            }, (error) => console.error("Erro Workflow Firebase:", error));
+
+                            // Setup MD Sincronização (Público para equipe)
+                            const mdRef = doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main');
+                            onSnapshot(mdRef, (docSnap) => {
+                                if (docSnap.exists()) {
+                                    const parsed = docSnap.data();
+                                    window.dataStore.brands = parsed.brands || window.dataStore.brands;
+                                    window.dataStore.affiliates = parsed.affiliates || [];
+                                    window.dataStore.dailyReports = parsed.dailyReports || [];
+                                    window.dataStore.auditLogs = parsed.auditLogs || [];
+                                    
+                                    // Se o app MD estiver aberto, atualizar as views
+                                    const dashApp = document.getElementById('dashboard-app');
+                                    if (dashApp && !dashApp.classList.contains('hidden')) {
+                                        window.initMDTabs();
+                                        if (window.currentMDEnv === 'Afiliados') window.renderAffiliatesCRM();
+                                        else if (window.currentMDEnv === 'Fechamento') window.initFechamentoUI();
+                                        else if (window.currentMDEnv !== 'Visão Geral') window.switchMDEnvironment(window.currentMDEnv);
+                                        else window.renderDashboard();
+                                    }
+                                }
+                            }, (error) => console.error("Erro MD Firebase:", error));
+
+                        }
+                    });
+                } else {
+                    throw new Error("Fora do Canvas. Sem credenciais do Firebase.");
+                }
+            } catch (error) {
+                console.warn("Utilizando Local Storage para o App.", error);
+                const syncEl = document.getElementById('wf-sync-status');
+                if(syncEl) syncEl.innerText = "OFFLINE (Local Storage)";
+                const dotEl = document.getElementById('wf-status-dot');
+                if(dotEl) dotEl.classList.replace('bg-gray-500', 'bg-yellow-500');
+                
+                // Libera a tela de login offline
+                const passInput = document.getElementById('password-input');
+                const loginBtn = document.getElementById('btn-login');
+                if(passInput) { passInput.placeholder = "••••••••"; passInput.disabled = false; }
+                if(loginBtn) { loginBtn.innerText = "Acessar Portal"; loginBtn.disabled = false; }
+
+                const savedTasks = localStorage.getItem('workflow3c_tasks');
+                if (savedTasks) {
+                    try { window.tasks = JSON.parse(savedTasks); } catch(e) { window.tasks = []; }
+                }
+                window.renderTasks(); 
+            }
+        };
+
+        // =========================================
         // NAVEGAÇÃO E HUB UNIFICADO
         // =========================================
-        window.checkPassword = () => {
+        window.checkPassword = async () => {
             const input = document.getElementById('password-input');
-            if (input.value === ACCESS_PASSWORD) {
+            const btn = document.getElementById('btn-login');
+            const pass = input.value.trim();
+
+            if (!pass) return;
+
+            btn.innerText = "Verificando Nuvem...";
+            btn.disabled = true;
+
+            let isValid = false;
+
+            if (window.isCloudMode && wfCurrentUser) {
+                try {
+                    const configRef = doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_config', 'auth');
+                    const configSnap = await getDoc(configRef);
+
+                    if (configSnap.exists() && configSnap.data().master_password) {
+                        isValid = (pass === configSnap.data().master_password);
+                    } else {
+                        // Configuração da primeira senha (se o banco for novo)
+                        await setDoc(configRef, { master_password: pass });
+                        isValid = true;
+                        window.showToast("Nova Senha Mestre configurada na nuvem!", "success");
+                    }
+                } catch(e) {
+                    console.error("Erro ao validar senha", e);
+                    isValid = (pass === "3cMD123@"); // Fallback
+                }
+            } else {
+                isValid = (pass === "3cMD123@"); // Fallback Offline
+            }
+
+            if (isValid) {
                 document.getElementById('lock-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
@@ -801,6 +931,8 @@
                 }, 700);
             } else {
                 input.classList.add('shake', 'border-red-500');
+                btn.innerText = "Acessar Portal";
+                btn.disabled = false;
                 setTimeout(() => input.classList.remove('shake', 'border-red-500'), 400);
             }
         };
@@ -820,7 +952,6 @@
         window.launchWorkflow = () => {
             document.getElementById('app-selection').style.opacity = '0';
             
-            // Força a restauração do pink como root theme (caso o MD tenha deixado verde/azul)
             const root = document.documentElement;
             root.style.setProperty('--theme-color', '#ec4899');
             root.style.setProperty('--theme-color-glow', 'rgba(236, 72, 153, 0.4)');
@@ -832,7 +963,6 @@
                 document.getElementById('workflow-main-content').classList.remove('hidden');
                 setTimeout(() => {
                     document.getElementById('workflow-main-content').style.opacity = '1';
-                    if (!window.workflowInitialized) window.initWorkflowServices();
                 }, 50);
             }, 700);
         };
@@ -902,7 +1032,6 @@
             setTimeout(() => m.classList.remove('opacity-0'), 10);
         };
 
-
         // =========================================
         // LÓGICA: OPERAÇÃO MD
         // =========================================
@@ -953,12 +1082,28 @@
             return brands.sort((a, b) => brandQftds[b] - brandQftds[a]);
         };
 
-        window.saveMDData = () => {
+        window.saveMDData = async () => {
             localStorage.setItem(MD_STORAGE_KEY, JSON.stringify(window.dataStore));
             const statusEl = document.getElementById('md-sync-status');
-            if(statusEl) {
-                statusEl.innerText = "Salvo (Local)";
-                setTimeout(() => statusEl.innerText = "Offline (Local)", 2000);
+            
+            if (window.isCloudMode && wfCurrentUser) {
+                if(statusEl) statusEl.innerText = "Salvando...";
+                try {
+                    const docRef = doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main');
+                    await setDoc(docRef, window.dataStore);
+                    if(statusEl) {
+                        statusEl.innerText = "Salvo (Nuvem)";
+                        setTimeout(() => statusEl.innerText = "Cloud Sync Online", 2000);
+                    }
+                } catch(e) {
+                    console.error("Erro ao salvar na nuvem", e);
+                    if(statusEl) statusEl.innerText = "Erro na Nuvem";
+                }
+            } else {
+                if(statusEl) {
+                    statusEl.innerText = "Salvo (Local)";
+                    setTimeout(() => statusEl.innerText = "Offline (Local)", 2000);
+                }
             }
         };
 
@@ -2050,64 +2195,6 @@
         // LÓGICA: WORKFLOW 3C
         // =========================================
 
-        window.initWorkflowServices = async () => {
-            window.workflowInitialized = true;
-            window.speechSynthesis.onvoiceschanged = () => {};
-            
-            try {
-                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                    const firebaseConfig = JSON.parse(__firebase_config);
-                    const app = initializeApp(firebaseConfig);
-                    wfAuth = getAuth(app);
-                    wfDb = getFirestore(app);
-                    window.isCloudMode = true;
-                    
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(wfAuth, __initial_auth_token);
-                    } else { 
-                        await signInAnonymously(wfAuth); 
-                    }
-                    
-                    onAuthStateChanged(wfAuth, (user) => {
-                        wfCurrentUser = user;
-                        if (user) {
-                            const userEl = document.getElementById('user-id-text');
-                            if(userEl) userEl.innerText = user.uid.substring(0, 8) + '...';
-                            const dotEl = document.getElementById('wf-status-dot');
-                            if(dotEl) dotEl.classList.replace('bg-gray-500', 'bg-emerald-500');
-                            const syncEl = document.getElementById('wf-sync-status');
-                            if(syncEl) syncEl.innerText = "Cloud Sync Online";
-
-                            const tasksRef = collection(wfDb, 'artifacts', wfAppId, 'users', user.uid, 'tasks');
-                            onSnapshot(tasksRef, (snapshot) => {
-                                window.tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                                window.tasks.sort((a, b) => b.createdAt - a.createdAt); 
-                                window.renderTasks();
-                                window.updateSyncTime();
-                            }, (error) => {
-                                console.error("Erro na leitura do Firebase:", error);
-                            });
-                        }
-                    });
-                } else {
-                    throw new Error("Fora do Canvas. Sem credenciais do Firebase.");
-                }
-            } catch (error) {
-                console.warn("Utilizando Local Storage para o Workflow.");
-                const syncEl = document.getElementById('wf-sync-status');
-                if(syncEl) syncEl.innerText = "OFFLINE (Local Storage)";
-                const dotEl = document.getElementById('wf-status-dot');
-                if(dotEl) dotEl.classList.replace('bg-gray-500', 'bg-yellow-500');
-                
-                const savedTasks = localStorage.getItem('workflow3c_tasks');
-                if (savedTasks) {
-                    try { window.tasks = JSON.parse(savedTasks); } 
-                    catch(e) { window.tasks = []; }
-                }
-                window.renderTasks(); 
-            }
-        };
-
         window.saveToLocalStorageWF = () => {
             localStorage.setItem('workflow3c_tasks', JSON.stringify(window.tasks));
         };
@@ -2223,7 +2310,7 @@
 
             if (window.isCloudMode && wfCurrentUser) {
                 try {
-                    const tasksRef = collection(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks');
+                    const tasksRef = collection(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks');
                     await addDoc(tasksRef, newTask);
                 } catch (error) { console.error("Erro:", error); }
             } else {
@@ -2238,7 +2325,7 @@
 
         window.deleteTask = async (id) => {
             if (window.isCloudMode && wfCurrentUser) {
-                try { await deleteDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', id)); } 
+                try { await deleteDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id)); } 
                 catch (error) { console.error("Erro:", error); }
             } else {
                 window.tasks = window.tasks.filter(t => t.id !== id);
@@ -2250,7 +2337,7 @@
             const task = window.tasks.find(t => t.id === id);
             if (!task) return;
             if (window.isCloudMode && wfCurrentUser) {
-                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', id), { completed: !task.completed }); } 
+                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id), { completed: !task.completed }); } 
                 catch (error) { console.error("Erro:", error); }
             } else {
                 task.completed = !task.completed; window.saveToLocalStorageWF(); window.renderTasks();
@@ -2271,7 +2358,7 @@
 
             if (window.isCloudMode && wfCurrentUser) {
                 try {
-                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', id), { title: newTitle, desc: newDesc, reminder: newReminder });
+                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id), { title: newTitle, desc: newDesc, reminder: newReminder });
                     window.editingId = null;
                 } catch (error) { console.error("Erro:", error); }
             } else {
@@ -2294,7 +2381,7 @@
 
             if (window.isCloudMode && wfCurrentUser) {
                 try {
-                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', taskId), { subtasks: updatedSubtasks });
+                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', taskId), { subtasks: updatedSubtasks });
                     input.value = '';
                 } catch (error) { console.error("Erro:", error); }
             } else {
@@ -2309,7 +2396,7 @@
             const updatedSubtasks = (task.subtasks || []).map(st => st.id === subtaskId ? { ...st, completed: !st.completed } : st);
 
             if (window.isCloudMode && wfCurrentUser) {
-                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', taskId), { subtasks: updatedSubtasks }); } 
+                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', taskId), { subtasks: updatedSubtasks }); } 
                 catch (error) { console.error("Erro:", error); }
             } else {
                 task.subtasks = updatedSubtasks; window.saveToLocalStorageWF(); window.renderTasks();
@@ -2323,7 +2410,7 @@
             const updatedSubtasks = (task.subtasks || []).filter(st => st.id !== subtaskId);
 
             if (window.isCloudMode && wfCurrentUser) {
-                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'users', wfCurrentUser.uid, 'tasks', taskId), { subtasks: updatedSubtasks }); } 
+                try { await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', taskId), { subtasks: updatedSubtasks }); } 
                 catch (error) { console.error("Erro:", error); }
             } else {
                 task.subtasks = updatedSubtasks; window.saveToLocalStorageWF(); window.renderTasks();
@@ -2439,6 +2526,7 @@
 
         window.addEventListener('load', () => {
             lucide.createIcons();
+            window.initFirebaseSystem(); // Inicia a conexão com a nuvem ao carregar a página
         });
 
     </script>
