@@ -783,8 +783,6 @@
         // =========================================
         // CONFIGURAÇÃO DO SEU PRÓPRIO BANCO DE DADOS (OPCIONAL)
         // =========================================
-        // Se quiser hospedar este arquivo por conta própria (fora do chat) e ter salvamento em nuvem,
-        // crie um projeto gratuito no Google Firebase e cole as suas chaves aqui:
         const MY_OWN_FIREBASE_CONFIG = {
           apiKey: "AIzaSyDuiup15ELAcm78GFJ0w7pdeYu2DHy-6Zk",
           authDomain: "hub-3c.firebaseapp.com",
@@ -827,7 +825,6 @@
         window.currentFilter = 'all';
         window.isCloudMode = false;
         
-        // Garante que a pasta na nuvem é a mesma independentemente de onde abrir (Preview ou GitHub)
         const wfAppId = (MY_OWN_FIREBASE_CONFIG && MY_OWN_FIREBASE_CONFIG.apiKey) ? 'hub3c-production' : (typeof __app_id !== 'undefined' ? __app_id : 'workflow-3c-app-default');
 
         // =========================================
@@ -839,12 +836,9 @@
             
             try {
                 let configToUse = null;
-                // PRIORIDADE 1: Usar a sua Base de Dados privada
                 if (MY_OWN_FIREBASE_CONFIG && MY_OWN_FIREBASE_CONFIG.apiKey) {
                     configToUse = MY_OWN_FIREBASE_CONFIG;
-                } 
-                // PRIORIDADE 2: Usar a nuvem do Canvas (apenas se a sua não estiver lá)
-                else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                } else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                     configToUse = JSON.parse(__firebase_config);
                 }
 
@@ -863,7 +857,6 @@
                     onAuthStateChanged(wfAuth, (user) => {
                         wfCurrentUser = user;
                         if (user) {
-                            // Libera a tela de login
                             const passInput = document.getElementById('password-input');
                             const loginBtn = document.getElementById('btn-login');
                             if(passInput) {
@@ -875,7 +868,6 @@
                                 loginBtn.disabled = false;
                             }
 
-                            // Setup Workflow Snapshot (Público para equipe)
                             const userEl = document.getElementById('user-id-text');
                             if(userEl) userEl.innerText = user.uid.substring(0, 8) + '...';
                             const dotEl = document.getElementById('wf-status-dot');
@@ -891,7 +883,6 @@
                                 window.updateSyncTime();
                             }, (error) => console.error("Erro Workflow Firebase:", error));
 
-                            // Setup MD Sincronização (Público para equipe)
                             const mdRef = doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'md_store', 'main');
                             onSnapshot(mdRef, (docSnap) => {
                                 if (docSnap.exists()) {
@@ -902,7 +893,6 @@
                                     window.dataStore.auditLogs = parsed.auditLogs || [];
                                     window.dataStore.payments = parsed.payments || [];
                                     
-                                    // Se o app MD estiver aberto, atualizar as views
                                     const dashApp = document.getElementById('dashboard-app');
                                     if (dashApp && !dashApp.classList.contains('hidden')) {
                                         window.initMDTabs();
@@ -926,7 +916,6 @@
                 const dotEl = document.getElementById('wf-status-dot');
                 if(dotEl) dotEl.classList.replace('bg-gray-500', 'bg-yellow-500');
                 
-                // Libera a tela de login offline
                 const passInput = document.getElementById('password-input');
                 const loginBtn = document.getElementById('btn-login');
                 if(passInput) { passInput.placeholder = "••••••••"; passInput.disabled = false; }
@@ -964,17 +953,16 @@
                         isValid = (pass === configSnap.data().master_password);
                         if (!isValid) window.showToast("Senha Mestre incorreta!", "error");
                     } else {
-                        // Configuração da primeira senha (se o banco for novo)
                         await setDoc(configRef, { master_password: pass });
                         isValid = true;
                         window.showToast("Nova Senha Mestre configurada na nuvem!", "success");
                     }
                 } catch(e) {
                     console.error("Erro ao validar senha", e);
-                    isValid = (pass === "3cMD123@"); // Fallback
+                    isValid = (pass === "3cMD123@");
                 }
             } else {
-                isValid = (pass === "3cMD123@"); // Fallback Offline
+                isValid = (pass === "3cMD123@");
             }
 
             if (isValid) {
@@ -2457,222 +2445,215 @@
             logoImg.src = "https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg";
             
             logoImg.onload = () => {
-                ctx.save(); ctx.beginPath(); ctx.arc(32, 32, 30, 0, Math.PI * 2); ctx
-<!-- ... existing code ... -->
-            const logoImg = new Image();
-            logoImg.crossOrigin = "anonymous";
-            logoImg.src = "https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg";
-            
-            logoImg.onload = () => {
-                ctx.save(); 
+                ctx.save(); 
                 ctx.beginPath(); 
                 ctx.arc(32, 32, 30, 0, Math.PI * 2); 
                 ctx.clip();
-                ctx.drawImage(logoImg, 0, 0, 64, 64);
-                ctx.restore();
+                ctx.drawImage(logoImg, 0, 0, 64, 64);
+                ctx.restore();
 
-                // Desenhar a bolinha de notificação rosa se houver pendências
-                if (hasPending) {
-                    ctx.beginPath(); 
+                // Desenhar a bolinha de notificação rosa se houver pendências
+                if (hasPending) {
+                    ctx.beginPath(); 
                     ctx.arc(52, 12, 12, 0, 2 * Math.PI);
-                    ctx.fillStyle = '#ec4899'; 
+                    ctx.fillStyle = '#ec4899'; 
                     ctx.fill();
-                    ctx.lineWidth = 2; 
+                    ctx.lineWidth = 2; 
                     ctx.strokeStyle = '#030008'; 
                     ctx.stroke();
-                }
+                }
 
-                const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-                link.type = 'image/x-icon'; 
+                const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon'; 
                 link.rel = 'shortcut icon';
-                link.href = canvas.toDataURL();
-                document.getElementsByTagName('head')[0].appendChild(link);
-            };
-        };
+                link.href = canvas.toDataURL();
+                document.getElementsByTagName('head')[0].appendChild(link);
+            };
+        };
 
-        window.updateProgress = () => {
-            if(!window.tasks) return;
-            const total = window.tasks.length;
-            const completed = window.tasks.filter(t => t.completed).length;
-            const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
-            
-            const bar = document.getElementById('overall-progress');
-            const display = document.getElementById('percent-display');
-            if (bar) bar.style.width = `${pct}%`;
-            if (display) display.innerText = `${pct}%`;
+        window.updateProgress = () => {
+            if(!window.tasks) return;
+            const total = window.tasks.length;
+            const completed = window.tasks.filter(t => t.completed).length;
+            const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+            
+            const bar = document.getElementById('overall-progress');
+            const display = document.getElementById('percent-display');
+            if (bar) bar.style.width = `${pct}%`;
+            if (display) display.innerText = `${pct}%`;
 
-            const hasPending = total > completed;
-            window.updateFavicon(hasPending);
-            
-            const dot = document.getElementById('notif-dot');
-            if(dot) {
-                if(hasPending) dot.classList.remove('hidden');
-                else dot.classList.add('hidden');
-            }
-        };
+            const hasPending = total > completed;
+            window.updateFavicon(hasPending);
+            
+            const dot = document.getElementById('notif-dot');
+            if(dot) {
+                if(hasPending) dot.classList.remove('hidden');
+                else dot.classList.add('hidden');
+            }
+        };
 
-        window.renderTasks = () => {
-            const list = document.getElementById('task-list');
-            const emptyState = document.getElementById('work-empty-state');
-            if(!list || !emptyState) return;
+        window.renderTasks = () => {
+            const list = document.getElementById('task-list');
+            const emptyState = document.getElementById('work-empty-state');
+            if(!list || !emptyState) return;
 
-            let filtered = (window.tasks || []);
-            if (window.currentFilter === 'pending') filtered = filtered.filter(t => !t.completed);
-            if (window.currentFilter === 'completed') filtered = filtered.filter(t => t.completed);
+            let filtered = (window.tasks || []);
+            if (window.currentFilter === 'pending') filtered = filtered.filter(t => !t.completed);
+            if (window.currentFilter === 'completed') filtered = filtered.filter(t => t.completed);
 
-            if (filtered.length === 0) {
-                list.innerHTML = ''; 
+            if (filtered.length === 0) {
+                list.innerHTML = ''; 
                 emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-                list.innerHTML = filtered.map(t => {
-                    const prioColor = t.priority === 'high' ? 'text-pink-500' : (t.priority === 'medium' ? 'text-purple-500' : 'text-cyan-500');
-                    const prioBg = t.priority === 'high' ? 'bg-pink-500/10 border-pink-500/20' : (t.priority === 'medium' ? 'bg-purple-500/10 border-purple-500/20' : 'bg-cyan-500/10 border-cyan-500/20');
-                    const prioBorder = t.priority === 'high' ? 'border-l-pink-500' : (t.priority === 'medium' ? 'border-l-purple-500' : 'border-l-cyan-500');
-                    
-                    const isDone = t.completed ? 'completed-task' : '';
-                    const titleDone = t.completed ? 'completed-text' : 'text-white';
-                    
-                    let remHtml = '';
-                    if (t.reminder) {
-                        const d = new Date(t.reminder);
-                        remHtml = `<div class="flex items-center gap-1 mt-3 text-[10px] font-bold text-gray-500 bg-white/5 px-2 py-1 rounded inline-flex"><i data-lucide="bell" class="w-3 h-3"></i> ${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>`;
-                    }
+            } else {
+                emptyState.classList.add('hidden');
+                list.innerHTML = filtered.map(t => {
+                    const prioColor = t.priority === 'high' ? 'text-pink-500' : (t.priority === 'medium' ? 'text-purple-500' : 'text-cyan-500');
+                    const prioBg = t.priority === 'high' ? 'bg-pink-500/10 border-pink-500/20' : (t.priority === 'medium' ? 'bg-purple-500/10 border-purple-500/20' : 'bg-cyan-500/10 border-cyan-500/20');
+                    const prioBorder = t.priority === 'high' ? 'border-l-pink-500' : (t.priority === 'medium' ? 'border-l-purple-500' : 'border-l-cyan-500');
+                    
+                    const isDone = t.completed ? 'completed-task' : '';
+                    const titleDone = t.completed ? 'completed-text' : 'text-white';
+                    
+                    let remHtml = '';
+                    if (t.reminder) {
+                        const d = new Date(t.reminder);
+                        remHtml = `<div class="flex items-center gap-1 mt-3 text-[10px] font-bold text-gray-500 bg-white/5 px-2 py-1 rounded inline-flex"><i data-lucide="bell" class="w-3 h-3"></i> ${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>`;
+                    }
 
-                    return `
-                    <div class="glass-card p-6 rounded-2xl border-l-4 ${prioBorder} ${isDone} transition-all hover:border-white/20 animate-task relative group">
-                        <div class="flex items-start gap-4">
-                            <button onclick="window.toggleTask('${t.id}')" class="mt-1 flex-shrink-0 text-gray-400 hover:text-pink-500 transition-colors">
-                                <i data-lucide="${t.completed ? 'check-circle-2' : 'circle'}" class="w-6 h-6 ${t.completed ? 'text-pink-500' : ''}"></i>
-                            </button>
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap items-center gap-3 mb-2">
-                                    <h3 class="text-lg font-black uppercase tracking-tight ${titleDone}">${t.title}</h3>
-                                    <span class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${prioColor} ${prioBg}">${t.priority}</span>
-                                </div>
-                                ${t.desc ? `<p class="text-sm text-gray-400 leading-relaxed max-w-3xl">${t.desc.replace(/\n/g, '<br>')}</p>` : ''}
-                                ${remHtml}
-                            </div>
-                            <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="window.deleteTask('${t.id}')" class="p-2 text-gray-500 hover:text-red-500 transition-colors rounded-xl hover:bg-white/5" title="Excluir Tarefa">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-            lucide.createIcons();
-            window.updateProgress();
-        };
+                    return `
+                    <div class="glass-card p-6 rounded-2xl border-l-4 ${prioBorder} ${isDone} transition-all hover:border-white/20 animate-task relative group">
+                        <div class="flex items-start gap-4">
+                            <button onclick="window.toggleTask('${t.id}')" class="mt-1 flex-shrink-0 text-gray-400 hover:text-pink-500 transition-colors">
+                                <i data-lucide="${t.completed ? 'check-circle-2' : 'circle'}" class="w-6 h-6 ${t.completed ? 'text-pink-500' : ''}"></i>
+                            </button>
+                            <div class="flex-grow">
+                                <div class="flex flex-wrap items-center gap-3 mb-2">
+                                    <h3 class="text-lg font-black uppercase tracking-tight ${titleDone}">${t.title}</h3>
+                                    <span class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${prioColor} ${prioBg}">${t.priority}</span>
+                                </div>
+                                ${t.desc ? `<p class="text-sm text-gray-400 leading-relaxed max-w-3xl">${t.desc.replace(/\n/g, '<br>')}</p>` : ''}
+                                ${remHtml}
+                            </div>
+                            <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="window.deleteTask('${t.id}')" class="p-2 text-gray-500 hover:text-red-500 transition-colors rounded-xl hover:bg-white/5" title="Excluir Tarefa">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            lucide.createIcons();
+            window.updateProgress();
+        };
 
-        window.addMainTask = async () => {
-            const titleInput = document.getElementById('main-task-input');
-            const descInput = document.getElementById('main-desc-input');
-            const prioInput = document.getElementById('priority-select');
-            const remInput = document.getElementById('reminder-input');
-            
-            const title = titleInput.value.trim();
-            if(!title) return window.showToast("Dê um nome para sua missão, guerreiro.");
+        window.addMainTask = async () => {
+            const titleInput = document.getElementById('main-task-input');
+            const descInput = document.getElementById('main-desc-input');
+            const prioInput = document.getElementById('priority-select');
+            const remInput = document.getElementById('reminder-input');
+            
+            const title = titleInput.value.trim();
+            if(!title) return window.showToast("Dê um nome para sua missão, guerreiro.");
 
-            const newTask = {
-                id: Math.random().toString(36).substring(2, 11),
-                title,
-                desc: descInput.value.trim(),
-                priority: prioInput.value,
-                reminder: remInput.value || null,
-                completed: false,
-                createdAt: Date.now()
-            };
+            const newTask = {
+                id: Math.random().toString(36).substring(2, 11),
+                title,
+                desc: descInput.value.trim(),
+                priority: prioInput.value,
+                reminder: remInput.value || null,
+                completed: false,
+                createdAt: Date.now()
+            };
 
-            window.tasks.unshift(newTask);
+            window.tasks.unshift(newTask);
 
-            if (window.isCloudMode && wfCurrentUser) {
-                try {
-                    await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', newTask.id), newTask);
-                    window.showToast("Missão lançada na nuvem!", "success");
-                } catch(e) {
-                    console.error("Erro Nuvem WF", e);
-                    window.saveToLocalStorageWF();
-                    window.showToast("Salvo offline (Erro Nuvem).", "success");
-                }
-            } else {
-                window.saveToLocalStorageWF();
-                window.showToast("Missão lançada localmente!", "success");
-            }
+            if (window.isCloudMode && wfCurrentUser) {
+                try {
+                    await setDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', newTask.id), newTask);
+                    window.showToast("Missão lançada na nuvem!", "success");
+                } catch(e) {
+                    console.error("Erro Nuvem WF", e);
+                    window.saveToLocalStorageWF();
+                    window.showToast("Salvo offline (Erro Nuvem).", "success");
+                }
+            } else {
+                window.saveToLocalStorageWF();
+                window.showToast("Missão lançada localmente!", "success");
+            }
 
-            titleInput.value = ''; descInput.value = ''; remInput.value = '';
-            window.renderTasks();
-        };
+            titleInput.value = ''; descInput.value = ''; remInput.value = '';
+            window.renderTasks();
+        };
 
-        window.toggleTask = async (id) => {
-            const task = window.tasks.find(t => t.id === id);
-            if(!task) return;
-            
-            task.completed = !task.completed;
-            window.renderTasks();
+        window.toggleTask = async (id) => {
+            const task = window.tasks.find(t => t.id === id);
+            if(!task) return;
+            
+            task.completed = !task.completed;
+            window.renderTasks();
 
-            if (window.isCloudMode && wfCurrentUser) {
-                try {
-                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id), { completed: task.completed });
-                } catch(e) {
-                    window.saveToLocalStorageWF();
-                }
-            } else {
-                window.saveToLocalStorageWF();
-            }
-        };
+            if (window.isCloudMode && wfCurrentUser) {
+                try {
+                    await updateDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id), { completed: task.completed });
+                } catch(e) {
+                    window.saveToLocalStorageWF();
+                }
+            } else {
+                window.saveToLocalStorageWF();
+            }
+        };
 
-        window.deleteTask = async (id) => {
-            window.showConfirm("Excluir essa tarefa do histórico?", async () => {
-                window.tasks = window.tasks.filter(t => t.id !== id);
-                window.renderTasks();
+        window.deleteTask = async (id) => {
+            window.showConfirm("Excluir essa tarefa do histórico?", async () => {
+                window.tasks = window.tasks.filter(t => t.id !== id);
+                window.renderTasks();
 
-                if (window.isCloudMode && wfCurrentUser) {
-                    try {
-                        await deleteDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id));
-                    } catch(e) {
-                        window.saveToLocalStorageWF();
-                    }
-                } else {
-                    window.saveToLocalStorageWF();
-                }
-                window.showToast("Tarefa erradicada.", "success");
-            });
-        };
+                if (window.isCloudMode && wfCurrentUser) {
+                    try {
+                        await deleteDoc(doc(wfDb, 'artifacts', wfAppId, 'public', 'data', 'tasks', id));
+                    } catch(e) {
+                        window.saveToLocalStorageWF();
+                    }
+                } else {
+                    window.saveToLocalStorageWF();
+                }
+                window.showToast("Tarefa erradicada.", "success");
+            });
+        };
 
-        window.setFilter = (f) => {
-            window.currentFilter = f;
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('text-pink-500', 'active-filter');
-                const span = b.querySelector('span');
-                if(span) span.remove();
-            });
-            const activeBtn = Array.from(document.querySelectorAll('.filter-btn')).find(b => {
-                if(f === 'all' && b.innerText.includes('Visão Geral')) return true;
-                if(f === 'pending' && b.innerText.includes('Pendentes')) return true;
-                if(f === 'completed' && b.innerText.includes('Finalizadas')) return true;
-                return false;
-            });
-            if(activeBtn) {
-                activeBtn.classList.add('text-pink-500', 'active-filter');
-                activeBtn.innerHTML += `<span class="absolute -bottom-9 left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>`;
-            }
-            window.renderTasks();
-        };
+        window.setFilter = (f) => {
+            window.currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('text-pink-500', 'active-filter');
+                const span = b.querySelector('span');
+                if(span) span.remove();
+            });
+            const activeBtn = Array.from(document.querySelectorAll('.filter-btn')).find(b => {
+                if(f === 'all' && b.innerText.includes('Visão Geral')) return true;
+                if(f === 'pending' && b.innerText.includes('Pendentes')) return true;
+                if(f === 'completed' && b.innerText.includes('Finalizadas')) return true;
+                return false;
+            });
+            if(activeBtn) {
+                activeBtn.classList.add('text-pink-500', 'active-filter');
+                activeBtn.innerHTML += `<span class="absolute -bottom-9 left-0 right-0 h-[3px] bg-pink-500 rounded-full"></span>`;
+            }
+            window.renderTasks();
+        };
 
-        // =========================================
-        // BOOTSTRAP INICIAL DO SISTEMA TODO
-        // =========================================
-        window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            setTimeout(() => {
-                const ls = document.getElementById('lock-screen');
-                if(ls) ls.style.opacity = '1';
-                window.initFirebaseSystem();
-            }, 500);
-        });
+        // =========================================
+        // BOOTSTRAP INICIAL DO SISTEMA TODO
+        // =========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setTimeout(() => {
+                const ls = document.getElementById('lock-screen');
+                if(ls) ls.style.opacity = '1';
+                window.initFirebaseSystem();
+            }, 500);
+        });
 
-    </script>
+    </script>
 </body>
 </html>
