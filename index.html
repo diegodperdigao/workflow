@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub 3C | MD & Workflow</title>
+    <script>
+        // Session check - runs before page renders to prevent flash
+        (function() {
+            try {
+                var sess = JSON.parse(localStorage.getItem('hub3c_session') || 'null');
+                if (sess && sess.exp > Date.now()) {
+                    // Valid session - mark for auto-login, hide lock screen via CSS
+                    document.documentElement.setAttribute('data-autologin', '1');
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <style>
+        /* Hide lock screen instantly if valid session */
+        html[data-autologin="1"] #lock-screen { display: none !important; }
+        html[data-autologin="1"] #app-selection { display: flex !important; opacity: 1 !important; }
+    </style>
     <link rel="icon" href="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -548,15 +565,7 @@
         const wfAppId = typeof __app_id !== 'undefined' ? __app_id : 'hub3c-production';
 
         window.initFirebaseSystem = async () => {
-            // Check for valid session - skip password screen if recent login
-            const _sess = (() => { try { return JSON.parse(localStorage.getItem('hub3c_session')||'null'); } catch(e) { return null; } })();
-            if(_sess && _sess.exp > Date.now()) {
-                // Valid session - bypass lock screen
-                const ls = document.getElementById('lock-screen');
-                if(ls) { ls.style.opacity='0'; ls.style.display='none'; }
-                document.getElementById('app-selection').classList.replace('hidden','flex');
-                setTimeout(()=>document.getElementById('app-selection').style.opacity='1', 50);
-            }
+            // Session already handled by inline CSS in <head>
             window.workflowInitialized = true;
             try {
                 const app=initializeApp(FB_CFG); wfAuth=getAuth(app); wfDb=getFirestore(app); window.isCloudMode=true;
