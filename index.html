@@ -172,6 +172,7 @@
         /* --- DAYS PENDING TAG --- */
         @keyframes urgentPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
         .urgent-blink { animation: urgentPulse 1.5s ease-in-out infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head><body class="antialiased selection:bg-pink-500 selection:text-white">
     <div class="bg-fluid"></div>
@@ -547,6 +548,15 @@
         const wfAppId = typeof __app_id !== 'undefined' ? __app_id : 'hub3c-production';
 
         window.initFirebaseSystem = async () => {
+            // Check for valid session - skip password screen if recent login
+            const _sess = (() => { try { return JSON.parse(localStorage.getItem('hub3c_session')||'null'); } catch(e) { return null; } })();
+            if(_sess && _sess.exp > Date.now()) {
+                // Valid session - bypass lock screen
+                const ls = document.getElementById('lock-screen');
+                if(ls) { ls.style.opacity='0'; ls.style.display='none'; }
+                document.getElementById('app-selection').classList.replace('hidden','flex');
+                setTimeout(()=>document.getElementById('app-selection').style.opacity='1', 50);
+            }
             window.workflowInitialized = true;
             try {
                 const app=initializeApp(FB_CFG); wfAuth=getAuth(app); wfDb=getFirestore(app); window.isCloudMode=true;
@@ -601,17 +611,33 @@
             document.getElementById('btn-login').innerText="Verificando..."; document.getElementById('btn-login').disabled=true;
             let ok=false;
             if(window.isCloudMode&&wfUser){ try{ const ref=doc(wfDb,'artifacts',wfAppId,'public','data','md_config','auth'),snap=await getDoc(ref); if(snap.exists()&&snap.data().master_password){ok=(p===snap.data().master_password);if(!ok)window.showToast("Senha incorreta!","error");}else{await setDoc(ref,{master_password:p});ok=true;window.showToast("Senha configurada!","success");} }catch(e){ok=(p==="3cMD123@");} } else ok=(p==="3cMD123@");
-            if(ok){ document.getElementById('lock-screen').style.opacity='0'; setTimeout(()=>{document.getElementById('lock-screen').style.display='none';document.getElementById('app-selection').classList.replace('hidden','flex');setTimeout(()=>document.getElementById('app-selection').style.opacity='1',50);},700); }
+            if(ok){
+                // Save session - valid for 7 days
+                localStorage.setItem('hub3c_session', JSON.stringify({ts: Date.now(), exp: Date.now() + 7*24*60*60*1000}));
+                document.getElementById('lock-screen').style.opacity='0';
+                setTimeout(()=>{document.getElementById('lock-screen').style.display='none';document.getElementById('app-selection').classList.replace('hidden','flex');setTimeout(()=>document.getElementById('app-selection').style.opacity='1',50);},700);
+            }
             else{ document.getElementById('password-input').classList.add('shake','border-red-500'); document.getElementById('btn-login').innerText="Acessar Portal"; document.getElementById('btn-login').disabled=false; setTimeout(()=>document.getElementById('password-input').classList.remove('shake','border-red-500'),400); }
         };
 
         window.launchApp = (id) => { document.getElementById('app-selection').style.opacity='0'; if(id==='workflow-main-content'){const r=document.documentElement;r.style.setProperty('--theme-color','#ec4899');r.style.setProperty('--theme-color-glow','rgba(236, 72, 153, 0.4)');} setTimeout(()=>{document.getElementById('app-selection').classList.add('hidden');document.getElementById(id).classList.remove('hidden');setTimeout(()=>{document.getElementById(id).style.opacity='1';if(id==='dashboard-app')window.initMD();},50);},700); };
+        window.logout = () => {
+            localStorage.removeItem('hub3c_session');
+            location.reload();
+        };
         window.returnToSelection = () => { document.getElementById('dashboard-app').style.opacity='0'; document.getElementById('workflow-main-content').style.opacity='0'; setTimeout(()=>{document.getElementById('dashboard-app').classList.add('hidden');document.getElementById('workflow-main-content').classList.add('hidden');document.getElementById('app-selection').classList.replace('hidden','flex');setTimeout(()=>document.getElementById('app-selection').style.opacity='1',50);},700); };
 
         window.logAction=(action,details)=>{window.dataStore.auditLogs.unshift({id:Math.random().toString(36).substr(2,9),timestamp:Date.now(),action,details});if(window.dataStore.auditLogs.length>100)window.dataStore.auditLogs.pop();window.saveMDData();};
         window.getBrandConfig=(n)=>{ if(MD_BASE_CONFIG[n])return MD_BASE_CONFIG[n]; const d=window.dataStore.brands[n]; if(!d)return null; let h=d.color.replace('#',''); if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; const rgb=`${parseInt(h.substring(0,2),16)||255}, ${parseInt(h.substring(2,4),16)||255}, ${parseInt(h.substring(4,6),16)||255}`; const bg=d.logo?`url('${d.logo}')`:``; return{color:d.color,colorRGB:rgb,grad1:`rgba(${rgb},0.12)`,grad2:`rgba(${rgb},0.05)`,title:n.toUpperCase(),subtitle:'',logo:d.logo||'',mosaic:bg,deal:d}; };
         window.getBrandList=()=>Object.keys(window.dataStore.brands).sort((a,b)=>{let qa=0,qb=0;window.dataStore.dailyReports.forEach(r=>{if(r.brand===a)qa+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;if(r.brand===b)qb+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;});return qb-qa;});
         window.saveMDData=async()=>{ localStorage.setItem(MD_KEY,JSON.stringify(window.dataStore)); if(window.isCloudMode&&wfUser){document.getElementById('md-sync-status').innerText="Salvando...";try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);document.getElementById('md-sync-status').innerText="Salvo";setTimeout(()=>document.getElementById('md-sync-status').innerText="Cloud Sync Online",2000);}catch(e){document.getElementById('md-sync-status').innerText="Erro";}}else{document.getElementById('md-sync-status').innerText="Salvo (Local)";setTimeout(()=>document.getElementById('md-sync-status').innerText="Offline (Local)",2000);} };
+        window.refreshData=()=>{
+            const btn = document.querySelector('[title="Atualizar dados"]');
+            if(btn) { btn.style.opacity='0.4'; btn.style.animation='spin 0.8s linear infinite'; }
+            window.loadMDData();
+            if(window.currentMDEnv) window.switchMDEnv(window.currentMDEnv);
+            setTimeout(()=>{ if(btn){ btn.style.opacity='1'; btn.style.animation=''; } window.showToast('Dados atualizados','success'); }, 800);
+        };
         window.loadMDData=()=>{ try{const p=JSON.parse(localStorage.getItem(MD_KEY));if(p){Object.keys(p.brands||{}).forEach(b=>{if(window.dataStore.brands[b])p.brands[b].logo=window.dataStore.brands[b].logo;});Object.assign(window.dataStore,p);window.dataStore.payments=p.payments||[];}}catch(e){} };
         window.initMD=()=>{
             window.loadMDData();
