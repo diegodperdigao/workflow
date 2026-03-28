@@ -531,18 +531,42 @@
                 } catch(e) {}
             }
             let ops=window.dataStore.affiliates.length?'<option value="">Selecione o afiliado...</option>'+window.dataStore.affiliates.map(a=>'<option value="'+a.id+'">'+a.name+'</option>').join(''):'<option value="">⚠ Nenhum afiliado carregado</option>'; document.getElementById('close-affiliate').innerHTML=ops; const d=new Date();document.getElementById('close-start').value=new Date(d.getFullYear(),d.getMonth(),1).toISOString().split('T')[0];document.getElementById('close-end').value=new Date(d.getFullYear(),d.getMonth()+1,0).toISOString().split('T')[0]; document.getElementById('closure-result-card').classList.add('hidden');document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>'; };
-        window.updateClosureBrands=()=>{ const id=document.getElementById('close-affiliate').value,aff=window.dataStore.affiliates.find(a=>a.id===id); if(!aff)return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>'; aff.deals=aff.deals||{}; let h='';window.getBrandList().forEach(b=>{if(aff.deals[b]&&(aff.deals[b].cpa>0||aff.deals[b].cpa_l1>0||aff.deals[b].rs>0))h+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="'+b+'" class="closure-brand-cb w-4 h-4 accent-emerald-500" checked><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">'+b+'</span></label>';}); document.getElementById('close-brands-container').innerHTML=h||'<span class="text-xs text-gray-500 italic">Sem deals.</span>'; };
+        window.updateClosureBrands=()=>{
+            const id=document.getElementById('close-affiliate').value;
+            if(!id) return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>';
+            // Ensure data is loaded
+            if(window.dataStore.affiliates.length === 0) {
+                try { const local=JSON.parse(localStorage.getItem('igaming3c_data_v15')||'{}'); if(local.affiliates) { window.dataStore.affiliates=local.affiliates; window.dataStore.dailyReports=local.dailyReports||[]; } } catch(e) {}
+            }
+            const aff=window.dataStore.affiliates.find(a=>a.id===id);
+            if(!aff)return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Afiliado não encontrado.</span>';
+            aff.deals=aff.deals||{}; let h='';window.getBrandList().forEach(b=>{if(aff.deals[b]&&(aff.deals[b].cpa>0||aff.deals[b].cpa_l1>0||aff.deals[b].rs>0))h+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="'+b+'" class="closure-brand-cb w-4 h-4 accent-emerald-500" checked><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">'+b+'</span></label>';}); document.getElementById('close-brands-container').innerHTML=h||'<span class="text-xs text-gray-500 italic">Sem deals.</span>'; };
 
         window.generateClosure=()=>{
             try {
-                // Always refresh the select with latest data before processing
-                window.initFechamentoUI();
+                // Ensure affiliates are loaded (without resetting the form)
+                if(window.dataStore.affiliates.length === 0) {
+                    try {
+                        const local = JSON.parse(localStorage.getItem('igaming3c_data_v15') || '{}');
+                        if(local.affiliates && local.affiliates.length > 0) {
+                            window.dataStore.affiliates = local.affiliates;
+                            window.dataStore.dailyReports = local.dailyReports || [];
+                            window.dataStore.payments = local.payments || [];
+                            // Re-populate select without resetting dates/checkboxes
+                            const sel = document.getElementById('close-affiliate');
+                            const currentVal = sel.value;
+                            sel.innerHTML = '<option value="">Selecione o afiliado...</option>' + local.affiliates.map(a => '<option value="'+a.id+'">'+a.name+'</option>').join('');
+                            sel.value = currentVal;
+                        }
+                    } catch(e) {}
+                }
                 const id=document.getElementById('close-affiliate').value;
                 const s=document.getElementById('close-start').value;
                 const e=document.getElementById('close-end').value;
                 const b=Array.from(document.querySelectorAll('.closure-brand-cb:checked')).map(cb=>cb.value);
-                if(!id||!s||!e) return window.showToast("Preencha todos os campos.","error");
-                if(!b.length) return window.showToast("Selecione uma casa.","error");
+                if(!id) return window.showToast("Selecione um afiliado.", "error");
+                if(!s||!e) return window.showToast("Preencha as datas.", "error");
+                if(!b.length) return window.showToast("Selecione pelo menos uma casa.", "error");
                 // Re-populate select in case it wasn't populated yet
                 if(window.dataStore.affiliates.length > 0 && document.getElementById('close-affiliate').children.length <= 1) {
                     window.initFechamentoUI();
