@@ -10,17 +10,11 @@
             try {
                 var sess = JSON.parse(localStorage.getItem('hub3c_session') || 'null');
                 if (sess && sess.exp > Date.now()) {
-                    // Valid session - mark for auto-login, hide lock screen via CSS
                     document.documentElement.setAttribute('data-autologin', '1');
                 }
             } catch(e) {}
         })();
     </script>
-    <style>
-        /* Hide lock screen instantly if valid session */
-        html[data-autologin="1"] #lock-screen { display: none !important; }
-        html[data-autologin="1"] #app-selection { display: flex !important; opacity: 1 !important; }
-    </style>
     <link rel="icon" href="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1120,7 +1114,24 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
             if (header) header.classList.toggle('scrolled', window.scrollY > 20);
         }, { passive: true });
 
-        window.addEventListener('DOMContentLoaded',()=>{lucide.createIcons();setTimeout(()=>{if(document.getElementById('lock-screen'))document.getElementById('lock-screen').style.opacity='1';window.initFirebaseSystem();},500);});
+        window.addEventListener('DOMContentLoaded',()=>{lucide.createIcons();setTimeout(()=>{
+                    const _isAutologin = document.documentElement.getAttribute('data-autologin') === '1';
+                    if (_isAutologin) {
+                        // Valid session: hide lock screen + selection, go to dashboard
+                        const ls = document.getElementById('lock-screen');
+                        if (ls) { ls.style.cssText += ';display:none!important;pointer-events:none!important;'; }
+                        const sel = document.getElementById('app-selection');
+                        if (sel) { sel.style.cssText += ';display:none!important;pointer-events:none!important;'; }
+                        const dash = document.getElementById('dashboard-app');
+                        if (dash) { dash.classList.remove('hidden'); dash.style.opacity = '1'; }
+                        window.initFirebaseSystem();
+                        setTimeout(() => { if(window.initMD) window.initMD(); }, 200);
+                    } else {
+                        const ls = document.getElementById('lock-screen');
+                        if (ls) ls.style.opacity = '1';
+                        window.initFirebaseSystem();
+                    }
+                },500);});
     </script>
 </body>
 </html>
