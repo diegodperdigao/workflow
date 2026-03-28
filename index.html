@@ -14,8 +14,10 @@
         :root { --theme-color: #ec4899; --theme-color-glow: rgba(236, 72, 153, 0.4); --bg-grad-1: rgba(255, 0, 127, 0.08); --bg-grad-2: rgba(106, 13, 173, 0.1); }
         html { scroll-behavior: smooth; }
         body { font-family: 'Montserrat', sans-serif; background-color: #030008; color: #fff; min-height: 100vh; overflow-x: hidden; transition: background-color 0.5s ease; }
+        
         .bg-fluid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; background: radial-gradient(circle at 80% 20%, var(--bg-grad-1) 0%, transparent 50%), radial-gradient(circle at 20% 80%, var(--bg-grad-2) 0%, transparent 50%); transition: background 1s ease-in-out; }
         .bg-noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); pointer-events: none; }
+        
         .mosaic-wrapper { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 15%, black 85%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0px, black 15%, black 85%, transparent 100%); opacity: 0.75; transition: opacity 0.5s ease; }
         .mosaic-container { position: absolute; top: -25%; left: -25%; width: 150%; height: 150%; transform: perspective(1000px) rotateX(15deg) rotateY(-5deg) rotateZ(2deg); }
         .mosaic-pattern { width: 100%; height: 100%; background-size: 150px; background-repeat: repeat; animation: panMosaic 60s linear infinite; transition: background-image 0.5s ease; }
@@ -23,6 +25,7 @@
         
         .glass-header { background: rgba(5, 5, 10, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .glass-card { background: rgba(15, 15, 20, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        
         .edit-mode-input { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 8px; width: 100%; outline: none; color: #fff; transition: border-color 0.3s ease; }
         .edit-mode-input:focus { border-color: var(--theme-color); }
         .form-label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: #6b7280; font-style: italic; margin-left: 0.5rem; }
@@ -61,7 +64,6 @@
         .completed-task { opacity: 0.25; filter: grayscale(1); }
         .completed-text { text-decoration: line-through; color: #71717a; }
         .animate-task { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
         .reminder-wrapper { position: relative; display: flex; align-items: center; }
         input[type="datetime-local"] { padding-right: 45px !important; width: 100%; }
@@ -85,7 +87,7 @@
                 <i data-lucide="bell" class="w-8 h-8 text-pink-500 animate-bounce"></i>
             </div>
             <div class="flex-grow">
-                <p id="alert-prefix" class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1 italic">Vai trabalhar vagabundo!</p>
+                <p id="alert-prefix" class="text-[9px] font-black uppercase tracking-[0.3em] text-pink-500 mb-1 italic">Notificação</p>
                 <h3 id="alert-title" class="text-xl font-black uppercase leading-tight tracking-tight">Título da Tarefa</h3>
             </div>
             <button onclick="document.getElementById('browser-alert').style.display='none'" class="p-3 hover:bg-white/5 rounded-2xl transition-all">
@@ -94,69 +96,37 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO (COMPARTILHADO) -->
-    <div id="modal-confirm" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity p-4 sm:p-6" onclick="if(event.target === this) window.closeConfirm()">
-        <div class="glass-card w-full max-w-sm p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col text-center">
-            <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30 mx-auto mb-4">
-                <i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
-            </div>
-            <h2 class="text-lg font-black uppercase tracking-widest mb-2 text-white">Atenção!</h2>
-            <p id="confirm-msg" class="text-xs text-gray-400 mb-6"></p>
-            <div class="flex gap-4">
-                <button onclick="window.closeConfirm()" class="flex-1 py-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors border border-white/10">Cancelar</button>
-                <button id="btn-confirm-action" class="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-lg">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TELA DE BLOQUEIO / LOGIN UNIFICADO -->
+    <!-- TELA DE BLOQUEIO / LOGIN -->
     <div id="lock-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#030008] transition-opacity duration-700">
         <div class="max-w-md w-full px-10 text-center">
             <div class="mb-8 flex flex-col items-center">
-                <img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" alt="3C" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-2xl">
+                <img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-2xl">
                 <h2 class="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 italic">Hub 3C System</h2>
             </div>
-            <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl">
-                <div class="space-y-6">
-                    <input type="password" id="password-input" placeholder="Conectando ao servidor..." disabled
-                        onkeypress="if(event.key === 'Enter') window.checkPassword()"
-                        class="w-full bg-black/40 border border-white/10 px-6 py-5 rounded-2xl text-center text-white focus:outline-none focus:border-pink-500 transition-all tracking-widest font-mono disabled:opacity-50">
-                    <button id="btn-login" onclick="window.checkPassword()" disabled class="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.3em] py-5 rounded-2xl hover:bg-pink-500 hover:text-white transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Aguarde...
-                    </button>
-                </div>
+            <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl space-y-6">
+                <input type="password" id="password-input" placeholder="Conectando..." disabled onkeypress="if(event.key === 'Enter') window.checkPassword()" class="w-full bg-black/40 border border-white/10 px-6 py-5 rounded-2xl text-center text-white focus:outline-none focus:border-pink-500 transition-all tracking-widest font-mono disabled:opacity-50">
+                <button id="btn-login" onclick="window.checkPassword()" disabled class="w-full bg-white text-black font-black uppercase text-[10px] tracking-[0.3em] py-5 rounded-2xl hover:bg-pink-500 hover:text-white transition-all active:scale-95 disabled:opacity-50">Aguarde...</button>
             </div>
         </div>
     </div>
 
-    <!-- TELA DE SELEÇÃO DE MÓDULO -->
+    <!-- SELEÇÃO DE APP -->
     <div id="app-selection" class="fixed inset-0 z-[90] flex items-center justify-center bg-[#030008] transition-opacity duration-700 hidden opacity-0 flex-col px-4">
         <div class="mb-16 flex flex-col items-center">
             <img src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-16 w-16 rounded-full object-cover border-2 border-white/10 mb-6 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-            <h2 class="text-xs font-black tracking-[0.4em] uppercase text-gray-400 italic">Selecione o Módulo de Trabalho</h2>
+            <h2 class="text-xs font-black tracking-[0.4em] uppercase text-gray-400 italic">Selecione o Módulo</h2>
         </div>
-        
         <div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl">
-            <!-- DASHBOARD MD -->
             <div onclick="window.launchApp('dashboard-app')" class="glass-card flex-1 p-10 rounded-3xl border border-white/10 hover:border-pink-500/50 hover:shadow-[0_0_30px_rgba(236,72,153,0.2)] transition-all cursor-pointer group text-center flex flex-col items-center justify-center min-h-[280px]">
-                <div class="w-20 h-20 rounded-full bg-pink-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-pink-500/20">
-                    <i data-lucide="bar-chart-2" class="w-10 h-10 text-pink-500"></i>
-                </div>
-                <h3 class="text-2xl font-black uppercase tracking-widest text-white mb-2">Operação MD</h3>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Dashboard & Extratos</p>
+                <div class="w-20 h-20 rounded-full bg-pink-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-pink-500/20"><i data-lucide="bar-chart-2" class="w-10 h-10 text-pink-500"></i></div>
+                <h3 class="text-2xl font-black uppercase tracking-widest text-white mb-2">Operação MD</h3><p class="text-[10px] text-gray-500 uppercase tracking-widest">Dashboard & Extratos</p>
             </div>
-            
-            <!-- WORKFLOW 3C -->
             <div onclick="window.launchApp('workflow-main-content')" class="glass-card flex-1 p-10 rounded-3xl border border-white/10 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all cursor-pointer group text-center flex flex-col items-center justify-center min-h-[280px]">
-                <div class="w-20 h-20 rounded-full bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-purple-500/20">
-                    <i data-lucide="check-square" class="w-10 h-10 text-purple-500"></i>
-                </div>
-                <h3 class="text-2xl font-black uppercase tracking-widest text-white mb-2">Workflow 3C</h3>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Gestão de Tarefas</p>
+                <div class="w-20 h-20 rounded-full bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-purple-500/20"><i data-lucide="check-square" class="w-10 h-10 text-purple-500"></i></div>
+                <h3 class="text-2xl font-black uppercase tracking-widest text-white mb-2">Workflow 3C</h3><p class="text-[10px] text-gray-500 uppercase tracking-widest">Gestão de Tarefas</p>
             </div>
         </div>
     </div>
-
 
     <!-- ========================================== -->
     <!-- MÓDULO 1: DASHBOARD OPERAÇÃO MD            -->
@@ -165,56 +135,36 @@
         <nav class="fixed w-full z-50 top-0 glass-header">
             <div class="absolute top-0 left-0 right-0 h-[2px] theme-bg opacity-30 transition-colors duration-500"></div>
             <div class="max-w-[1400px] mx-auto px-8 py-3 flex justify-between items-center text-white">
-                <div class="flex items-center gap-5 cursor-pointer group" onclick="window.switchMDEnv('Visão Geral')" title="Ir para Visão Geral">
-                    <img id="nav-logo" src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" alt="Logo" class="h-8 w-8 rounded-full border border-white/10 p-0.5 shadow-2xl object-cover transition-all duration-500 group-hover:scale-110">
-                    <div class="flex flex-col">
-                        <span class="text-[0.65rem] tracking-[0.4em] uppercase font-black leading-tight group-hover:text-pink-400 transition-colors">OPERAÇÃO MD</span>
-                        <span class="text-[0.45rem] tracking-[0.2em] text-gray-500 font-bold italic opacity-80 uppercase">3C_Execution_Control</span>
-                    </div>
+                <div class="flex items-center gap-5 cursor-pointer group" onclick="window.switchMDEnv('Visão Geral')">
+                    <img id="nav-logo" src="https://i.ibb.co/TDvNpKbv/285535120-111261434935979-5560566145880188190-n.jpg" class="h-8 w-8 rounded-full border border-white/10 p-0.5 shadow-2xl object-cover transition-all group-hover:scale-110">
+                    <div class="flex flex-col"><span class="text-[0.65rem] tracking-[0.4em] uppercase font-black leading-tight group-hover:text-pink-400 transition-colors">OPERAÇÃO MD</span><span class="text-[0.45rem] tracking-[0.2em] text-gray-500 font-bold italic uppercase">3C_Execution_Control</span></div>
                 </div>
-                
                 <div class="flex items-center gap-4 md:gap-6">
-                    <button id="nav-afiliados" onclick="window.switchMDEnv('Afiliados')" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest" title="Gestão de Afiliados">
-                        <i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Afiliados</span>
-                    </button>
-
+                    <button onclick="window.switchMDEnv('Afiliados')" id="nav-afiliados" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"><i data-lucide="users" class="w-4 h-4"></i> <span class="hidden sm:inline">Afiliados</span></button>
                     <div class="relative group">
-                        <button class="p-2 text-gray-400 group-hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest" title="Acessar Casas Parceiras">
-                            <i data-lucide="layout-grid" class="w-4 h-4"></i> <span class="hidden sm:inline">Casas</span> <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i>
-                        </button>
+                        <button class="p-2 text-gray-400 group-hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"><i data-lucide="layout-grid" class="w-4 h-4"></i> <span class="hidden sm:inline">Casas</span> <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i></button>
                         <div class="absolute top-full right-0 w-full h-4"></div>
                         <div class="absolute right-0 top-[calc(100%+0.5rem)] w-56 bg-[#0a0a0f] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[200] flex flex-col py-2" id="header-brands-dropdown"></div>
                     </div>
-
-                    <button onclick="window.openConfigModal()" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest" title="Configurar Operação e Casas Parceiras">
-                        <i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Configuração</span>
-                    </button>
-                    
-                    <button onclick="window.returnToSelection()" class="p-2 text-gray-400 hover:text-pink-500 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest" title="Trocar Módulo">
-                        <i data-lucide="grid" class="w-4 h-4"></i>
-                    </button>
-
-                    <div class="hidden md:flex items-center gap-3 px-3 py-1.5 bg-white/5 rounded-xl border border-white/5">
-                        <div id="status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                        <span id="md-sync-status" class="text-[7px] font-black tracking-widest uppercase italic text-gray-400">Offline (Local)</span>
-                    </div>
+                    <button onclick="window.openModal('modal-config')" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"><i data-lucide="settings" class="w-4 h-4"></i> <span class="hidden sm:inline">Configuração</span></button>
+                    <button onclick="window.returnToSelection()" class="p-2 text-gray-400 hover:text-pink-500 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"><i data-lucide="grid" class="w-4 h-4"></i></button>
+                    <div class="hidden md:flex items-center gap-3 px-3 py-1.5 bg-white/5 rounded-xl border border-white/5"><div id="status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div><span id="md-sync-status" class="text-[7px] font-black tracking-widest uppercase italic text-gray-400">Offline</span></div>
                 </div>
             </div>
         </nav>
 
         <div class="max-w-[1400px] mx-auto px-4 sm:px-8 pt-32 pb-20 relative text-white">
             <div class="flex gap-4 mb-10 border-b border-white/10 pb-4 overflow-x-auto custom-scrollbar" id="brand-tabs-container"></div>
+            
             <div id="dynamic-view-wrapper" class="fade-content">
                 <header class="mb-12 relative overflow-hidden rounded-3xl bg-white/[0.01] border border-white/[0.03] shadow-2xl flex items-center min-h-[220px]">
                     <div class="mosaic-wrapper"><div class="mosaic-container"><div id="dynamic-mosaic" class="mosaic-pattern"></div></div></div>
                     <div class="relative z-10 w-full p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                        <div>
-                            <h1 id="brand-title" class="text-4xl md:text-5xl font-black uppercase tracking-tighter flex items-center gap-4">VISÃO GERAL</h1>
-                            <p id="brand-subtitle" class="text-xs text-gray-400 mt-2 font-mono tracking-widest uppercase">Resultado consolidado da operação</p>
-                        </div>
+                        <div><h1 id="brand-title" class="text-4xl md:text-5xl font-black uppercase tracking-tighter flex items-center gap-4">VISÃO GERAL</h1><p id="brand-subtitle" class="text-xs text-gray-400 mt-2 font-mono tracking-widest uppercase">Resultado consolidado da operação</p></div>
                     </div>
                 </header>
 
+                <!-- TAB: DASHBOARD GERAL E MARCAS -->
                 <div id="standard-module">
                     <div class="flex flex-wrap justify-between items-end gap-8 mb-12">
                         <div class="flex flex-wrap gap-4 items-end bg-black/40 p-6 rounded-2xl border border-white/5 shadow-lg">
@@ -226,7 +176,6 @@
                                 <button onclick="window.setDateRange('all')" class="px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest text-gray-300 transition-all border border-white/10 whitespace-nowrap">Todo Período</button>
                             </div>
                         </div>
-
                         <div class="flex flex-wrap gap-3">
                             <button onclick="window.openHistoryModal()" class="px-5 py-4 bg-white/5 text-white font-black uppercase text-[10px] tracking-[0.2em] rounded-xl transition-all border border-white/10 hover:bg-white/10 flex items-center gap-2"><i data-lucide="list" class="w-4 h-4"></i> Lançamentos</button>
                             <button onclick="window.switchMDEnv('Afiliados')" class="px-5 py-4 bg-white text-black font-black uppercase text-[10px] tracking-[0.2em] rounded-xl hover:bg-gray-200 transition-all shadow-lg flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Gerenciar</button>
@@ -238,76 +187,65 @@
                         <div class="glass-card p-8 rounded-2xl border-l-4 theme-border relative overflow-hidden group min-h-[160px] flex flex-col justify-center">
                             <div class="absolute -right-10 -top-10 w-40 h-40 theme-glow opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"></div>
                             <h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> QFTDs (Qualificados)</h3>
-                            <p id="kpi-qftds" class="text-5xl font-mono font-black text-white mt-2 tracking-tight">0</p>
-                            <p id="kpi-ftds" class="text-sm text-gray-500 mt-3 font-bold">0 FTDs Totais</p>
+                            <p id="kpi-qftds" class="text-5xl font-mono font-black text-white mt-2 tracking-tight">0</p><p id="kpi-ftds" class="text-sm text-gray-500 mt-3 font-bold">0 FTDs Totais</p>
                         </div>
                         <div class="glass-card p-8 rounded-2xl border-l-4 border-l-blue-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center">
                             <div class="absolute -right-10 -top-10 w-40 h-40 bg-[radial-gradient(circle,rgba(59,130,246,0.4)_0%,transparent_70%)] opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"></div>
-                            <h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Depósitos (BRL)</h3>
-                            <p id="kpi-deposits" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight">R$ 0,00</p>
-                            <p class="text-sm text-gray-500 mt-3">Volume depositado</p>
+                            <h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Depósitos</h3>
+                            <p id="kpi-deposits" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">Volume depositado</p>
                         </div>
                         <div class="glass-card p-8 rounded-2xl border-l-4 border-l-red-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center">
                             <div class="absolute -right-10 -top-10 w-40 h-40 bg-[radial-gradient(circle,rgba(239,68,68,0.4)_0%,transparent_70%)] opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"></div>
                             <h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4"></i> Comissão Afiliados</h3>
-                            <p id="kpi-aff-comm" class="text-4xl font-mono font-bold text-red-400 mt-2 tracking-tight">R$ 0,00</p>
-                            <p class="text-sm text-gray-500 mt-3">A pagar na fatura</p>
+                            <p id="kpi-aff-comm" class="text-4xl font-mono font-bold text-red-400 mt-2 tracking-tight">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">A pagar na fatura</p>
                         </div>
                         <div class="glass-card p-8 rounded-2xl border-l-4 border-l-emerald-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center">
                             <div class="absolute -right-10 -top-10 w-40 h-40 bg-[radial-gradient(circle,rgba(16,185,129,0.4)_0%,transparent_70%)] opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"></div>
                             <h3 class="text-[11px] uppercase font-black tracking-widest text-emerald-400 mb-2 flex items-center gap-2"><i data-lucide="gem" class="w-4 h-4"></i> Margem 3C</h3>
-                            <p id="kpi-profit" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight">R$ 0,00</p>
-                            <p id="kpi-gross" class="text-sm text-emerald-200/50 mt-3">Receita Bruta: R$ 0,00</p>
+                            <p id="kpi-profit" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight">R$ 0,00</p><p id="kpi-gross" class="text-sm text-emerald-200/50 mt-3">Receita Bruta: R$ 0,00</p>
                         </div>
                     </div>
 
                     <div class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
-                        <div class="bg-black/60 px-8 py-6 border-b border-white/5 flex justify-between items-center">
-                            <h2 id="table-title" class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 theme-text"></i> Performance por Afiliado (Top Ranking)</h2>
-                            <span class="text-[9px] text-gray-500 italic uppercase tracking-widest">No período selecionado</span>
-                        </div>
+                        <div class="bg-black/60 px-8 py-6 border-b border-white/5 flex justify-between items-center"><h2 id="table-title" class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 theme-text"></i> Performance</h2><span class="text-[9px] text-gray-500 italic uppercase tracking-widest">No período</span></div>
                         <div class="overflow-x-auto custom-scrollbar">
                             <table class="w-full text-left border-collapse min-w-[1000px]">
                                 <thead>
                                     <tr class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400">
-                                        <th class="px-6 py-5 font-bold whitespace-nowrap">Ranking / Afiliado</th>
+                                        <th class="px-6 py-5 font-bold whitespace-nowrap">Afiliado</th>
                                         <th id="th-deal" class="px-6 py-5 font-bold text-center whitespace-nowrap">Deal Afiliado</th>
-                                        <th class="px-6 py-5 font-bold text-center whitespace-nowrap">FTDs</th>
-                                        <th class="px-6 py-5 font-bold text-center whitespace-nowrap">QFTDs</th>
-                                        <th class="px-6 py-5 font-bold text-right whitespace-nowrap">Depósitos</th>
-                                        <th class="px-6 py-5 font-bold text-right whitespace-nowrap">Net Rev</th>
-                                        <th class="px-6 py-5 font-bold text-right text-red-400 whitespace-nowrap">Comissão Gerada</th>
-                                        <th class="px-6 py-5 font-bold text-right text-emerald-400 whitespace-nowrap">Lucro 3C</th>
-                                        <th class="px-6 py-5 font-bold text-center whitespace-nowrap">Ações</th>
+                                        <th class="px-6 py-5 font-bold text-center">FTDs</th>
+                                        <th class="px-6 py-5 font-bold text-center">QFTDs</th>
+                                        <th class="px-6 py-5 font-bold text-right">Depósitos</th>
+                                        <th class="px-6 py-5 font-bold text-right">Net Rev</th>
+                                        <th class="px-6 py-5 font-bold text-right text-red-400">Comissão Gerada</th>
+                                        <th class="px-6 py-5 font-bold text-right text-emerald-400">Lucro 3C</th>
+                                        <th class="px-6 py-5 font-bold text-center">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody id="affiliates-table-body" class="text-sm"></tbody>
                             </table>
                         </div>
-                        <div id="md-empty-state" class="hidden text-center py-24 opacity-30">
-                            <i data-lucide="folder-open" class="w-20 h-20 mx-auto mb-6 theme-text"></i>
-                            <p class="text-2xl font-black uppercase tracking-widest">Nenhum dado neste período</p>
-                        </div>
+                        <div id="md-empty-state" class="hidden text-center py-24 opacity-30"><i data-lucide="folder-open" class="w-20 h-20 mx-auto mb-6 theme-text"></i><p class="text-2xl font-black uppercase tracking-widest">Sem dados</p></div>
                     </div>
                 </div>
 
+                <!-- TAB: AFILIADOS / CRM -->
                 <div id="crm-module" class="hidden">
                     <div class="flex justify-between items-center mb-8">
                         <div class="bg-black/40 p-2 rounded-xl border border-white/5 flex items-center w-full max-w-md">
                             <i data-lucide="search" class="w-5 h-5 text-gray-500 ml-3"></i>
-                            <input type="text" id="search-affiliate" placeholder="Buscar afiliado pelo nome..." class="bg-transparent border-none text-white px-4 py-2 w-full focus:outline-none" oninput="window.renderAffiliatesCRM()">
+                            <input type="text" id="search-affiliate" placeholder="Buscar afiliado..." class="bg-transparent border-none text-white px-4 py-2 w-full focus:outline-none" oninput="window.renderAffiliatesCRM()">
                         </div>
                         <button onclick="window.openAffiliateModal()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-widest rounded-xl hover:bg-pink-600 transition-all shadow-[0_0_15px_rgba(236,72,153,0.3)] flex items-center gap-2">
                             <i data-lucide="plus" class="w-4 h-4"></i> Novo Afiliado
                         </button>
                     </div>
                     <div id="crm-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></div>
-                    <div id="crm-empty-state" class="hidden text-center py-24 opacity-30">
-                        <i data-lucide="users" class="w-20 h-20 mx-auto mb-6 text-pink-500"></i>
-                        <p class="text-2xl font-black uppercase tracking-widest">Nenhum afiliado encontrado</p>
-                    </div>
+                    <div id="crm-empty-state" class="hidden text-center py-24 opacity-30"><i data-lucide="users" class="w-20 h-20 mx-auto mb-6 text-pink-500"></i><p class="text-2xl font-black uppercase tracking-widest">Nenhum encontrado</p></div>
                 </div>
 
+                <!-- TAB: FECHAMENTOS E FATURAS -->
                 <div id="fechamento-module" class="hidden">
                     <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl mb-12">
                         <h2 class="text-2xl font-black uppercase tracking-widest mb-8 border-b border-white/10 pb-5 flex items-center gap-3"><i data-lucide="file-check" class="w-6 h-6 text-emerald-400"></i> Gerador de Faturas (Extrato)</h2>
@@ -347,9 +285,7 @@
 
                     <!-- HISTÓRICO GLOBAL DE FECHAMENTOS (ACORDEÃO) -->
                     <div class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
-                        <div class="bg-black/60 px-8 py-6 border-b border-white/5 flex justify-between items-center">
-                            <h2 class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="history" class="w-4 h-4 text-emerald-400"></i> Histórico de Pagamentos por Afiliado</h2>
-                        </div>
+                        <div class="bg-black/60 px-8 py-6 border-b border-white/5 flex justify-between items-center"><h2 class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="history" class="w-4 h-4 text-emerald-400"></i> Histórico de Pagamentos por Afiliado</h2></div>
                         <div id="grouped-payments-container" class="p-6 space-y-4"></div>
                     </div>
                 </div>
@@ -1196,91 +1132,98 @@
         };
 
         window.generateClosure = () => {
-            const id = document.getElementById('close-affiliate').value;
-            const s = document.getElementById('close-start').value;
-            const e = document.getElementById('close-end').value;
-            const cbNodes = document.querySelectorAll('.closure-brand-cb:checked');
-            const b = Array.from(cbNodes).map(cb => cb.value);
+            try {
+                const id = document.getElementById('close-affiliate').value;
+                const s = document.getElementById('close-start').value;
+                const e = document.getElementById('close-end').value;
+                const cbNodes = document.querySelectorAll('.closure-brand-cb:checked');
+                const b = Array.from(cbNodes).map(cb => cb.value);
 
-            if(!id || !s || !e) return window.showToast("Preencha todos os campos.", "error"); 
-            if(b.length === 0) return window.showToast("Selecione uma casa.", "error");
+                if(!id || !s || !e) return window.showToast("Preencha todos os campos.", "error"); 
+                if(b.length === 0) return window.showToast("Selecione uma casa.", "error");
 
-            const start = new Date(s + 'T00:00:00');
-            const end = new Date(e + 'T23:59:59');
-            const aff = window.dataStore.affiliates.find(a => a.id === id);
-            
-            if(!aff) return window.showToast("Afiliado não encontrado.", "error");
+                const start = new Date(s + 'T00:00:00').getTime();
+                const end = new Date(e + 'T23:59:59').getTime();
+                const aff = window.dataStore.affiliates.find(a => a.id === id);
+                
+                if(!aff) return window.showToast("Afiliado não encontrado.", "error");
 
-            aff.deals = aff.deals || {}; // SEGURANÇA
+                aff.deals = aff.deals || {}; // SEGURANÇA
 
-            const reps = window.dataStore.dailyReports.filter(r => {
-                const d = new Date(r.date + 'T12:00:00');
-                return r.affiliateId === id && d >= start && d <= end && b.includes(r.brand);
-            });
-
-            let tQ = 0, tRev = 0, tComm = 0;
-            let rowsHtml = '';
-
-            b.forEach(brand => {
-                const bReps = reps.filter(r => r.brand === brand);
-                if (bReps.length === 0) return;
-
-                let sQ = 0, sR = 0, bC = 0;
-                bReps.forEach(r => {
-                    sR += r.netRev;
-                    const mD = aff.deals[brand] || { cpa: 0, rs: 0 };
-                    const bCfg = window.dataStore.brands[brand];
-                    const isT = bCfg && bCfg.type === 'tiered';
-
-                    let q = 0;
-                    let cpaEarn = 0;
-
-                    if (isT) {
-                        const qL1 = (r.qftd && r.qftd.l1) ? r.qftd.l1 : 0;
-                        const qL2 = (r.qftd && r.qftd.l2) ? r.qftd.l2 : 0;
-                        const qL3 = (r.qftd && r.qftd.l3) ? r.qftd.l3 : 0;
-                        q = qL1;
-                        sQ += q;
-                        cpaEarn = (qL1 * (mD.cpa_l1 || mD.cpa || 0)) + (qL2 * (mD.cpa_l2 || 0)) + (qL3 * (mD.cpa_l3 || 0));
-                    } else {
-                        q = typeof r.qftd === 'object' ? (r.qftd?.l1 || 0) : (r.qftd || 0);
-                        sQ += q;
-                        cpaEarn = q * (mD.cpa || 0);
-                    }
-                    bC += cpaEarn + (r.netRev * ((mD.rs || 0) / 100));
+                const reps = window.dataStore.dailyReports.filter(r => {
+                    const repTime = new Date(r.date + 'T12:00:00').getTime();
+                    return r.affiliateId === id && repTime >= start && repTime <= end && b.includes(r.brand);
                 });
 
-                tQ += sQ; tRev += sR; tComm += bC; 
+                let tQ = 0, tRev = 0, tComm = 0;
+                let rowsHtml = '';
+
+                b.forEach(brand => {
+                    const bReps = reps.filter(r => r.brand === brand);
+                    if (bReps.length === 0) return;
+
+                    let sQ = 0, sR = 0, bC = 0;
+                    bReps.forEach(r => {
+                        sR += (r.netRev || 0);
+                        const mD = aff.deals[brand] || { cpa: 0, rs: 0 };
+                        const bCfg = window.dataStore.brands[brand];
+                        if (!bCfg) return;
+                        
+                        const isT = bCfg.type === 'tiered';
+
+                        let q = 0;
+                        let cpaEarn = 0;
+
+                        if (isT) {
+                            const qL1 = (r.qftd && r.qftd.l1) ? r.qftd.l1 : 0;
+                            const qL2 = (r.qftd && r.qftd.l2) ? r.qftd.l2 : 0;
+                            const qL3 = (r.qftd && r.qftd.l3) ? r.qftd.l3 : 0;
+                            q = qL1;
+                            sQ += q;
+                            cpaEarn = (qL1 * (mD.cpa_l1 || mD.cpa || 0)) + (qL2 * (mD.cpa_l2 || 0)) + (qL3 * (mD.cpa_l3 || 0));
+                        } else {
+                            q = typeof r.qftd === 'object' ? (r.qftd?.l1 || 0) : (r.qftd || 0);
+                            sQ += q;
+                            cpaEarn = q * (mD.cpa || 0);
+                        }
+                        bC += cpaEarn + ((r.netRev || 0) * ((mD.rs || 0) / 100));
+                    });
+
+                    tQ += sQ; tRev += sR; tComm += bC; 
+                    
+                    const cfg = window.getBrandConfig(brand) || { color: '#ffffff' };
+                    const mD = aff.deals[brand] || { cpa: 0, rs: 0 };
+                    const isT = window.dataStore.brands[brand] && window.dataStore.brands[brand].type === 'tiered';
+                    
+                    let dealStr = '';
+                    if (isT) { dealStr = 'L1: R$ ' + (mD.cpa_l1 || mD.cpa || 0) + ' / ' + (mD.rs || 0) + '%'; } 
+                    else { dealStr = 'R$ ' + (mD.cpa || 0) + ' / ' + (mD.rs || 0) + '%'; }
+
+                    rowsHtml += '<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">';
+                    rowsHtml += '<td class="py-4 font-bold" style="color: ' + cfg.color + '">' + brand + '</td>';
+                    rowsHtml += '<td class="py-4 text-center font-mono text-xs text-gray-400">' + dealStr + '</td>';
+                    rowsHtml += '<td class="py-4 text-center font-bold text-gray-300">' + sQ + '</td>';
+                    rowsHtml += '<td class="py-4 text-right font-mono text-gray-400">' + window.formatCurrency(sR) + '</td>';
+                    rowsHtml += '<td class="py-4 text-right font-mono font-bold text-emerald-400">' + window.formatCurrency(bC) + '</td></tr>';
+                });
+
+                if (rowsHtml === '') rowsHtml = '<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">Nenhum dado gerador de receita neste período.</td></tr>';
+
+                document.getElementById('closure-table-body').innerHTML = rowsHtml;
+                document.getElementById('closure-total').innerText = window.formatCurrency(tComm); 
+                document.getElementById('closure-summary').innerText = tQ + ' QFTDs | Receita: ' + window.formatCurrency(tRev); 
+                document.getElementById('closure-meta').innerText = 'Afiliado: ' + aff.name + ' | Período: ' + s.split('-').reverse().join('/') + ' até ' + e.split('-').reverse().join('/');
                 
-                const cfg = window.getBrandConfig(brand) || { color: '#ffffff' };
-                const mD = aff.deals[brand] || { cpa: 0, rs: 0 };
-                const isT = window.dataStore.brands[brand] && window.dataStore.brands[brand].type === 'tiered';
-                
-                let dealStr = '';
-                if (isT) { dealStr = 'L1: R$ ' + (mD.cpa_l1 || mD.cpa || 0) + ' / ' + (mD.rs || 0) + '%'; } 
-                else { dealStr = 'R$ ' + (mD.cpa || 0) + ' / ' + (mD.rs || 0) + '%'; }
-
-                rowsHtml += '<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">';
-                rowsHtml += '<td class="py-4 font-bold" style="color: ' + cfg.color + '">' + brand + '</td>';
-                rowsHtml += '<td class="py-4 text-center font-mono text-xs text-gray-400">' + dealStr + '</td>';
-                rowsHtml += '<td class="py-4 text-center font-bold text-gray-300">' + sQ + '</td>';
-                rowsHtml += '<td class="py-4 text-right font-mono text-gray-400">' + window.formatCurrency(sR) + '</td>';
-                rowsHtml += '<td class="py-4 text-right font-mono font-bold text-emerald-400">' + window.formatCurrency(bC) + '</td></tr>';
-            });
-
-            if (rowsHtml === '') rowsHtml = '<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">Nenhum dado gerador de receita neste período.</td></tr>';
-
-            document.getElementById('closure-table-body').innerHTML = rowsHtml;
-            document.getElementById('closure-total').innerText = window.formatCurrency(tComm); 
-            document.getElementById('closure-summary').innerText = tQ + ' QFTDs | Receita: ' + window.formatCurrency(tRev); 
-            document.getElementById('closure-meta').innerText = 'Afiliado: ' + aff.name + ' | Período: ' + s.split('-').reverse().join('/') + ' até ' + e.split('-').reverse().join('/');
-            
-            window.currentPendingClosure = { affiliateId: aff.id, affiliateName: aff.name, startDate: s, endDate: e, totalAmount: tComm };
-            const rc = document.getElementById('closure-result-card'); 
-            rc.classList.remove('hidden', 'fade-content'); 
-            void rc.offsetWidth; 
-            rc.classList.add('fade-content'); 
-            window.logAction('Extrato Gerado', `Para ${aff.name}`);
+                window.currentPendingClosure = { affiliateId: aff.id, affiliateName: aff.name, startDate: s, endDate: e, totalAmount: tComm };
+                const rc = document.getElementById('closure-result-card'); 
+                rc.classList.remove('hidden', 'fade-content'); 
+                void rc.offsetWidth; 
+                rc.classList.add('fade-content'); 
+                window.logAction('Extrato Gerado', `Para ${aff.name}`);
+            } catch (error) {
+                console.error("ERRO NO FECHAMENTO:", error);
+                window.showToast("Erro ao processar dados de fechamento.", "error");
+            }
         };
 
         window.exportClosureCSV = () => {
