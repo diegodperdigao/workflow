@@ -1194,7 +1194,9 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
             if (header) header.classList.toggle('scrolled', window.scrollY > 20);
         }, { passive: true });
 
-        window.addEventListener('DOMContentLoaded',()=>{lucide.createIcons();setTimeout(()=>{
+        // Module scripts are deferred: DOMContentLoaded has already fired by the time
+        // this code runs, so we call init directly instead of waiting for the event.
+        (()=>{lucide.createIcons();setTimeout(()=>{
                     const _isAutologin = document.documentElement.getAttribute('data-autologin') === '1';
                     if (_isAutologin) {
                         // Valid session: hide lock screen + selection, go to dashboard
@@ -1211,7 +1213,7 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
                         if (ls) ls.style.opacity = '1';
                         window.initFirebaseSystem();
                     }
-                },500);});
+                },500);})();
     </script>
 </body>
 </html>
