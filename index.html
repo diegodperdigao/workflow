@@ -598,7 +598,6 @@
             }, 8000);
             try {
                 const app=initializeApp(FB_CFG); wfAuth=getAuth(app); wfDb=getFirestore(app); window.isCloudMode=true;
-                if(typeof __initial_auth_token!=='undefined'&&__initial_auth_token) await signInWithCustomToken(wfAuth,__initial_auth_token); else await signInAnonymously(wfAuth);
                 onAuthStateChanged(wfAuth,(u)=>{
                     wfUser=u;
                     if(u){
@@ -635,6 +634,8 @@
                         });
                     }
                 });
+                // Sign in without blocking - onAuthStateChanged above will handle the result
+                (typeof __initial_auth_token!=='undefined'&&__initial_auth_token ? signInWithCustomToken(wfAuth,__initial_auth_token) : signInAnonymously(wfAuth)).catch(e=>{ console.warn('Firebase sign-in error:',e); });
             } catch(e) {
                 clearTimeout(fallbackTimeout); firebaseReady=true;
                 document.getElementById('wf-sync-status').innerText="OFFLINE (Local)"; document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500','bg-yellow-500');
@@ -663,7 +664,7 @@
             localStorage.removeItem('hub3c_session');
             location.reload();
         };
-        window.returnToSelection = () => { document.getElementById('dashboard-app').style.opacity='0'; document.getElementById('workflow-main-content').style.opacity='0'; setTimeout(()=>{document.getElementById('dashboard-app').classList.add('hidden');document.getElementById('workflow-main-content').classList.add('hidden');document.getElementById('app-selection').classList.replace('hidden','flex');setTimeout(()=>document.getElementById('app-selection').style.opacity='1',50);},700); };
+        window.returnToSelection = () => { document.getElementById('dashboard-app').style.opacity='0'; document.getElementById('workflow-main-content').style.opacity='0'; setTimeout(()=>{document.getElementById('dashboard-app').classList.add('hidden');document.getElementById('workflow-main-content').classList.add('hidden');const sel=document.getElementById('app-selection');sel.style.cssText='';sel.classList.remove('hidden');sel.classList.add('flex');sel.style.opacity='0';setTimeout(()=>sel.style.opacity='1',50);},700); };
 
         window.logAction=(action,details)=>{window.dataStore.auditLogs.unshift({id:Math.random().toString(36).substr(2,9),timestamp:Date.now(),action,details});if(window.dataStore.auditLogs.length>100)window.dataStore.auditLogs.pop();window.saveMDData();};
         window.getBrandConfig=(n)=>{ if(MD_BASE_CONFIG[n])return MD_BASE_CONFIG[n]; const d=window.dataStore.brands[n]; if(!d)return null; let h=d.color.replace('#',''); if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; const rgb=`${parseInt(h.substring(0,2),16)||255}, ${parseInt(h.substring(2,4),16)||255}, ${parseInt(h.substring(4,6),16)||255}`; const bg=d.logo?`url('${d.logo}')`:``; return{color:d.color,colorRGB:rgb,grad1:`rgba(${rgb},0.12)`,grad2:`rgba(${rgb},0.05)`,title:n.toUpperCase(),subtitle:'',logo:d.logo||'',mosaic:bg,deal:d}; };
