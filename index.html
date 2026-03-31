@@ -581,14 +581,29 @@
         window.initFirebaseSystem = async () => {
             // Session already handled by inline CSS in <head>
             window.workflowInitialized = true;
+            let firebaseReady = false;
+            const unlockLogin = () => {
+                if(document.getElementById('password-input')){document.getElementById('password-input').placeholder="••••••••";document.getElementById('password-input').disabled=false;}
+                if(document.getElementById('btn-login')){document.getElementById('btn-login').innerText="Acessar Portal";document.getElementById('btn-login').disabled=false;}
+            };
+            const fallbackTimeout = setTimeout(()=>{
+                if(!firebaseReady){
+                    console.warn('Firebase timeout - fallback to offline mode');
+                    document.getElementById('wf-sync-status').innerText="OFFLINE (Local)";
+                    document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500','bg-yellow-500');
+                    unlockLogin();
+                    try{window.tasks=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');}catch(err){}
+                    window.renderTasks();
+                }
+            }, 8000);
             try {
                 const app=initializeApp(FB_CFG); wfAuth=getAuth(app); wfDb=getFirestore(app); window.isCloudMode=true;
                 if(typeof __initial_auth_token!=='undefined'&&__initial_auth_token) await signInWithCustomToken(wfAuth,__initial_auth_token); else await signInAnonymously(wfAuth);
                 onAuthStateChanged(wfAuth,(u)=>{
                     wfUser=u;
                     if(u){
-                        if(document.getElementById('password-input')){document.getElementById('password-input').placeholder="••••••••";document.getElementById('password-input').disabled=false;}
-                        if(document.getElementById('btn-login')){document.getElementById('btn-login').innerText="Acessar Portal";document.getElementById('btn-login').disabled=false;}
+                        firebaseReady=true; clearTimeout(fallbackTimeout);
+                        unlockLogin();
                         document.getElementById('user-id-text').innerText=u.uid.substring(0,8)+'...';
                         document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500','bg-emerald-500');
                         document.getElementById('wf-sync-status').innerText="Cloud Sync Online";
@@ -621,9 +636,9 @@
                     }
                 });
             } catch(e) {
+                clearTimeout(fallbackTimeout); firebaseReady=true;
                 document.getElementById('wf-sync-status').innerText="OFFLINE (Local)"; document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500','bg-yellow-500');
-                if(document.getElementById('password-input')){document.getElementById('password-input').placeholder="••••••••";document.getElementById('password-input').disabled=false;}
-                if(document.getElementById('btn-login')){document.getElementById('btn-login').innerText="Acessar Portal";document.getElementById('btn-login').disabled=false;}
+                unlockLogin();
                 try{window.tasks=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');}catch(err){}
                 window.renderTasks();
             }
