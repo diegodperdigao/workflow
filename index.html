@@ -282,20 +282,18 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                        <div class="glass-card p-8 rounded-2xl border-l-4 theme-border relative overflow-hidden group min-h-[160px] flex flex-col justify-center" style="background:linear-gradient(135deg,rgba(236,72,153,0.07) 0%,rgba(15,15,20,0.6) 60%)">
-                            <div class="absolute -right-6 -top-6 w-32 h-32 rounded-full" style="background:radial-gradient(circle,rgba(236,72,153,0.15) 0%,transparent 70%)"></div>
-                            <h3 class="text-[10px] uppercase font-black tracking-widest text-gray-500 mb-1 flex items-center gap-2 relative z-10"><i data-lucide="users" class="w-3.5 h-3.5 text-pink-500"></i> QFTDs Qualificados</h3>
-                            <p id="kpi-qftds" class="text-6xl font-mono font-black text-white mt-1 tracking-tight kpi-animate relative z-10">0</p>
-                            <p id="kpi-ftds" class="text-xs text-gray-600 mt-2 font-bold relative z-10">0 FTDs Totais</p>
+                        <div class="glass-card p-8 rounded-2xl border-l-4 theme-border group min-h-[160px] flex flex-col justify-center">
+                            <h3 class="text-[10px] uppercase font-black tracking-widest text-gray-500 mb-1 flex items-center gap-2"><i data-lucide="users" class="w-3.5 h-3.5 text-pink-500"></i> QFTDs Qualificados</h3>
+                            <p id="kpi-qftds" class="text-6xl font-mono font-black text-white mt-1 tracking-tight kpi-animate">0</p>
+                            <p id="kpi-ftds" class="text-xs text-gray-600 mt-2 font-bold">0 FTDs Totais</p>
                             
                         </div>
-                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-blue-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center"><div class="absolute -right-10 -top-10 w-40 h-40 bg-[radial-gradient(circle,rgba(59,130,246,0.4)_0%,transparent_70%)] opacity-20 group-hover:opacity-40 pointer-events-none"></div><h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Depósitos</h3><p id="kpi-deposits" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight kpi-animate">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">Volume depositado</p></div>
-                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-red-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center"><div class="absolute -right-10 -top-10 w-40 h-40 bg-[radial-gradient(circle,rgba(239,68,68,0.4)_0%,transparent_70%)] opacity-20 group-hover:opacity-40 pointer-events-none"></div><h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4"></i> Comissão Afiliados</h3><p id="kpi-aff-comm" class="text-4xl font-mono font-bold text-red-400 mt-2 tracking-tight kpi-animate">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">Total a pagar (CPA + Rev Share)</p></div>
-                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-emerald-500 relative overflow-hidden group min-h-[160px] flex flex-col justify-center" style="background:linear-gradient(135deg,rgba(16,185,129,0.07) 0%,rgba(15,15,20,0.6) 60%)">
-                            <div class="absolute -right-6 -top-6 w-32 h-32 rounded-full" style="background:radial-gradient(circle,rgba(16,185,129,0.15) 0%,transparent 70%)"></div>
-                            <h3 class="text-[10px] uppercase font-black tracking-widest text-emerald-400 mb-1 flex items-center gap-2 relative z-10"><i data-lucide="gem" class="w-3.5 h-3.5"></i> Lucro Líquido 3C</h3>
-                            <p id="kpi-profit" class="text-4xl font-mono font-black text-white mt-1 tracking-tight kpi-animate relative z-10">R$ 0,00</p>
-                            <p id="kpi-gross" class="text-xs text-emerald-400/40 mt-2 font-bold relative z-10">Bruto 3C: R$ 0,00</p>
+                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-blue-500 group min-h-[160px] flex flex-col justify-center"><h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i> Depósitos</h3><p id="kpi-deposits" class="text-4xl font-mono font-bold text-white mt-2 tracking-tight kpi-animate">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">Volume depositado</p></div>
+                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-red-500 group min-h-[160px] flex flex-col justify-center"><h3 class="text-[11px] uppercase font-black tracking-widest text-gray-400 mb-2 flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4"></i> Comissão Afiliados</h3><p id="kpi-aff-comm" class="text-4xl font-mono font-bold text-red-400 mt-2 tracking-tight kpi-animate">R$ 0,00</p><p class="text-sm text-gray-500 mt-3">Total a pagar (CPA + Rev Share)</p></div>
+                        <div class="glass-card p-8 rounded-2xl border-l-4 border-l-emerald-500 group min-h-[160px] flex flex-col justify-center">
+                            <h3 class="text-[10px] uppercase font-black tracking-widest text-emerald-400 mb-1 flex items-center gap-2"><i data-lucide="gem" class="w-3.5 h-3.5"></i> Lucro Líquido 3C</h3>
+                            <p id="kpi-profit" class="text-4xl font-mono font-black text-white mt-1 tracking-tight kpi-animate">R$ 0,00</p>
+                            <p id="kpi-gross" class="text-xs text-emerald-400/40 mt-2 font-bold">Bruto 3C: R$ 0,00</p>
                             
                         </div>
                     </div>
@@ -436,7 +434,7 @@
             <div class="space-y-4">
                 <div><label class="form-label text-pink-400">Ação Principal</label><input type="text" id="edit-task-title" class="edit-mode-input w-full text-sm py-2.5" placeholder="Título da tarefa"></div>
                 <div><label class="form-label text-purple-400">Contexto Estratégico</label><textarea id="edit-task-desc" class="edit-mode-input w-full text-sm min-h-[100px] custom-scrollbar resize-none" placeholder="Detalhes, links, metas..."></textarea></div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4">
                     <div><label class="form-label text-cyan-400">Prioridade</label><select id="edit-task-priority" class="edit-mode-input w-full text-sm py-2.5"><option value="high">Alta</option><option value="medium">Média</option><option value="low">Baixa</option></select></div>
                     <div><label class="form-label text-amber-400">Lembrete</label><input type="datetime-local" id="edit-task-reminder" class="edit-mode-input w-full text-sm py-2.5"></div>
                 </div>
@@ -594,6 +592,7 @@
                     unlockLogin();
                     try{window.tasks=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');}catch(err){}
                     window.renderTasks();
+                    if(window.loadMDData) window.loadMDData();
                 }
             }, 8000);
             try {
@@ -669,7 +668,7 @@
         window.logAction=(action,details)=>{window.dataStore.auditLogs.unshift({id:Math.random().toString(36).substr(2,9),timestamp:Date.now(),action,details});if(window.dataStore.auditLogs.length>100)window.dataStore.auditLogs.pop();window.saveMDData();};
         window.getBrandConfig=(n)=>{ if(MD_BASE_CONFIG[n])return MD_BASE_CONFIG[n]; const d=window.dataStore.brands[n]; if(!d)return null; let h=d.color.replace('#',''); if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; const rgb=`${parseInt(h.substring(0,2),16)||255}, ${parseInt(h.substring(2,4),16)||255}, ${parseInt(h.substring(4,6),16)||255}`; const bg=d.logo?`url('${d.logo}')`:``; return{color:d.color,colorRGB:rgb,grad1:`rgba(${rgb},0.12)`,grad2:`rgba(${rgb},0.05)`,title:n.toUpperCase(),subtitle:'',logo:d.logo||'',mosaic:bg,deal:d}; };
         window.getBrandList=()=>Object.keys(window.dataStore.brands).sort((a,b)=>{let qa=0,qb=0;window.dataStore.dailyReports.forEach(r=>{if(r.brand===a)qa+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;if(r.brand===b)qb+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;});return qb-qa;});
-        window.saveMDData=async()=>{ localStorage.setItem(MD_KEY,JSON.stringify(window.dataStore)); if(window.isCloudMode&&wfUser){document.getElementById('md-sync-status').innerText="Salvando...";try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);document.getElementById('md-sync-status').innerText="Salvo";setTimeout(()=>document.getElementById('md-sync-status').innerText="Cloud Sync Online",2000);}catch(e){document.getElementById('md-sync-status').innerText="Erro";}}else{document.getElementById('md-sync-status').innerText="Salvo (Local)";setTimeout(()=>document.getElementById('md-sync-status').innerText="Offline (Local)",2000);} };
+        window.saveMDData=async()=>{ const hasData=window.dataStore.affiliates.length>0||window.dataStore.dailyReports.length>0; if(hasData)localStorage.setItem(MD_KEY,JSON.stringify(window.dataStore)); if(window.isCloudMode&&wfUser){if(!hasData){document.getElementById('md-sync-status').innerText="Sem dados para salvar";return;}document.getElementById('md-sync-status').innerText="Salvando...";try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);document.getElementById('md-sync-status').innerText="Salvo";setTimeout(()=>document.getElementById('md-sync-status').innerText="Cloud Sync Online",2000);}catch(e){document.getElementById('md-sync-status').innerText="Erro";}}else{document.getElementById('md-sync-status').innerText="Salvo (Local)";setTimeout(()=>document.getElementById('md-sync-status').innerText="Offline (Local)",2000);} };
         window.refreshData=()=>{
             const btn = document.querySelector('[title="Atualizar dados"]');
             if(btn) { btn.style.opacity='0.4'; btn.style.animation='spin 0.8s linear infinite'; }
