@@ -1064,16 +1064,47 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
                 aff.deals=aff.deals||{};
                 const start=new Date(s+'T00:00:00').getTime(), end=new Date(e+'T23:59:59').getTime();
                 const reps=window.dataStore.dailyReports.filter(r=>{ const t=new Date(r.date+'T12:00:00').getTime(); return r.affiliateId===id&&t>=start&&t<=end&&b.includes(r.brand); });
-                let tQ=0,tRev=0,tComm=0,rows='';
+                let tQ=0,tRev=0,tComm=0,rows='',brandDetails=[];
                 b.forEach(brand=>{
                     const bR=reps.filter(r=>r.brand===brand); if(!bR.length)return;
                     let sQ=0,sR=0,bC=0;
                     const mD=aff.deals[brand]||{cpa:0,rs:0};
                     const bCfg=window.dataStore.brands[brand]; if(!bCfg)return;
                     const isT=bCfg.type==='tiered';
-                    bR.forEach(r=>{ sR+=(r.netRev||0); let q=0,cpa=0; if(isT){const q1=(r.qftd&&r.qftd.l1)?r.qftd.l1:0,q2=(r.qftd&&r.qftd.l2)?r.qftd.l2:0,q3=(r.qftd&&r.qftd.l3)?r.qftd.l3:0;q=q1;sQ+=q;cpa=(q1*(mD.cpa_l1||mD.cpa||0))+(q2*(mD.cpa_l2||0))+(q3*(mD.cpa_l3||0));}else{q=typeof r.qftd==='object'?(r.qftd?.l1||0):(r.qftd||0);sQ+=q;cpa=q*(mD.cpa||0);}bC+=cpa+((r.netRev||0)*((mD.rs||0)/100)); });
+                    let q1Total=0,q2Total=0,q3Total=0,cpaL1Total=0,cpaL2Total=0,cpaL3Total=0,standardQ=0,standardCpaTotal=0;
+                    bR.forEach(r=>{
+                        sR+=(r.netRev||0);
+                        let q=0,cpa=0;
+                        if(isT){
+                            const q1=(r.qftd&&r.qftd.l1)?r.qftd.l1:0,q2=(r.qftd&&r.qftd.l2)?r.qftd.l2:0,q3=(r.qftd&&r.qftd.l3)?r.qftd.l3:0;
+                            q=q1;sQ+=q;
+                            q1Total+=q1;q2Total+=q2;q3Total+=q3;
+                            const c1=q1*(mD.cpa_l1||mD.cpa||0),c2=q2*(mD.cpa_l2||0),c3=q3*(mD.cpa_l3||0);
+                            cpaL1Total+=c1;cpaL2Total+=c2;cpaL3Total+=c3;
+                            cpa=c1+c2+c3;
+                        } else {
+                            q=typeof r.qftd==='object'?(r.qftd?.l1||0):(r.qftd||0);
+                            sQ+=q;standardQ+=q;
+                            const c=q*(mD.cpa||0);
+                            standardCpaTotal+=c;
+                            cpa=c;
+                        }
+                        bC+=cpa+((r.netRev||0)*((mD.rs||0)/100));
+                    });
+                    const rsAmount=sR*((mD.rs||0)/100);
                     tQ+=sQ;tRev+=sR;tComm+=bC;
                     const cfg=window.getBrandConfig(brand)||{color:'#ffffff'};
+                    // Store detailed breakdown for PDF
+                    brandDetails.push({
+                        brand:brand,color:cfg.color,isTiered:isT,
+                        levels:isT?[
+                            {name:'CPA L1',qftds:q1Total,value:mD.cpa_l1||mD.cpa||0,total:cpaL1Total},
+                            {name:'CPA L2',qftds:q2Total,value:mD.cpa_l2||0,total:cpaL2Total},
+                            {name:'CPA L3',qftds:q3Total,value:mD.cpa_l3||0,total:cpaL3Total}
+                        ]:null,
+                        standardQftds:standardQ,standardCpaValue:mD.cpa||0,standardCpaTotal:standardCpaTotal,
+                        netRev:sR,rsPercent:mD.rs||0,rsAmount:rsAmount,brandTotal:bC
+                    });
                     const deal=isT?('L1: R$ '+(mD.cpa_l1||mD.cpa||0)+' / '+(mD.rs||0)+'%'):('R$ '+(mD.cpa||0)+' / '+(mD.rs||0)+'%');
                     rows+='<tr class="border-b border-white/5 hover:bg-white/5"><td class="py-4 font-bold" style="color:'+cfg.color+'">'+brand+'</td><td class="py-4 text-center font-mono text-xs text-gray-400">'+deal+'</td><td class="py-4 text-center font-bold text-gray-300">'+sQ+'</td><td class="py-4 text-right font-mono text-gray-400">'+window.formatCurrency(sR)+'</td><td class="py-4 text-right font-mono font-bold text-emerald-400">'+window.formatCurrency(bC)+'</td></tr>';
                 });
@@ -1082,7 +1113,7 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
                 document.getElementById('closure-total').innerText=window.formatCurrency(tComm);
                 document.getElementById('closure-summary').innerText=tQ+' QFTDs | Receita: '+window.formatCurrency(tRev);
                 document.getElementById('closure-meta').innerText='Afiliado: '+aff.name+' | Período: '+s.split('-').reverse().join('/')+' até '+e.split('-').reverse().join('/');
-                window.currentPendingClosure={affiliateId:aff.id,affiliateName:aff.name,startDate:s,endDate:e,totalAmount:tComm};
+                window.currentPendingClosure={affiliateId:aff.id,affiliateName:aff.name,startDate:s,endDate:e,totalAmount:tComm,totalQftds:tQ,totalRev:tRev,brandDetails:brandDetails};
                 const rc=document.getElementById('closure-result-card');rc.classList.remove('hidden','fade-content');void rc.offsetWidth;rc.classList.add('fade-content');
                 window.logAction('Extrato Gerado','Para '+aff.name);
             } catch(err) {
@@ -1092,42 +1123,50 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
         };
 
         window.exportClosurePDF=()=>{
-            const meta=document.getElementById('closure-meta').innerText;
-            const affName=(meta.split('|')[0]||'').replace('Afiliado:','').trim();
-            const period=(meta.split('|')[1]||'').replace('Período:','').trim();
-            const totalStr=document.getElementById('closure-total').innerText;
-            const summaryStr=document.getElementById('closure-summary').innerText;
+            const pc=window.currentPendingClosure;
+            if(!pc||!pc.brandDetails||!pc.brandDetails.length) return window.showToast('Calcule um fechamento primeiro.','error');
+            const period=pc.startDate.split('-').reverse().join('/')+' até '+pc.endDate.split('-').reverse().join('/');
             const todayStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-            // Build table rows from the DOM
-            let rowsHtml='';
-            document.querySelectorAll('#closure-table-body tr').forEach(r=>{
-                if(r.cells.length===5){
-                    const brand=r.cells[0].innerText.trim();
-                    const brandColor=r.cells[0].style.color||'#10b981';
-                    const deal=r.cells[1].innerText.trim();
-                    const qftd=r.cells[2].innerText.trim();
-                    const netRev=r.cells[3].innerText.trim();
-                    const comm=r.cells[4].innerText.trim();
-                    rowsHtml+='<tr style="border-bottom:1px solid #e5e7eb"><td style="padding:14px 12px;font-weight:800;color:'+brandColor+'">'+brand+'</td><td style="padding:14px 12px;font-family:monospace;font-size:11px;color:#6b7280;text-align:center">'+deal+'</td><td style="padding:14px 12px;text-align:center;font-weight:700;color:#374151">'+qftd+'</td><td style="padding:14px 12px;text-align:right;font-family:monospace;color:#6b7280">'+netRev+'</td><td style="padding:14px 12px;text-align:right;font-family:monospace;font-weight:800;color:#10b981">'+comm+'</td></tr>';
+            const fmt=window.formatCurrency;
+            // Build per-brand sections
+            let brandsHtml='';
+            pc.brandDetails.forEach(bd=>{
+                let linesHtml='';
+                if(bd.isTiered){
+                    // Show each CPA level with QFTDs achieved and unit value
+                    bd.levels.forEach(lv=>{
+                        const lineColor=lv.qftds>0?'#111827':'#9ca3af';
+                        linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lineColor+';letter-spacing:0.05em">'+lv.name+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+lv.value.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lineColor+'">'+lv.qftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lineColor+'">'+fmt(lv.total)+'</td></tr>';
+                    });
+                } else {
+                    const lineColor=bd.standardQftds>0?'#111827':'#9ca3af';
+                    linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lineColor+';letter-spacing:0.05em">CPA</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+bd.standardCpaValue.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lineColor+'">'+bd.standardQftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lineColor+'">'+fmt(bd.standardCpaTotal)+'</td></tr>';
                 }
+                // Rev Share line (shows the calculation applied to affiliate's rate)
+                const rsColor=bd.rsAmount>0?'#111827':'#9ca3af';
+                linesHtml+='<tr style="border-bottom:1px solid #f3f4f6;background:#fafafa"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+rsColor+';letter-spacing:0.05em">Rev Share</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+bd.rsPercent+'% sobre Net Rev</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+fmt(bd.netRev)+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+rsColor+'">'+fmt(bd.rsAmount)+'</td></tr>';
+                brandsHtml+='<div style="margin-bottom:22px;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden">'
+                    +'<div style="background:'+bd.color+'12;border-bottom:2px solid '+bd.color+';padding:14px 18px;display:flex;justify-content:space-between;align-items:center">'
+                    +'<div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+bd.color+'"></div><span style="font-size:14px;font-weight:900;color:'+bd.color+';letter-spacing:0.02em">'+bd.brand+'</span></div>'
+                    +'<div style="text-align:right"><p style="font-size:9px;color:#6b7280;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0">Subtotal</p><p style="font-size:16px;font-weight:900;color:#10b981;font-family:monospace;margin:2px 0 0">'+fmt(bd.brandTotal)+'</p></div>'
+                    +'</div>'
+                    +'<table style="width:100%;border-collapse:collapse">'
+                    +'<thead><tr style="background:#f9fafb"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Componente</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Valor Acordado</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Alcançado</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Total</th></tr></thead>'
+                    +'<tbody>'+linesHtml+'</tbody>'
+                    +'</table></div>';
             });
-            if(!rowsHtml) return window.showToast('Nenhum dado para exportar.','error');
-            const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Extrato - '+affName+'</title><style>@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap");*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Montserrat",sans-serif;color:#1f2937;background:#fff}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:18mm 16mm;size:A4}}</style></head><body>'
+            const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Extrato - '+pc.affiliateName+'</title><style>@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap");*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Montserrat",sans-serif;color:#1f2937;background:#fff}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:18mm 16mm;size:A4}}</style></head><body>'
                 +'<div style="max-width:760px;margin:0 auto;padding:40px 0">'
                 +'<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #10b981;padding-bottom:20px;margin-bottom:30px">'
                 +'<div><img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" style="height:32px;filter:invert(1) brightness(0.2)" onerror="this.style.display=\'none\'"></div>'
                 +'<div style="text-align:right"><span style="font-size:10px;font-weight:800;letter-spacing:3px;color:#9ca3af;text-transform:uppercase">Extrato de Fechamento</span><br><span style="font-size:11px;color:#9ca3af">'+todayStr+'</span></div>'
                 +'</div>'
-                +'<h1 style="font-size:22px;font-weight:900;color:#111827;margin-bottom:6px;line-height:1.3">'+affName+'</h1>'
+                +'<h1 style="font-size:22px;font-weight:900;color:#111827;margin-bottom:6px;line-height:1.3">'+pc.affiliateName+'</h1>'
                 +'<p style="font-size:12px;color:#6b7280;font-weight:600;margin-bottom:24px">Período: <span style="color:#111827;font-weight:800">'+period+'</span></p>'
-                +'<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:24px">'
-                +'<table style="width:100%;border-collapse:collapse">'
-                +'<thead><tr style="background:#f3f4f6"><th style="padding:14px 12px;text-align:left;font-size:10px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase">Casa</th><th style="padding:14px 12px;text-align:center;font-size:10px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase">Deal</th><th style="padding:14px 12px;text-align:center;font-size:10px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase">QFTDs</th><th style="padding:14px 12px;text-align:right;font-size:10px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase">Net Rev</th><th style="padding:14px 12px;text-align:right;font-size:10px;font-weight:800;letter-spacing:2px;color:#10b981;text-transform:uppercase">Comissão</th></tr></thead>'
-                +'<tbody>'+rowsHtml+'</tbody>'
-                +'</table></div>'
+                +brandsHtml
                 +'<div style="background:linear-gradient(135deg,#10b98115,#10b98105);border:2px solid #10b98133;border-radius:16px;padding:28px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">'
-                +'<div><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#6b7280;text-transform:uppercase;margin-bottom:6px">Valor Total a Pagar</p><p style="font-size:32px;font-weight:900;color:#10b981;font-family:monospace;line-height:1">'+totalStr+'</p></div>'
-                +'<div style="text-align:right"><p style="font-size:9px;font-weight:700;color:#9ca3af;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Resumo</p><p style="font-size:12px;font-weight:700;color:#374151">'+summaryStr+'</p></div>'
+                +'<div><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#6b7280;text-transform:uppercase;margin-bottom:6px">Valor Total a Pagar</p><p style="font-size:32px;font-weight:900;color:#10b981;font-family:monospace;line-height:1">'+fmt(pc.totalAmount)+'</p></div>'
+                +'<div style="text-align:right"><p style="font-size:9px;font-weight:700;color:#9ca3af;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Resumo</p><p style="font-size:12px;font-weight:700;color:#374151">'+pc.totalQftds+' QFTDs</p><p style="font-size:10px;font-weight:600;color:#9ca3af;margin-top:2px">Receita Gerada: '+fmt(pc.totalRev)+'</p></div>'
                 +'</div>'
                 +'<div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:16px 20px;margin-bottom:24px"><p style="font-size:10px;font-weight:700;color:#92400e;line-height:1.6"><strong style="font-weight:900">Aviso:</strong> Este extrato é confidencial e de uso exclusivo entre as partes. Valores calculados conforme acordo comercial vigente.</p></div>'
                 +'<div style="margin-top:40px;padding-top:16px;border-top:1px solid #e5e7eb;text-align:center">'
