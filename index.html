@@ -646,7 +646,13 @@
                         document.getElementById('user-id-text').innerText=u.uid.substring(0,8)+'...';
                         document.getElementById('wf-status-dot')?.classList.replace('bg-gray-500','bg-emerald-500');
                         document.getElementById('wf-sync-status').innerText="Cloud Sync Online";
-                        onSnapshot(collection(wfDb,'artifacts',wfAppId,'public','data','tasks'),(s)=>{ window.tasks=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt); window.renderTasks(); window.updateSyncTime(); });
+                        let _tasksDebounce;
+                        onSnapshot(collection(wfDb,'artifacts',wfAppId,'public','data','tasks'),(s)=>{
+                            window.tasks=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
+                            clearTimeout(_tasksDebounce);
+                            _tasksDebounce=setTimeout(()=>{ window.renderTasks(); window.updateSyncTime(); }, 150);
+                        });
+                        let _mdDebounce;
                         onSnapshot(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),(s)=>{
                             // Update status to Online when snapshot fires
                             const syncEl = document.getElementById('md-sync-status');
@@ -663,13 +669,16 @@
                                     auditLogs: p.auditLogs || localData.auditLogs || [],
                                     payments: p.payments || localData.payments || []
                                 });
-                                if(!document.getElementById('dashboard-app').classList.contains('hidden')){
-                                    window.initMDTabs();
-                                    if(window.currentMDEnv==='Afiliados') window.renderAffiliatesCRM();
-                                    else if(window.currentMDEnv==='Fechamento'){window.initFechamentoUI();window.renderGlobalPaymentHistory();}
-                                    else if(window.currentMDEnv!=='Visão Geral') window.switchMDEnv(window.currentMDEnv);
-                                    else window.renderDashboard();
-                                }
+                                clearTimeout(_mdDebounce);
+                                _mdDebounce=setTimeout(()=>{
+                                    if(!document.getElementById('dashboard-app').classList.contains('hidden')){
+                                        window.initMDTabs();
+                                        if(window.currentMDEnv==='Afiliados') window.renderAffiliatesCRM();
+                                        else if(window.currentMDEnv==='Fechamento'){window.initFechamentoUI();window.renderGlobalPaymentHistory();}
+                                        else if(window.currentMDEnv!=='Visão Geral') window.switchMDEnv(window.currentMDEnv);
+                                        else window.renderDashboard();
+                                    }
+                                }, 250);
                             }
                         });
                     }
@@ -699,17 +708,17 @@
             else{ document.getElementById('password-input').classList.add('shake','border-red-500'); document.getElementById('btn-login').innerText="Acessar Portal"; document.getElementById('btn-login').disabled=false; setTimeout(()=>document.getElementById('password-input').classList.remove('shake','border-red-500'),400); }
         };
 
-        window.launchApp = (id) => { document.getElementById('app-selection').style.opacity='0'; if(id==='workflow-main-content'){const r=document.documentElement;r.style.setProperty('--theme-color','#ec4899');r.style.setProperty('--theme-color-glow','rgba(236, 72, 153, 0.4)');} setTimeout(()=>{document.getElementById('app-selection').classList.add('hidden');document.getElementById(id).classList.remove('hidden');setTimeout(()=>{document.getElementById(id).style.opacity='1';if(id==='dashboard-app')window.initMD();},50);},700); };
+        window.launchApp = (id) => { try{localStorage.setItem('hub3c_last_app',id);}catch(e){} document.getElementById('app-selection').style.opacity='0'; if(id==='workflow-main-content'){const r=document.documentElement;r.style.setProperty('--theme-color','#ec4899');r.style.setProperty('--theme-color-glow','rgba(236, 72, 153, 0.4)');} setTimeout(()=>{document.getElementById('app-selection').classList.add('hidden');document.getElementById(id).classList.remove('hidden');setTimeout(()=>{document.getElementById(id).style.opacity='1';if(id==='dashboard-app')window.initMD();},50);},700); };
         window.logout = () => {
             localStorage.removeItem('hub3c_session');
             location.reload();
         };
-        window.returnToSelection = () => { document.getElementById('dashboard-app').style.opacity='0'; document.getElementById('workflow-main-content').style.opacity='0'; setTimeout(()=>{document.getElementById('dashboard-app').classList.add('hidden');document.getElementById('workflow-main-content').classList.add('hidden');const sel=document.getElementById('app-selection');sel.style.cssText='';sel.classList.remove('hidden');sel.classList.add('flex');sel.style.opacity='0';setTimeout(()=>sel.style.opacity='1',50);},700); };
+        window.returnToSelection = () => { try{localStorage.removeItem('hub3c_last_app');}catch(e){} document.getElementById('dashboard-app').style.opacity='0'; document.getElementById('workflow-main-content').style.opacity='0'; setTimeout(()=>{document.getElementById('dashboard-app').classList.add('hidden');document.getElementById('workflow-main-content').classList.add('hidden');const sel=document.getElementById('app-selection');sel.style.cssText='';sel.classList.remove('hidden');sel.classList.add('flex');sel.style.opacity='0';setTimeout(()=>sel.style.opacity='1',50);},700); };
 
         window.logAction=(action,details)=>{window.dataStore.auditLogs.unshift({id:Math.random().toString(36).substr(2,9),timestamp:Date.now(),action,details});if(window.dataStore.auditLogs.length>100)window.dataStore.auditLogs.pop();window.saveMDData();};
         window.getBrandConfig=(n)=>{ if(MD_BASE_CONFIG[n])return MD_BASE_CONFIG[n]; const d=window.dataStore.brands[n]; if(!d)return null; let h=d.color.replace('#',''); if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2]; const rgb=`${parseInt(h.substring(0,2),16)||255}, ${parseInt(h.substring(2,4),16)||255}, ${parseInt(h.substring(4,6),16)||255}`; const bg=d.logo?`url('${d.logo}')`:``; return{color:d.color,colorRGB:rgb,grad1:`rgba(${rgb},0.12)`,grad2:`rgba(${rgb},0.05)`,title:n.toUpperCase(),subtitle:'',logo:d.logo||'',mosaic:bg,deal:d}; };
         window.getBrandList=()=>Object.keys(window.dataStore.brands).sort((a,b)=>{let qa=0,qb=0;window.dataStore.dailyReports.forEach(r=>{if(r.brand===a)qa+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;if(r.brand===b)qb+=typeof r.qftd==='object'?r.qftd.l1||0:r.qftd||0;});return qb-qa;});
-        window.saveMDData=async()=>{ const hasData=window.dataStore.affiliates.length>0||window.dataStore.dailyReports.length>0; if(hasData)localStorage.setItem(MD_KEY,JSON.stringify(window.dataStore)); if(window.isCloudMode&&wfUser){if(!hasData){document.getElementById('md-sync-status').innerText="Sem dados para salvar";return;}document.getElementById('md-sync-status').innerText="Salvando...";try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);document.getElementById('md-sync-status').innerText="Salvo";setTimeout(()=>document.getElementById('md-sync-status').innerText="Cloud Sync Online",2000);}catch(e){document.getElementById('md-sync-status').innerText="Erro";}}else{document.getElementById('md-sync-status').innerText="Salvo (Local)";setTimeout(()=>document.getElementById('md-sync-status').innerText="Offline (Local)",2000);} };
+        window.saveMDData=async()=>{ const hasData=window.dataStore.affiliates.length>0||window.dataStore.dailyReports.length>0; if(hasData)localStorage.setItem(MD_KEY,JSON.stringify(window.dataStore)); const statusEl=document.getElementById('md-sync-status'); if(window.isCloudMode&&wfUser){if(!hasData){if(statusEl)statusEl.innerText="Sem dados para salvar";return;}if(statusEl)statusEl.innerText="Salvando..."; const timeoutPromise=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timeout de 10s — salvo localmente')),10000)); const savePromise=setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore); try{ await Promise.race([savePromise,timeoutPromise]); if(statusEl)statusEl.innerText="Salvo"; setTimeout(()=>{if(statusEl)statusEl.innerText="Cloud Sync Online";},2000); }catch(e){ console.warn('saveMDData error:',e.message); if(statusEl)statusEl.innerText="Offline — salvo local"; setTimeout(()=>{if(statusEl)statusEl.innerText="Cloud Sync Online";},4000); } }else{if(statusEl)statusEl.innerText="Salvo (Local)";setTimeout(()=>{if(statusEl)statusEl.innerText="Offline (Local)";},2000);} };
         window.refreshData=()=>{
             const btn = document.querySelector('[title="Atualizar dados"]');
             if(btn) { btn.style.opacity='0.4'; btn.style.animation='spin 0.8s linear infinite'; }
@@ -1340,15 +1349,22 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
         (()=>{lucide.createIcons();setTimeout(()=>{
                     const _isAutologin = document.documentElement.getAttribute('data-autologin') === '1';
                     if (_isAutologin) {
-                        // Valid session: hide lock screen + selection, go to dashboard
+                        // Valid session: hide lock screen, restore last app (default: dashboard)
                         const ls = document.getElementById('lock-screen');
                         if (ls) { ls.style.cssText += ';display:none!important;pointer-events:none!important;'; }
+                        let lastApp = 'dashboard-app';
+                        try { const la = localStorage.getItem('hub3c_last_app'); if(la==='workflow-main-content'||la==='dashboard-app') lastApp = la; } catch(e) {}
                         const sel = document.getElementById('app-selection');
                         if (sel) { sel.style.cssText += ';display:none!important;pointer-events:none!important;'; }
-                        const dash = document.getElementById('dashboard-app');
-                        if (dash) { dash.classList.remove('hidden'); dash.style.opacity = '1'; }
+                        const target = document.getElementById(lastApp);
+                        if (target) { target.classList.remove('hidden'); target.style.opacity = '1'; }
+                        if (lastApp === 'workflow-main-content') {
+                            const r=document.documentElement;
+                            r.style.setProperty('--theme-color','#ec4899');
+                            r.style.setProperty('--theme-color-glow','rgba(236, 72, 153, 0.4)');
+                        }
                         window.initFirebaseSystem();
-                        setTimeout(() => { if(window.initMD) window.initMD(); }, 200);
+                        if (lastApp === 'dashboard-app') setTimeout(() => { if(window.initMD) window.initMD(); }, 200);
                     } else {
                         const ls = document.getElementById('lock-screen');
                         if (ls) ls.style.opacity = '1';
