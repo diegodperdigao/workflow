@@ -549,7 +549,7 @@
                 <div class="bg-black/30 p-5 rounded-2xl border border-white/10"><h3 class="text-xs font-black uppercase tracking-widest text-emerald-400 mb-3">+ Nova Casa Parceira</h3><div class="grid grid-cols-1 md:grid-cols-5 gap-3"><div class="col-span-2"><label class="form-label !ml-0">Nome</label><input type="text" id="new-brand-name" placeholder="Ex: Betano" class="edit-mode-input mt-1 w-full py-2"></div><div class="col-span-2"><label class="form-label !ml-0">Logo URL</label><input type="text" id="new-brand-logo" class="edit-mode-input mt-1 w-full py-2"></div><div><label class="form-label !ml-0">Cor Hex</label><input type="text" id="new-brand-color" placeholder="#ff0000" class="edit-mode-input mt-1 w-full py-2 font-mono"></div><div class="md:col-span-5 flex justify-end mt-2"><button onclick="window.addNewBrand()" class="bg-emerald-500 text-white font-black uppercase text-[10px] tracking-widest px-6 py-2.5 rounded-lg hover:bg-emerald-600">Adicionar</button></div></div></div>
                 <div><h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 border-b border-white/10 pb-2">Deals da 3C com as Casas</h3><p class="text-[10px] text-gray-500 mb-4 italic">O que a casa paga para a 3C.</p><div id="brands-config-list" class="space-y-4 max-h-[35vh] overflow-y-auto custom-scrollbar pr-2"></div></div>
                 <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20"><h3 class="text-xs font-black uppercase tracking-widest text-blue-400 mb-3 flex items-center gap-2"><i data-lucide="cloud" class="w-4 h-4"></i> Sincronização em Nuvem</h3><p class="text-[10px] text-gray-400 mb-4 italic">Se os dados não aparecerem no telemóvel, clique aqui no computador para forçar envio.</p><button onclick="window.forceCloudSync(event)" class="w-full bg-blue-500 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-600 flex items-center justify-center gap-2"><i data-lucide="cloud-upload" class="w-4 h-4"></i> Forçar Envio Local → Nuvem</button></div>
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10"><h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2"><i data-lucide="hard-drive" class="w-4 h-4"></i> Backup</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button onclick="window.exportBackup()" class="w-full bg-white/10 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/20 border border-white/10 flex items-center justify-center gap-2"><i data-lucide="download-cloud" class="w-4 h-4"></i> Exportar JSON</button><div><input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importBackup(event)"><button onclick="document.getElementById('import-file').click()" class="w-full bg-blue-500/20 text-blue-400 font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-500/30 border border-blue-500/30 flex items-center justify-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Restaurar</button></div></div></div>
+                <div class="bg-black/30 p-5 rounded-2xl border border-white/10"><h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2"><i data-lucide="hard-drive" class="w-4 h-4"></i> Backup & Exportação</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><button onclick="window.exportBackup()" class="w-full bg-white/10 text-white font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-white/20 border border-white/10 flex items-center justify-center gap-2"><i data-lucide="download-cloud" class="w-4 h-4"></i> Backup Interno</button><button onclick="window.exportData()" class="w-full bg-emerald-500/20 text-emerald-400 font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-emerald-500/30 border border-emerald-500/30 flex items-center justify-center gap-2"><i data-lucide="file-json" class="w-4 h-4"></i> Exportar Dados</button><div><input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importBackup(event)"><button onclick="document.getElementById('import-file').click()" class="w-full bg-blue-500/20 text-blue-400 font-black uppercase text-[10px] tracking-widest py-3 rounded-lg hover:bg-blue-500/30 border border-blue-500/30 flex items-center justify-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Restaurar</button></div></div><p class="text-[9px] text-gray-600 mt-3 italic">Backup Interno = formato do sistema. Exportar Dados = JSON padronizado com nomes descritivos, filtra pelo período selecionado no dashboard.</p></div>
                 <button onclick="window.saveBrandsConfig()" class="w-full mt-4 theme-bg text-white font-black uppercase text-xs tracking-widest py-4 rounded-xl hover:brightness-110 theme-shadow">Salvar Deals Globais</button>
             </div>
         </div>
@@ -1200,6 +1200,41 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
         window.saveBrandsConfig=()=>{window.getBrandList().forEach(b=>{const d=window.dataStore.brands[b];if(d.type==='tiered'){d.levels.forEach((l,i)=>{l.cpa=parseFloat(document.getElementById('cfg-'+b+'-cpa-'+i)?.value)||0;l.baseline=parseFloat(document.getElementById('cfg-'+b+'-base-'+i)?.value)||0;});d.rs=parseFloat(document.getElementById('cfg-'+b+'-rs')?.value)||0;}else{d.cpa=parseFloat(document.getElementById('cfg-'+b+'-cpa')?.value)||0;d.rs=parseFloat(document.getElementById('cfg-'+b+'-rs')?.value)||0;}});window.saveMDData();window.closeModals();window.showToast("Salvo!","success");if(!['Fechamento','Afiliados'].includes(window.currentMDEnv))window.renderDashboard();};
         window.addNewBrand=()=>{const n=document.getElementById('new-brand-name').value.trim(),l=document.getElementById('new-brand-logo').value.trim(),c=document.getElementById('new-brand-color').value.trim()||'#fff';if(!n)return;if(window.dataStore.brands[n])return window.showToast("Já existe!","error");window.dataStore.brands[n]={color:c,type:'standard',cpa:0,rs:0,logo:l};window.saveMDData();window.initMDTabs();document.getElementById('new-brand-name').value='';document.getElementById('new-brand-logo').value='';document.getElementById('new-brand-color').value='';window.openConfigModal();window.showToast("Adicionada!","success");};
         window.exportBackup=()=>{const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(localStorage.getItem(MD_KEY));a.download='bkp_'+Date.now()+'.json';a.click();window.showToast("Exportado!","success");};
+        window.exportData=()=>{
+            const fs=document.getElementById('filter-start')?.value||'',fe=document.getElementById('filter-end')?.value||'';
+            let reps=[...window.dataStore.dailyReports];
+            if(fs&&fe){const start=new Date(fs+'T00:00:00').getTime(),end=new Date(fe+'T23:59:59').getTime();reps=reps.filter(r=>{const t=new Date(r.date+'T12:00:00').getTime();return t>=start&&t<=end;});}
+            const affMap={};window.dataStore.affiliates.forEach(a=>{affMap[a.id]=a.name;});
+            const reports=reps.map(r=>{
+                const q=typeof r.qftd==='object'?r.qftd:{standard:r.qftd||0};
+                return{
+                    id:r.id, date:r.date, brand:r.brand,
+                    affiliate_id:r.affiliateId, affiliate_name:affMap[r.affiliateId]||'Desconhecido',
+                    ftd:r.ftd||0, qftd:q, deposits:r.deposits||0,
+                    net_revenue:r.netRev||0, inserted_at:r.insertedAt||0
+                };
+            });
+            const affiliates=window.dataStore.affiliates.map(a=>({
+                id:a.id, name:a.name, social:a.social||'', notes:a.notes||'',
+                deals:a.deals||{}, created_at:a.createdAt||0
+            }));
+            const payload={
+                exported_at:new Date().toISOString(),
+                platform:'Hub 3C',
+                period:{start:fs||'all',end:fe||'all'},
+                total_reports:reports.length,
+                total_affiliates:affiliates.length,
+                brands:window.dataStore.brands,
+                affiliates:affiliates,
+                daily_reports:reports,
+                payments:window.dataStore.payments||[]
+            };
+            const a=document.createElement('a');
+            a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(payload,null,2));
+            const fname='hub3c_dados'+(fs?'_'+fs:'')+(fe?'_a_'+fe:'')+'.json';
+            a.download=fname;a.click();
+            window.showToast("Exportado: "+reports.length+" lançamentos","success");
+        };
         window.forceCloudSync=async(ev)=>{if(!window.isCloudMode||!wfUser)return;const b=ev.currentTarget,t=b.innerHTML;b.innerHTML='Enviando...';b.disabled=true;try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);const lt=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');for(const tk of lt){if(!window.tasks.find(x=>x.id===tk.id))await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',tk.id),tk);}window.showToast("Enviado!","success");}catch(err){window.showToast("Erro.","error");}b.innerHTML=t;b.disabled=false;lucide.createIcons();};
         window.importBackup=(ev)=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);
             // Field name mapping for common variations
