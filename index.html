@@ -1201,7 +1201,66 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
         window.addNewBrand=()=>{const n=document.getElementById('new-brand-name').value.trim(),l=document.getElementById('new-brand-logo').value.trim(),c=document.getElementById('new-brand-color').value.trim()||'#fff';if(!n)return;if(window.dataStore.brands[n])return window.showToast("Já existe!","error");window.dataStore.brands[n]={color:c,type:'standard',cpa:0,rs:0,logo:l};window.saveMDData();window.initMDTabs();document.getElementById('new-brand-name').value='';document.getElementById('new-brand-logo').value='';document.getElementById('new-brand-color').value='';window.openConfigModal();window.showToast("Adicionada!","success");};
         window.exportBackup=()=>{const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(localStorage.getItem(MD_KEY));a.download='bkp_'+Date.now()+'.json';a.click();window.showToast("Exportado!","success");};
         window.forceCloudSync=async(ev)=>{if(!window.isCloudMode||!wfUser)return;const b=ev.currentTarget,t=b.innerHTML;b.innerHTML='Enviando...';b.disabled=true;try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);const lt=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');for(const tk of lt){if(!window.tasks.find(x=>x.id===tk.id))await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',tk.id),tk);}window.showToast("Enviado!","success");}catch(err){window.showToast("Erro.","error");}b.innerHTML=t;b.disabled=false;lucide.createIcons();};
-        window.importBackup=(ev)=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p.brands)window.showConfirm("Substituir dados pelo backup?",async()=>{window.dataStore=p;window.dataStore.payments=p.payments||[];await window.saveMDData();window.initMDTabs();window.switchMDEnv('Visão Geral');window.closeModals();window.showToast("Restaurado!","success");});else window.showToast("Inválido.","error");}catch(err){}};r.readAsText(f);};
+        window.importBackup=(ev)=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);
+            // Field name mapping for common variations
+            const pick=(obj,...keys)=>{for(const k of keys){if(obj[k]!==undefined)return obj[k];}return undefined;};
+            const normalized={};
+            // Brands
+            normalized.brands=pick(p,'brands')||{};
+            if(!Object.keys(normalized.brands).length){console.warn('[import] Nenhuma brand encontrada no JSON');window.showToast("JSON inválido: sem brands.","error");ev.target.value='';return;}
+            // Affiliates
+            const rawAffs=pick(p,'affiliates','afiliados','partners','parceiros')||[];
+            normalized.affiliates=rawAffs.map(a=>({
+                id:pick(a,'id')||Math.random().toString(36).substr(2,9),
+                name:pick(a,'name','nome','partner_name')||'Sem nome',
+                social:pick(a,'social','')||'',
+                notes:pick(a,'notes','observacoes','obs')||'',
+                createdAt:pick(a,'createdAt','created_at','insertedAt')||Date.now(),
+                deals:pick(a,'deals','deal','acordos')||{}
+            }));
+            console.log('[import] Affiliates parsed:',normalized.affiliates.length,'afiliados');
+            // Daily Reports
+            const rawReports=pick(p,'dailyReports','daily_reports','reports','lancamentos','relatorios')||[];
+            normalized.dailyReports=rawReports.map(r=>{
+                const q=pick(r,'qftd','QFTD','qualified_ftd','qftds');
+                return{
+                    id:pick(r,'id')||Math.random().toString(36).substr(2,9),
+                    brand:pick(r,'brand','marca','casa')||'',
+                    affiliateId:pick(r,'affiliateId','affiliate_id','afiliado_id','partnerId','partner_id')||'',
+                    date:pick(r,'date','data','ref_date')||'',
+                    ftd:parseInt(pick(r,'ftd','FTD','ftds','FTDs'))||0,
+                    qftd:typeof q==='object'?{l1:q.l1||q.L1||0,l2:q.l2||q.L2||0,l3:q.l3||q.L3||0}:(parseInt(q)||0),
+                    deposits:parseFloat(pick(r,'deposits','deposit','depositos','dep'))||0,
+                    netRev:parseFloat(pick(r,'netRev','net_rev','netRevenue','net_revenue','revenue','receita'))||0,
+                    insertedAt:pick(r,'insertedAt','inserted_at','createdAt','created_at')||Date.now()
+                };
+            }).filter(r=>r.brand&&r.date);
+            console.log('[import] Reports parsed:',normalized.dailyReports.length,'daily rows');
+            if(rawReports.length>0&&normalized.dailyReports.length===0){
+                console.warn('[import] Todos os reports descartados! Campos do primeiro item:',Object.keys(rawReports[0]));
+                window.showToast("Atenção: "+rawReports.length+" lançamentos não foram reconhecidos. Verifique os campos no console (F12).","error");
+            }
+            // Audit logs & payments
+            normalized.auditLogs=pick(p,'auditLogs','audit_logs','logs')||[];
+            normalized.payments=pick(p,'payments','pagamentos')||[];
+            // Preserve original brand configs (logos, colors) that the backup might not have
+            Object.keys(window.dataStore.brands).forEach(b=>{
+                if(normalized.brands[b]&&!normalized.brands[b].logo&&window.dataStore.brands[b].logo)
+                    normalized.brands[b].logo=window.dataStore.brands[b].logo;
+            });
+            const summary=normalized.affiliates.length+' afiliados, '+normalized.dailyReports.length+' lançamentos';
+            console.log('[import] Resumo final:',summary);
+            window.showConfirm("Importar backup? ("+summary+")",async()=>{
+                window.dataStore=normalized;
+                await window.saveMDData();
+                window.initMDTabs();
+                window.switchMDEnv('Visão Geral');
+                window.closeModals();
+                window.showToast("Importado: "+summary,"success");
+            });
+            }catch(err){console.error('[import] Erro:',err);window.showToast("Erro ao ler arquivo: "+err.message,"error");}
+            ev.target.value='';
+        };r.readAsText(f);};
 
         window.generateDealInputsForModal=()=>{ let ch='',dh=''; window.getBrandList().forEach(b=>{const c=window.getBrandConfig(b),t=c.deal.type==='tiered'; ch+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/5 bg-black/40" style="border-bottom:2px solid '+c.color+'"><input type="checkbox" id="cb-brand-'+b+'" value="'+b+'" class="w-4 h-4 accent-pink-500" onchange="window.toggleBrandDealConfig(\''+b+'\')"><span class="text-xs font-black uppercase tracking-widest text-gray-300">'+b+'</span></label>'; dh+='<div id="deal-config-'+b+'" class="hidden bg-black/30 p-5 rounded-2xl border border-white/5" style="border-left:3px solid '+c.color+'"><h4 class="text-[10px] uppercase font-black mb-4 flex items-center gap-2" style="color:'+c.color+'"><i data-lucide="settings-2" class="w-3 h-3"></i> Deal → '+b+'</h4>'; if(t){dh+='<div class="grid grid-cols-1 md:grid-cols-4 gap-4"><div><label class="form-label !ml-0">CPA L1</label><input type="number" id="aff-cpa-l1-'+b+'" class="edit-mode-input w-full py-2.5"></div><div><label class="form-label !ml-0">CPA L2</label><input type="number" id="aff-cpa-l2-'+b+'" class="edit-mode-input w-full py-2.5"></div><div><label class="form-label !ml-0">CPA L3</label><input type="number" id="aff-cpa-l3-'+b+'" class="edit-mode-input w-full py-2.5"></div><div><label class="form-label !ml-0">RS%</label><input type="number" id="aff-rs-'+b+'" class="edit-mode-input w-full py-2.5"></div></div>';}else{dh+='<div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label !ml-0">CPA (R$)</label><input type="number" id="aff-cpa-'+b+'" class="edit-mode-input w-full py-2.5"></div><div><label class="form-label !ml-0">Baseline</label><input type="number" id="aff-base-'+b+'" class="edit-mode-input w-full py-2.5"></div><div><label class="form-label !ml-0">RS%</label><input type="number" id="aff-rs-'+b+'" class="edit-mode-input w-full py-2.5"></div></div>'; } dh+='</div>'; }); document.getElementById('brand-checkboxes').innerHTML=ch; document.getElementById('affiliate-deals-container').innerHTML=dh; lucide.createIcons(); };
         window.toggleBrandDealConfig=(b)=>{const d=document.getElementById('deal-config-'+b);if(document.getElementById('cb-brand-'+b)?.checked)d?.classList.remove('hidden');else d?.classList.add('hidden');};
