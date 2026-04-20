@@ -1205,35 +1205,37 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
             let reps=[...window.dataStore.dailyReports];
             if(fs&&fe){const start=new Date(fs+'T00:00:00').getTime(),end=new Date(fe+'T23:59:59').getTime();reps=reps.filter(r=>{const t=new Date(r.date+'T12:00:00').getTime();return t>=start&&t<=end;});}
             const affMap={};window.dataStore.affiliates.forEach(a=>{affMap[a.id]=a.name;});
-            const reports=reps.map(r=>{
-                const q=typeof r.qftd==='object'?r.qftd:{standard:r.qftd||0};
-                return{
-                    id:r.id, date:r.date, brand:r.brand,
-                    affiliate_id:r.affiliateId, affiliate_name:affMap[r.affiliateId]||'Desconhecido',
-                    ftd:r.ftd||0, qftd:q, deposits:r.deposits||0,
-                    net_revenue:r.netRev||0, inserted_at:r.insertedAt||0
-                };
-            });
-            const affiliates=window.dataStore.affiliates.map(a=>({
-                id:a.id, name:a.name, social:a.social||'', notes:a.notes||'',
-                deals:a.deals||{}, created_at:a.createdAt||0
+            // Uses internal Hub3C field names: dailyReports, affiliateId, netRev, qftd, insertedAt
+            const dailyReports=reps.map(r=>({
+                id:r.id,
+                date:r.date,
+                brand:r.brand,
+                affiliateId:r.affiliateId,
+                affiliateName:affMap[r.affiliateId]||'Desconhecido',
+                ftd:r.ftd||0,
+                qftd:r.qftd||0,
+                deposits:r.deposits||0,
+                netRev:r.netRev||0,
+                insertedAt:r.insertedAt||0
             }));
             const payload={
-                exported_at:new Date().toISOString(),
+                exportedAt:new Date().toISOString(),
                 platform:'Hub 3C',
                 period:{start:fs||'all',end:fe||'all'},
-                total_reports:reports.length,
-                total_affiliates:affiliates.length,
+                totalReports:dailyReports.length,
+                totalAffiliates:window.dataStore.affiliates.length,
                 brands:window.dataStore.brands,
-                affiliates:affiliates,
-                daily_reports:reports,
-                payments:window.dataStore.payments||[]
+                affiliates:window.dataStore.affiliates,
+                dailyReports:dailyReports,
+                payments:window.dataStore.payments||[],
+                auditLogs:window.dataStore.auditLogs||[]
             };
             const a=document.createElement('a');
             a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(payload,null,2));
             const fname='hub3c_dados'+(fs?'_'+fs:'')+(fe?'_a_'+fe:'')+'.json';
             a.download=fname;a.click();
-            window.showToast("Exportado: "+reports.length+" lançamentos","success");
+            console.log('[export] dailyReports:',dailyReports.length,'lançamentos · período:',fs||'all','→',fe||'all');
+            window.showToast("Exportado: "+dailyReports.length+" lançamentos","success");
         };
         window.forceCloudSync=async(ev)=>{if(!window.isCloudMode||!wfUser)return;const b=ev.currentTarget,t=b.innerHTML;b.innerHTML='Enviando...';b.disabled=true;try{await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','md_store','main'),window.dataStore);const lt=JSON.parse(localStorage.getItem('workflow3c_tasks')||'[]');for(const tk of lt){if(!window.tasks.find(x=>x.id===tk.id))await setDoc(doc(wfDb,'artifacts',wfAppId,'public','data','tasks',tk.id),tk);}window.showToast("Enviado!","success");}catch(err){window.showToast("Erro.","error");}b.innerHTML=t;b.disabled=false;lucide.createIcons();};
         window.importBackup=(ev)=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);
