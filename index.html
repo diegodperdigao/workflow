@@ -314,29 +314,23 @@
                 <div id="fechamento-module" class="hidden">
                     <div class="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl mb-12">
                         <h2 class="text-2xl font-black uppercase tracking-widest mb-8 border-b border-white/10 pb-5 flex items-center gap-3"><i data-lucide="file-check" class="w-6 h-6 text-emerald-400"></i> Gerador de Faturas</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                            <div><label class="form-label !ml-0">Selecionar Afiliado</label><select id="close-affiliate" class="edit-mode-input mt-1 w-full py-4 appearance-none cursor-pointer" onchange="window.updateClosureBrands()"></select></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                             <div><label class="form-label !ml-0">Data Inicial</label><input type="date" id="close-start" class="edit-mode-input mt-1 w-full py-4 cursor-pointer"></div>
                             <div><label class="form-label !ml-0">Data Final</label><input type="date" id="close-end" class="edit-mode-input mt-1 w-full py-4 cursor-pointer"></div>
                         </div>
-                        <div class="mb-8 bg-black/20 p-6 rounded-2xl border border-white/5"><label class="form-label !ml-0 mb-4 block text-emerald-400">Casas a incluir</label><div id="close-brands-container" class="flex flex-wrap gap-4"><span class="text-xs text-gray-500 italic">Selecione um afiliado primeiro.</span></div></div>
+                        <div class="mb-8 bg-black/20 p-6 rounded-2xl border border-white/5"><label class="form-label !ml-0 mb-3 block text-pink-400">Afiliados</label><div id="close-affiliates-container" class="flex flex-wrap gap-3"></div></div>
+                        <div class="mb-8 bg-black/20 p-6 rounded-2xl border border-white/5"><label class="form-label !ml-0 mb-3 block text-emerald-400">Casas a incluir</label><div id="close-brands-container" class="flex flex-wrap gap-3"></div></div>
                         <button onclick="window.generateClosure()" id="btn-calcular" class="w-full bg-emerald-500 text-white font-black uppercase text-base tracking-widest py-5 rounded-xl hover:bg-emerald-600 active:scale-[0.99] transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"><i data-lucide="calculator" class="w-5 h-5"></i>Calcular Fechamento</button>
                     </div>
                     <div id="closure-result-card" class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl hidden fade-content mb-12">
                         <div class="bg-emerald-500/10 px-10 py-8 border-b border-emerald-500/20 flex justify-between items-center">
-                            <div><h2 class="text-xl font-black uppercase tracking-widest text-emerald-400">Extrato Consolidado</h2><p id="closure-meta" class="text-sm text-gray-400 mt-2 font-mono">Afiliado: --- | Período: ---</p></div>
+                            <div><h2 class="text-xl font-black uppercase tracking-widest text-emerald-400">Extrato Consolidado</h2><p id="closure-meta" class="text-sm text-gray-400 mt-2 font-mono">Período: ---</p></div>
                             <div class="flex flex-wrap gap-3">
                                 <button onclick="window.exportClosurePDF()" class="px-6 py-3 bg-white/10 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-white/20 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i> Exportar PDF</button>
-                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-4 h-4"></i> Registrar Pagamento</button>
+                                <button onclick="window.saveClosureToHistory()" class="px-6 py-3 bg-pink-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-pink-600 flex items-center gap-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]"><i data-lucide="save" class="w-4 h-4"></i> Registrar Pagamentos</button>
                             </div>
                         </div>
-                        <div class="p-10">
-                            <div class="overflow-x-auto custom-scrollbar mb-10"><table class="w-full text-left border-collapse"><thead><tr class="text-xs uppercase tracking-widest text-gray-400 border-b border-white/10"><th class="pb-4 font-bold whitespace-nowrap">Casa</th><th class="pb-4 font-bold text-center whitespace-nowrap">Deal</th><th class="pb-4 font-bold text-center whitespace-nowrap">QFTDs</th><th class="pb-4 font-bold text-right whitespace-nowrap">Net Rev</th><th class="pb-4 font-bold text-right text-emerald-400 whitespace-nowrap">Comissão</th></tr></thead><tbody id="closure-table-body" class="text-base"></tbody></table></div>
-                            <div class="bg-black/40 rounded-3xl p-8 border border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-                                <div><p class="text-sm text-gray-400 uppercase tracking-widest font-bold flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4 text-emerald-400"></i>Valor Total a Pagar</p><p id="closure-total" class="text-5xl font-black text-emerald-400 font-mono mt-2 drop-shadow-[0_0_20px_rgba(16,185,129,0.3)]">R$ 0,00</p></div>
-                                <div class="text-right"><p class="text-xs text-gray-500 uppercase tracking-widest">Resumo</p><p id="closure-summary" class="text-base font-bold text-gray-300 mt-2">0 QFTDs | Receita: R$ 0,00</p></div>
-                            </div>
-                        </div>
+                        <div id="closure-results-body" class="p-10"></div>
                     </div>
                     <div class="glass-card rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-12">
                         <div class="bg-black/60 px-8 py-6 border-b border-white/5"><h2 class="text-base font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="history" class="w-4 h-4 text-emerald-400"></i> Histórico de Pagamentos por Afiliado</h2></div>
@@ -1012,182 +1006,101 @@ window.renderDashboard=()=>{ const s=document.getElementById('filter-start').val
 
         window.openAffiliateProfile=(id)=>{ const aff=window.dataStore.affiliates.find(a=>a.id===id);if(!aff)return;window.currentProfileAffId=id;aff.deals=aff.deals||{}; document.getElementById('profile-name').innerText=aff.name;document.getElementById('profile-date').innerText=`Parceiro desde: ${new Date(aff.createdAt).toLocaleDateString('pt-BR')}`;const pidEl=document.getElementById('profile-id-display');if(pidEl)pidEl.innerText='ID: '+aff.id; document.getElementById('profile-social').value=aff.social||'';document.getElementById('profile-notes').value=aff.notes||''; ['profile-social','profile-notes'].forEach(el=>{document.getElementById(el).readOnly=true;document.getElementById(el).className=document.getElementById(el).className.replace(/bg-black\/30|pointer-events-auto|text-white/g,'').trim()+' bg-transparent pointer-events-none text-gray-400 border-transparent';}); document.getElementById('btn-save-notes').classList.add('hidden');document.getElementById('btn-edit-notes').classList.remove('hidden'); let tQ=0,tC=0,tP=0; window.dataStore.dailyReports.filter(r=>r.affiliateId===id).forEach(r=>{const cfg=window.getBrandConfig(r.brand)?.deal;if(!cfg)return;const ad=aff.deals[r.brand]||{cpa:0,rs:0};let q=0,hC=0,rC=0;if(cfg.type==='tiered'){q=window._qftd(r.qftd);const q2=window._qftd(r.qftd,'l2'),q3=window._qftd(r.qftd,'l3');hC=(q*(cfg.levels[0]?.cpa||0))+(q2*(cfg.levels[1]?.cpa||0))+(q3*(cfg.levels[2]?.cpa||0));rC=(q*(ad.cpa_l1||ad.cpa||0))+(q2*(ad.cpa_l2||0))+(q3*(ad.cpa_l3||0))+(r.netRev*((ad.rs||0)/100));}else{q=window._qftd(r.qftd);hC=q*(cfg.cpa||0);rC=(q*(ad.cpa||0))+(r.netRev*((ad.rs||0)/100));}tQ+=q;tC+=rC;tP+=((hC+(r.netRev*((cfg.rs||0)/100)))-rC);}); document.getElementById('profile-qftds').innerText=tQ;document.getElementById('profile-comm').innerText=window.formatCurrency(tC);document.getElementById('profile-profit').innerText=window.formatCurrency(tP); let dh='';window.getBrandList().forEach(b=>{if(aff.deals[b]&&(aff.deals[b].cpa>0||aff.deals[b].cpa_l1>0||aff.deals[b].rs>0)){const c=window.getBrandConfig(b);const d=aff.deals[b];dh+='<tr class="border-b border-white/5 hover:bg-white/5"><td class="p-3 font-bold" style="color:'+(c?.color||'#fff')+'">'+b+'</td><td class="p-3 text-center text-gray-300">R$ '+(d.cpa_l1||d.cpa||0)+'</td><td class="p-3 text-center text-gray-300">R$ '+(d.cpa_l2||d.baseline||0)+'</td><td class="p-3 text-center text-gray-300">'+(d.rs||0)+'%</td></tr>';}}); document.getElementById('profile-deals-tbody').innerHTML=dh||'<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Sem deals.</td></tr>'; window.openAffiliateModalFromProfile=()=>{window.closeModals();setTimeout(()=>window.openAffiliateModal(aff.id),300);}; window.renderPaymentHistory(id); window.openModal('modal-affiliate-profile'); };
         window.initFechamentoUI = function(resetForm) {
-            // Always keep the affiliate select up to date
-            const currentAffId = document.getElementById('close-affiliate') ? document.getElementById('close-affiliate').value : '';
             const affs = window.dataStore.affiliates || [];
-            let ops = affs.length
-                ? '<option value="">Selecione o afiliado...</option>' + affs.map(function(a){ return '<option value="' + a.id + '">' + a.name + '</option>'; }).join('')
-                : '<option value="">Sem afiliados cadastrados</option>';
-            document.getElementById('close-affiliate').innerHTML = ops;
-            if (currentAffId) document.getElementById('close-affiliate').value = currentAffId;
-
-            // ONLY reset form when user navigates to Fechamento tab (resetForm=true)
-            // When called from onSnapshot (no arg), do NOT touch result card or dates
+            const ac=document.getElementById('close-affiliates-container');
+            if(ac){
+                let ah='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-pink-500/20 hover:bg-pink-500/10 bg-pink-500/5"><input type="checkbox" id="close-aff-all" class="w-4 h-4 accent-pink-500" onchange="document.querySelectorAll(\'.closure-aff-cb\').forEach(c=>c.checked=this.checked);window.updateClosureBrands()"><span class="text-xs font-bold text-pink-400 uppercase tracking-widest">Todos</span></label>';
+                affs.forEach(a=>{ah+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="'+a.id+'" class="closure-aff-cb w-4 h-4 accent-pink-500" onchange="window.updateClosureBrands()"><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">'+a.name+'</span></label>';});
+                ac.innerHTML=affs.length?ah:'<span class="text-xs text-gray-500 italic">Sem afiliados cadastrados.</span>';
+            }
             if (resetForm) {
                 const d = new Date();
                 document.getElementById('close-start').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0];
                 document.getElementById('close-end').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
                 document.getElementById('closure-result-card').classList.add('hidden');
-                document.getElementById('close-brands-container').innerHTML = '<span class="text-xs text-gray-500 italic">Selecione um afiliado primeiro.</span>';
+                document.getElementById('close-brands-container').innerHTML = '<span class="text-xs text-gray-500 italic">Selecione afiliados primeiro.</span>';
             }
         };
 
         window.updateClosureBrands=()=>{
-            const id=document.getElementById('close-affiliate').value;
-            if(!id) return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Selecione um afiliado.</span>';
-            // Ensure data is loaded
+            const ids=Array.from(document.querySelectorAll('.closure-aff-cb:checked')).map(c=>c.value);
+            if(!ids.length) return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Selecione afiliados primeiro.</span>';
             if(window.dataStore.affiliates.length === 0) {
                 try { const local=JSON.parse(localStorage.getItem('igaming3c_data_v15')||'{}'); if(local.affiliates) { window.dataStore.affiliates=local.affiliates; window.dataStore.dailyReports=local.dailyReports||[]; } } catch(e) {}
             }
-            const aff=window.dataStore.affiliates.find(a=>a.id===id);
-            if(!aff)return document.getElementById('close-brands-container').innerHTML='<span class="text-xs text-gray-500 italic">Afiliado não encontrado.</span>';
-            aff.deals=aff.deals||{}; let h='';window.getBrandList().forEach(b=>{if(aff.deals[b]&&(aff.deals[b].cpa>0||aff.deals[b].cpa_l1>0||aff.deals[b].rs>0))h+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="'+b+'" class="closure-brand-cb w-4 h-4 accent-emerald-500" checked><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">'+b+'</span></label>';}); document.getElementById('close-brands-container').innerHTML=h||'<span class="text-xs text-gray-500 italic">Sem deals.</span>'; };
+            const brandSet=new Set();
+            ids.forEach(id=>{const aff=window.dataStore.affiliates.find(a=>a.id===id);if(!aff)return;aff.deals=aff.deals||{};window.getBrandList().forEach(b=>{if(aff.deals[b]&&(aff.deals[b].cpa>0||aff.deals[b].cpa_l1>0||aff.deals[b].rs>0))brandSet.add(b);});});
+            let h='';brandSet.forEach(b=>{h+='<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 bg-black/40"><input type="checkbox" value="'+b+'" class="closure-brand-cb w-4 h-4 accent-emerald-500" checked><span class="text-xs font-bold text-gray-300 uppercase tracking-widest">'+b+'</span></label>';});
+            document.getElementById('close-brands-container').innerHTML=h||'<span class="text-xs text-gray-500 italic">Sem deals para os afiliados selecionados.</span>';
+        };
 
+        window._calcClosureForAffiliate=(aff,brands,repsAll)=>{
+            aff.deals=aff.deals||{};const reps=repsAll.filter(r=>r.affiliateId===aff.id);let tQ=0,tRev=0,tComm=0,brandDetails=[];
+            brands.forEach(brand=>{const bR=reps.filter(r=>r.brand===brand);if(!bR.length)return;let sQ=0,sR=0,bC=0;const mD=aff.deals[brand]||{cpa:0,rs:0};const bCfg=window.dataStore.brands[brand];if(!bCfg)return;const isT=bCfg.type==='tiered';let q1T=0,q2T=0,q3T=0,cL1=0,cL2=0,cL3=0,stdQ=0,stdC=0;
+                bR.forEach(r=>{sR+=(r.netRev||0);if(isT){const q1=window._qftd(r.qftd),q2=window._qftd(r.qftd,'l2'),q3=window._qftd(r.qftd,'l3');sQ+=q1;q1T+=q1;q2T+=q2;q3T+=q3;const c1=q1*(mD.cpa_l1||mD.cpa||0),c2=q2*(mD.cpa_l2||0),c3=q3*(mD.cpa_l3||0);cL1+=c1;cL2+=c2;cL3+=c3;bC+=(c1+c2+c3)+((r.netRev||0)*((mD.rs||0)/100));}else{const q=window._qftd(r.qftd);sQ+=q;stdQ+=q;const c=q*(mD.cpa||0);stdC+=c;bC+=c+((r.netRev||0)*((mD.rs||0)/100));}});
+                const rsAmt=sR*((mD.rs||0)/100);tQ+=sQ;tRev+=sR;tComm+=bC;const cfg=window.getBrandConfig(brand)||{color:'#fff'};
+                brandDetails.push({brand,color:cfg.color,isTiered:isT,levels:isT?[{name:'CPA L1',qftds:q1T,value:mD.cpa_l1||mD.cpa||0,total:cL1},{name:'CPA L2',qftds:q2T,value:mD.cpa_l2||0,total:cL2},{name:'CPA L3',qftds:q3T,value:mD.cpa_l3||0,total:cL3}]:null,standardQftds:stdQ,standardCpaValue:mD.cpa||0,standardCpaTotal:stdC,netRev:sR,rsPercent:mD.rs||0,rsAmount:rsAmt,brandTotal:bC});});
+            return{affiliateId:aff.id,affiliateName:aff.name,totalAmount:tComm,totalQftds:tQ,totalRev:tRev,brandDetails};
+        };
         window.generateClosure=()=>{
-            try {
-                // Ensure affiliates are loaded (without resetting the form)
-                if(window.dataStore.affiliates.length === 0) {
-                    try {
-                        const local = JSON.parse(localStorage.getItem('igaming3c_data_v15') || '{}');
-                        if(local.affiliates && local.affiliates.length > 0) {
-                            window.dataStore.affiliates = local.affiliates;
-                            window.dataStore.dailyReports = local.dailyReports || [];
-                            window.dataStore.payments = local.payments || [];
-                            // Re-populate select without resetting dates/checkboxes
-                            const sel = document.getElementById('close-affiliate');
-                            const currentVal = sel.value;
-                            sel.innerHTML = '<option value="">Selecione o afiliado...</option>' + local.affiliates.map(a => '<option value="'+a.id+'">'+a.name+'</option>').join('');
-                            sel.value = currentVal;
-                        }
-                    } catch(e) {}
-                }
-                const id=document.getElementById('close-affiliate').value;
-                const s=document.getElementById('close-start').value;
-                const e=document.getElementById('close-end').value;
+            try{
+                if(window.dataStore.affiliates.length===0){try{const local=JSON.parse(localStorage.getItem('igaming3c_data_v15')||'{}');if(local.affiliates&&local.affiliates.length>0){window.dataStore.affiliates=local.affiliates;window.dataStore.dailyReports=local.dailyReports||[];window.dataStore.payments=local.payments||[];window.initFechamentoUI();}}catch(e){}}
+                const affIds=Array.from(document.querySelectorAll('.closure-aff-cb:checked')).map(c=>c.value);
+                const s=document.getElementById('close-start').value,e=document.getElementById('close-end').value;
                 const b=Array.from(document.querySelectorAll('.closure-brand-cb:checked')).map(cb=>cb.value);
-                if(!id) return window.showToast("Selecione um afiliado.", "error");
-                if(!s||!e) return window.showToast("Preencha as datas.", "error");
-                if(!b.length) return window.showToast("Selecione pelo menos uma casa.", "error");
-                const aff=window.dataStore.affiliates.find(a=>a.id===id);
-                if(!aff) {
-                    const total = window.dataStore.affiliates.length;
-                    return window.showToast(total === 0 ? "Nenhum afiliado carregado ainda. Aguarde a sincronização." : "Afiliado não encontrado.", "error");
-                }
-                aff.deals=aff.deals||{};
-                const start=new Date(s+'T00:00:00').getTime(), end=new Date(e+'T23:59:59').getTime();
-                const reps=window.dataStore.dailyReports.filter(r=>{ const t=new Date(r.date+'T12:00:00').getTime(); return r.affiliateId===id&&t>=start&&t<=end&&b.includes(r.brand); });
-                let tQ=0,tRev=0,tComm=0,rows='',brandDetails=[];
-                b.forEach(brand=>{
-                    const bR=reps.filter(r=>r.brand===brand); if(!bR.length)return;
-                    let sQ=0,sR=0,bC=0;
-                    const mD=aff.deals[brand]||{cpa:0,rs:0};
-                    const bCfg=window.dataStore.brands[brand]; if(!bCfg)return;
-                    const isT=bCfg.type==='tiered';
-                    let q1Total=0,q2Total=0,q3Total=0,cpaL1Total=0,cpaL2Total=0,cpaL3Total=0,standardQ=0,standardCpaTotal=0;
-                    bR.forEach(r=>{
-                        sR+=(r.netRev||0);
-                        let q=0,cpa=0;
-                        if(isT){
-                            const q1=window._qftd(r.qftd),q2=window._qftd(r.qftd,'l2'),q3=window._qftd(r.qftd,'l3');
-                            q=q1;sQ+=q;
-                            q1Total+=q1;q2Total+=q2;q3Total+=q3;
-                            const c1=q1*(mD.cpa_l1||mD.cpa||0),c2=q2*(mD.cpa_l2||0),c3=q3*(mD.cpa_l3||0);
-                            cpaL1Total+=c1;cpaL2Total+=c2;cpaL3Total+=c3;
-                            cpa=c1+c2+c3;
-                        } else {
-                            q=typeof r.qftd==='object'?(r.qftd?.l1||0):(r.qftd||0);
-                            sQ+=q;standardQ+=q;
-                            const c=q*(mD.cpa||0);
-                            standardCpaTotal+=c;
-                            cpa=c;
-                        }
-                        bC+=cpa+((r.netRev||0)*((mD.rs||0)/100));
-                    });
-                    const rsAmount=sR*((mD.rs||0)/100);
-                    tQ+=sQ;tRev+=sR;tComm+=bC;
-                    const cfg=window.getBrandConfig(brand)||{color:'#ffffff'};
-                    // Store detailed breakdown for PDF
-                    brandDetails.push({
-                        brand:brand,color:cfg.color,isTiered:isT,
-                        levels:isT?[
-                            {name:'CPA L1',qftds:q1Total,value:mD.cpa_l1||mD.cpa||0,total:cpaL1Total},
-                            {name:'CPA L2',qftds:q2Total,value:mD.cpa_l2||0,total:cpaL2Total},
-                            {name:'CPA L3',qftds:q3Total,value:mD.cpa_l3||0,total:cpaL3Total}
-                        ]:null,
-                        standardQftds:standardQ,standardCpaValue:mD.cpa||0,standardCpaTotal:standardCpaTotal,
-                        netRev:sR,rsPercent:mD.rs||0,rsAmount:rsAmount,brandTotal:bC
-                    });
-                    const deal=isT?('L1: R$ '+(mD.cpa_l1||mD.cpa||0)+' / '+(mD.rs||0)+'%'):('R$ '+(mD.cpa||0)+' / '+(mD.rs||0)+'%');
-                    rows+='<tr class="border-b border-white/5 hover:bg-white/5"><td class="py-4 font-bold" style="color:'+cfg.color+'">'+brand+'</td><td class="py-4 text-center font-mono text-xs text-gray-400">'+deal+'</td><td class="py-4 text-center font-bold text-gray-300">'+sQ+'</td><td class="py-4 text-right font-mono text-gray-400">'+window.formatCurrency(sR)+'</td><td class="py-4 text-right font-mono font-bold text-emerald-400">'+window.formatCurrency(bC)+'</td></tr>';
-                });
-                if(!rows)rows='<tr><td colspan="5" class="py-8 text-center text-gray-500 italic">Nenhum dado neste período.</td></tr>';
-                document.getElementById('closure-table-body').innerHTML=rows;
-                document.getElementById('closure-total').innerText=window.formatCurrency(tComm);
-                document.getElementById('closure-summary').innerText=tQ+' QFTDs | Receita: '+window.formatCurrency(tRev);
-                document.getElementById('closure-meta').innerText='Afiliado: '+aff.name+' | Período: '+s.split('-').reverse().join('/')+' até '+e.split('-').reverse().join('/');
-                window.currentPendingClosure={affiliateId:aff.id,affiliateName:aff.name,startDate:s,endDate:e,totalAmount:tComm,totalQftds:tQ,totalRev:tRev,brandDetails:brandDetails};
-                const rc=document.getElementById('closure-result-card');rc.classList.remove('hidden','fade-content');void rc.offsetWidth;rc.classList.add('fade-content');
-                window.logAction('Extrato Gerado','Para '+aff.name);
-            } catch(err) {
-                console.error('Erro generateClosure:',err);
-                window.showToast('Erro: '+err.message,'error');
+                if(!affIds.length)return window.showToast("Selecione pelo menos um afiliado.","error");
+                if(!s||!e)return window.showToast("Preencha as datas.","error");
+                if(!b.length)return window.showToast("Selecione pelo menos uma casa.","error");
+                const start=new Date(s+'T00:00:00').getTime(),end=new Date(e+'T23:59:59').getTime();
+                const allReps=window.dataStore.dailyReports.filter(r=>{const t=new Date(r.date+'T12:00:00').getTime();return t>=start&&t<=end&&b.includes(r.brand);});
+                const closures=[];let grandTotal=0,grandQ=0,grandRev=0;
+                affIds.forEach(id=>{const aff=window.dataStore.affiliates.find(a=>a.id===id);if(!aff)return;const c=window._calcClosureForAffiliate(aff,b,allReps);if(c.totalAmount>0||c.totalQftds>0||c.totalRev!==0){closures.push(c);grandTotal+=c.totalAmount;grandQ+=c.totalQftds;grandRev+=c.totalRev;}});
+                const body=document.getElementById('closure-results-body');
+                if(!closures.length){body.innerHTML='<p class="text-center text-gray-500 italic py-8">Nenhum dado neste período.</p>';document.getElementById('closure-result-card').classList.remove('hidden');return;}
+                const fmt=window.formatCurrency;let html='';
+                closures.forEach(c=>{let rows='';c.brandDetails.forEach(bd=>{const cfg=window.getBrandConfig(bd.brand)||{color:'#fff'};const deal=bd.isTiered?('L1: R$ '+(bd.levels[0]?.value||0)+' / '+bd.rsPercent+'%'):('R$ '+bd.standardCpaValue+' / '+bd.rsPercent+'%');const qT=bd.isTiered?(bd.levels[0]?.qftds||0):bd.standardQftds;rows+='<tr class="border-b border-white/5 hover:bg-white/5"><td class="py-3 font-bold text-sm" style="color:'+cfg.color+'">'+bd.brand+'</td><td class="py-3 text-center font-mono text-xs text-gray-400">'+deal+'</td><td class="py-3 text-center font-bold text-gray-300">'+qT+'</td><td class="py-3 text-right font-mono text-gray-400 text-sm">'+fmt(bd.netRev)+'</td><td class="py-3 text-right font-mono font-bold text-emerald-400 text-sm">'+fmt(bd.brandTotal)+'</td></tr>';});
+                html+='<div class="mb-8 bg-black/20 rounded-2xl border border-white/5 overflow-hidden"><div class="bg-white/5 px-6 py-4 flex justify-between items-center border-b border-white/5"><h3 class="text-sm font-black uppercase tracking-widest text-white flex items-center gap-2"><i data-lucide="user" class="w-4 h-4 text-pink-400"></i> '+c.affiliateName+'</h3><span class="text-lg font-black font-mono text-emerald-400">'+fmt(c.totalAmount)+'</span></div><div class="p-4"><table class="w-full text-left border-collapse"><thead><tr class="text-[10px] uppercase tracking-widest text-gray-500"><th class="pb-3 font-bold">Casa</th><th class="pb-3 font-bold text-center">Deal</th><th class="pb-3 font-bold text-center">QFTDs</th><th class="pb-3 font-bold text-right">Net Rev</th><th class="pb-3 font-bold text-right text-emerald-400">Comissão</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';});
+                html+='<div class="bg-black/40 rounded-3xl p-8 border border-white/5 flex flex-col md:flex-row justify-between items-center gap-8"><div><p class="text-sm text-gray-400 uppercase tracking-widest font-bold flex items-center gap-2"><i data-lucide="banknote" class="w-4 h-4 text-emerald-400"></i>Total Geral ('+closures.length+' afiliados)</p><p class="text-5xl font-black text-emerald-400 font-mono mt-2 drop-shadow-[0_0_20px_rgba(16,185,129,0.3)]">'+fmt(grandTotal)+'</p></div><div class="text-right"><p class="text-xs text-gray-500 uppercase tracking-widest">Resumo</p><p class="text-base font-bold text-gray-300 mt-2">'+grandQ+' QFTDs | Receita: '+fmt(grandRev)+'</p></div></div>';
+                body.innerHTML=html;document.getElementById('closure-meta').innerText='Período: '+s.split('-').reverse().join('/')+' até '+e.split('-').reverse().join('/')+' | '+closures.length+' afiliado(s)';
+                window.currentPendingClosures=closures.map(c=>({...c,startDate:s,endDate:e}));
+                window.currentPendingClosure=closures.length===1?{...closures[0],startDate:s,endDate:e}:null;
+                const rc=document.getElementById('closure-result-card');rc.classList.remove('hidden','fade-content');void rc.offsetWidth;rc.classList.add('fade-content');lucide.createIcons();window.logAction('Extrato Gerado',closures.length+' afiliado(s)');
+            }catch(err){console.error('Erro generateClosure:',err);window.showToast('Erro: '+err.message,'error');}
+        };
+        window.saveClosureToHistory=()=>{
+            const cls=window.currentPendingClosures;if(!cls||!cls.length)return window.showToast("Calcule um fechamento primeiro.","error");
+            cls.forEach(c=>{const p={id:Math.random().toString(36).substr(2,9),...c,status:'pending',invoiceUrl:'',invoiceName:'',createdAt:Date.now()};window.dataStore.payments.push(p);});
+            window.saveMDData();window.logAction('Fechamento Registrado',cls.length+' afiliado(s) - '+window.formatCurrency(cls.reduce((s,c)=>s+c.totalAmount,0)));
+            window.showToast("Registrado: "+cls.length+" pagamento(s)!","success");window.currentPendingClosures=null;window.currentPendingClosure=null;document.getElementById('closure-result-card').classList.add('hidden');window.renderGlobalPaymentHistory();
+        };
+        window._buildClosurePDFHtml=(pc,todayStr,period,fmt)=>{
+            let brandsHtml='';pc.brandDetails.forEach(bd=>{let linesHtml='';
+                if(bd.isTiered){bd.levels.forEach(lv=>{const lc=lv.qftds>0?'#111827':'#9ca3af';linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lc+'">'+lv.name+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+lv.value.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lc+'">'+lv.qftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lc+'">'+fmt(lv.total)+'</td></tr>';});}
+                else{const lc=bd.standardQftds>0?'#111827':'#9ca3af';linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lc+'">CPA</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+bd.standardCpaValue.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lc+'">'+bd.standardQftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lc+'">'+fmt(bd.standardCpaTotal)+'</td></tr>';}
+                const rc=bd.rsAmount>0?'#111827':'#9ca3af';linesHtml+='<tr style="border-bottom:1px solid #f3f4f6;background:#fafafa"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+rc+'">Rev Share</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+bd.rsPercent+'% sobre Net Rev</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+fmt(bd.netRev)+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+rc+'">'+fmt(bd.rsAmount)+'</td></tr>';
+                brandsHtml+='<div style="margin-bottom:22px;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden"><div style="background:'+bd.color+'12;border-bottom:2px solid '+bd.color+';padding:14px 18px;display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+bd.color+'"></div><span style="font-size:14px;font-weight:900;color:'+bd.color+'">'+bd.brand+'</span></div><div style="text-align:right"><p style="font-size:9px;color:#6b7280;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0">Subtotal</p><p style="font-size:16px;font-weight:900;color:#10b981;font-family:monospace;margin:2px 0 0">'+fmt(bd.brandTotal)+'</p></div></div><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#f9fafb"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Componente</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Valor Acordado</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Alcançado</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Total</th></tr></thead><tbody>'+linesHtml+'</tbody></table></div>';});
+            return brandsHtml;
+        };
+        window._openPDFWindow=(title,affName,period,todayStr,brandsHtml,totalAmount,totalQftds,totalRev,fmt)=>{
+            const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Extrato - '+affName+'</title><style>@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap");*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Montserrat",sans-serif;color:#1f2937;background:#fff;padding:18mm 16mm}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body><div style="max-width:760px;margin:0 auto"><div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #10b981;padding-bottom:20px;margin-bottom:30px"><div><img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" style="height:32px;filter:invert(1) brightness(0.2)" onerror="this.style.display=\'none\'"></div><div style="text-align:right"><span style="font-size:10px;font-weight:800;letter-spacing:3px;color:#9ca3af;text-transform:uppercase">'+title+'</span><br><span style="font-size:11px;color:#9ca3af">'+todayStr+'</span></div></div><h1 style="font-size:22px;font-weight:900;color:#111827;margin-bottom:6px">'+affName+'</h1><p style="font-size:12px;color:#6b7280;font-weight:600;margin-bottom:24px">Período: <span style="color:#111827;font-weight:800">'+period+'</span></p>'+brandsHtml+'<div style="background:linear-gradient(135deg,#10b98115,#10b98105);border:2px solid #10b98133;border-radius:16px;padding:28px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#6b7280;text-transform:uppercase;margin-bottom:6px">Valor Total</p><p style="font-size:32px;font-weight:900;color:#10b981;font-family:monospace;line-height:1">'+fmt(totalAmount)+'</p></div><div style="text-align:right"><p style="font-size:9px;font-weight:700;color:#9ca3af;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Resumo</p><p style="font-size:12px;font-weight:700;color:#374151">'+totalQftds+' QFTDs</p><p style="font-size:10px;font-weight:600;color:#9ca3af;margin-top:2px">Receita: '+fmt(totalRev)+'</p></div></div><div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:16px 20px;margin-bottom:24px"><p style="font-size:10px;font-weight:700;color:#92400e;line-height:1.6"><strong>Aviso:</strong> Confidencial. Valores conforme acordo comercial vigente.</p></div><div style="margin-top:40px;padding-top:16px;border-top:1px solid #e5e7eb;text-align:center"><p style="font-size:9px;color:#d1d5db;letter-spacing:2px;font-weight:700;text-transform:uppercase">Confidencial · 3C Gaming BizDev · '+new Date().getFullYear()+'</p></div></div></body></html>';
+            const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();setTimeout(()=>{w.print();},600);}
+        };
+        window.exportClosurePDF=()=>{
+            const cls=window.currentPendingClosures;if(!cls||!cls.length)return window.showToast('Calcule um fechamento primeiro.','error');
+            const fmt=window.formatCurrency;const todayStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+            const period=cls[0].startDate.split('-').reverse().join('/')+' até '+cls[0].endDate.split('-').reverse().join('/');
+            // Individual PDFs per affiliate
+            cls.forEach((pc,i)=>{
+                const bHtml=window._buildClosurePDFHtml(pc,todayStr,period,fmt);
+                setTimeout(()=>{window._openPDFWindow('Extrato de Fechamento',pc.affiliateName,period,todayStr,bHtml,pc.totalAmount,pc.totalQftds,pc.totalRev,fmt);},i*800);
+            });
+            // If multiple affiliates, also open a consolidated PDF
+            if(cls.length>1){
+                const grandTotal=cls.reduce((s,c)=>s+c.totalAmount,0),grandQ=cls.reduce((s,c)=>s+c.totalQftds,0),grandRev=cls.reduce((s,c)=>s+c.totalRev,0);
+                let allBrands='';cls.forEach(pc=>{allBrands+='<div style="margin-bottom:8px"><h2 style="font-size:16px;font-weight:900;color:#111827;margin-bottom:12px;padding:10px 0;border-bottom:2px solid #e5e7eb">'+pc.affiliateName+' — '+fmt(pc.totalAmount)+'</h2>'+window._buildClosurePDFHtml(pc,todayStr,period,fmt)+'</div>';});
+                setTimeout(()=>{window._openPDFWindow('Extrato Consolidado','Todos os Afiliados ('+cls.length+')',period,todayStr,allBrands,grandTotal,grandQ,grandRev,fmt);},cls.length*800);
             }
         };
-
-        window.exportClosurePDF=()=>{
-            const pc=window.currentPendingClosure;
-            if(!pc||!pc.brandDetails||!pc.brandDetails.length) return window.showToast('Calcule um fechamento primeiro.','error');
-            const period=pc.startDate.split('-').reverse().join('/')+' até '+pc.endDate.split('-').reverse().join('/');
-            const todayStr=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-            const fmt=window.formatCurrency;
-            // Build per-brand sections
-            let brandsHtml='';
-            pc.brandDetails.forEach(bd=>{
-                let linesHtml='';
-                if(bd.isTiered){
-                    // Show each CPA level with QFTDs achieved and unit value
-                    bd.levels.forEach(lv=>{
-                        const lineColor=lv.qftds>0?'#111827':'#9ca3af';
-                        linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lineColor+';letter-spacing:0.05em">'+lv.name+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+lv.value.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lineColor+'">'+lv.qftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lineColor+'">'+fmt(lv.total)+'</td></tr>';
-                    });
-                } else {
-                    const lineColor=bd.standardQftds>0?'#111827':'#9ca3af';
-                    linesHtml+='<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+lineColor+';letter-spacing:0.05em">CPA</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">R$ '+bd.standardCpaValue.toLocaleString('pt-BR')+' / QFTD</td><td style="padding:10px 14px;font-size:12px;font-weight:800;text-align:center;color:'+lineColor+'">'+bd.standardQftds+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+lineColor+'">'+fmt(bd.standardCpaTotal)+'</td></tr>';
-                }
-                // Rev Share line (shows the calculation applied to affiliate's rate)
-                const rsColor=bd.rsAmount>0?'#111827':'#9ca3af';
-                linesHtml+='<tr style="border-bottom:1px solid #f3f4f6;background:#fafafa"><td style="padding:10px 14px;font-size:11px;font-weight:700;color:'+rsColor+';letter-spacing:0.05em">Rev Share</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+bd.rsPercent+'% sobre Net Rev</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:center;color:#6b7280">'+fmt(bd.netRev)+'</td><td style="padding:10px 14px;font-size:11px;font-family:monospace;text-align:right;font-weight:700;color:'+rsColor+'">'+fmt(bd.rsAmount)+'</td></tr>';
-                brandsHtml+='<div style="margin-bottom:22px;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden">'
-                    +'<div style="background:'+bd.color+'12;border-bottom:2px solid '+bd.color+';padding:14px 18px;display:flex;justify-content:space-between;align-items:center">'
-                    +'<div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+bd.color+'"></div><span style="font-size:14px;font-weight:900;color:'+bd.color+';letter-spacing:0.02em">'+bd.brand+'</span></div>'
-                    +'<div style="text-align:right"><p style="font-size:9px;color:#6b7280;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0">Subtotal</p><p style="font-size:16px;font-weight:900;color:#10b981;font-family:monospace;margin:2px 0 0">'+fmt(bd.brandTotal)+'</p></div>'
-                    +'</div>'
-                    +'<table style="width:100%;border-collapse:collapse">'
-                    +'<thead><tr style="background:#f9fafb"><th style="padding:9px 14px;text-align:left;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Componente</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Valor Acordado</th><th style="padding:9px 14px;text-align:center;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Alcançado</th><th style="padding:9px 14px;text-align:right;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9ca3af;text-transform:uppercase">Total</th></tr></thead>'
-                    +'<tbody>'+linesHtml+'</tbody>'
-                    +'</table></div>';
-            });
-            const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Extrato - '+pc.affiliateName+'</title><style>@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap");*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Montserrat",sans-serif;color:#1f2937;background:#fff;padding:18mm 16mm}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{margin:0;size:A4}}</style></head><body>'
-                +'<div style="max-width:760px;margin:0 auto;padding:40px 0">'
-                +'<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #10b981;padding-bottom:20px;margin-bottom:30px">'
-                +'<div><img src="https://i.ibb.co/chfw0cND/Horizontal-Com-Tag-W.png" style="height:32px;filter:invert(1) brightness(0.2)" onerror="this.style.display=\'none\'"></div>'
-                +'<div style="text-align:right"><span style="font-size:10px;font-weight:800;letter-spacing:3px;color:#9ca3af;text-transform:uppercase">Extrato de Fechamento</span><br><span style="font-size:11px;color:#9ca3af">'+todayStr+'</span></div>'
-                +'</div>'
-                +'<h1 style="font-size:22px;font-weight:900;color:#111827;margin-bottom:6px;line-height:1.3">'+pc.affiliateName+'</h1>'
-                +'<p style="font-size:12px;color:#6b7280;font-weight:600;margin-bottom:24px">Período: <span style="color:#111827;font-weight:800">'+period+'</span></p>'
-                +brandsHtml
-                +'<div style="background:linear-gradient(135deg,#10b98115,#10b98105);border:2px solid #10b98133;border-radius:16px;padding:28px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">'
-                +'<div><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#6b7280;text-transform:uppercase;margin-bottom:6px">Valor Total a Pagar</p><p style="font-size:32px;font-weight:900;color:#10b981;font-family:monospace;line-height:1">'+fmt(pc.totalAmount)+'</p></div>'
-                +'<div style="text-align:right"><p style="font-size:9px;font-weight:700;color:#9ca3af;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Resumo</p><p style="font-size:12px;font-weight:700;color:#374151">'+pc.totalQftds+' QFTDs</p><p style="font-size:10px;font-weight:600;color:#9ca3af;margin-top:2px">Receita Gerada: '+fmt(pc.totalRev)+'</p></div>'
-                +'</div>'
-                +'<div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:16px 20px;margin-bottom:24px"><p style="font-size:10px;font-weight:700;color:#92400e;line-height:1.6"><strong style="font-weight:900">Aviso:</strong> Este extrato é confidencial e de uso exclusivo entre as partes. Valores calculados conforme acordo comercial vigente.</p></div>'
-                +'<div style="margin-top:40px;padding-top:16px;border-top:1px solid #e5e7eb;text-align:center">'
-                +'<p style="font-size:9px;color:#d1d5db;letter-spacing:2px;font-weight:700;text-transform:uppercase">Confidencial · 3C Gaming BizDev · '+new Date().getFullYear()+'</p>'
-                +'</div></div></body></html>';
-            const w=window.open('','_blank');
-            if(w){w.document.write(html);w.document.close();setTimeout(()=>{w.print();},500);}
-        };
-        window.saveClosureToHistory=()=>{ if(!window.currentPendingClosure)return window.showToast("Calcule um fechamento primeiro.","error"); const p={id:Math.random().toString(36).substr(2,9),...window.currentPendingClosure,status:'pending',invoiceUrl:'',invoiceName:'',createdAt:Date.now()}; window.dataStore.payments.push(p);window.saveMDData();window.logAction('Fechamento Registrado',window.formatCurrency(p.totalAmount)); window.showToast("Registrado!","success");window.currentPendingClosure=null;document.getElementById('closure-result-card').classList.add('hidden');window.renderGlobalPaymentHistory(); };
         window.toggleAcordeon=(id)=>{const el=document.getElementById('aff-pays-'+id);if(el)el.classList.toggle('hidden');};
 
         window.renderGlobalPaymentHistory=()=>{ const c=document.getElementById('grouped-payments-container');if(!c)return; const p=window.dataStore.payments||[];if(!p.length){c.innerHTML='<p class="text-center text-gray-500 italic py-8">Nenhum pagamento registrado.</p>';return;} const g={};p.forEach(x=>{if(!g[x.affiliateId])g[x.affiliateId]={name:x.affiliateName,p:[]};g[x.affiliateId].p.push(x);}); let html=''; Object.entries(g).forEach(([id,d])=>{ d.p.sort((a,b)=>b.createdAt-a.createdAt);let tp=0,tn=0,rows=''; d.p.forEach(x=>{ x.status==='paid'?tp+=x.totalAmount:tn+=x.totalAmount; let pi=x.status==='paid'&&x.paidAt?'<br><span class="text-[8px] text-emerald-500 mt-1 block">Pago: '+new Date(x.paidAt).toLocaleDateString('pt-BR')+'</span>':''; let sb=x.status==='paid'?'<button onclick="window.togglePaymentStatus(\''+x.id+'\')" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-lg text-[9px] font-black uppercase border border-emerald-500/30 w-24">✓ Pago</button>':'<button onclick="window.togglePaymentStatus(\''+x.id+'\')" class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-lg text-[9px] font-black uppercase border border-amber-500/30 w-24">⏳ Pendente</button>'; let da=x.invoiceUrl&&x.invoiceUrl.startsWith('data:')?'download="nf"':''; let ib=x.invoiceUrl?'<div class="flex flex-col items-center gap-1"><a href="'+x.invoiceUrl+'" target="_blank" '+da+' class="text-blue-400 text-xs font-bold">↗ Abrir N.F.</a><button onclick="window.updateInvoice(\''+x.id+'\')" class="text-gray-500 hover:text-white text-[9px] uppercase font-bold">↺ Trocar</button></div>':'<button onclick="window.updateInvoice(\''+x.id+'\')" class="text-gray-400 hover:text-white bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 text-[9px] uppercase font-bold">↑ Anexar N.F.</button>'; rows+='<tr class="border-t border-white/5 hover:bg-white/5"><td class="py-4 px-4 text-gray-300 text-xs">'+x.startDate.split('-').reverse().join('/')+' a '+x.endDate.split('-').reverse().join('/')+'</td><td class="py-4 px-4 text-right text-white font-bold text-xs">'+window.formatCurrency(x.totalAmount)+'</td><td class="py-4 px-4 text-center">'+sb+pi+'</td><td class="py-4 px-4 text-center">'+ib+'</td><td class="py-4 px-4 text-center"><button onclick="window.deletePayment(\''+x.id+'\',\''+id+'\')" class="p-2 text-gray-500 hover:text-red-500 rounded hover:bg-red-500/10"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td></tr>'; }); html+='<div class="bg-black/40 border border-white/10 rounded-2xl overflow-hidden mb-4"><div class="bg-white/5 px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/10" onclick="window.toggleAcordeon(\''+id+'\')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 border border-pink-500/30"><i data-lucide="user" class="w-5 h-5"></i></div><h3 class="font-black uppercase tracking-widest text-sm text-white">'+d.name+'</h3></div><div class="flex items-center gap-6 text-right"><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pendente</p><p class="text-amber-400 font-mono font-bold text-sm">'+window.formatCurrency(tn)+'</p></div><div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Pago</p><p class="text-emerald-400 font-mono font-bold text-sm">'+window.formatCurrency(tp)+'</p></div><i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 ml-4"></i></div></div><div id="aff-pays-'+id+'" class="hidden p-2"><div class="overflow-x-auto custom-scrollbar"><table class="w-full text-left"><thead><tr class="text-[9px] uppercase tracking-widest text-gray-500"><th class="px-4 py-3 font-bold">Período</th><th class="px-4 py-3 font-bold text-right">Valor</th><th class="px-4 py-3 font-bold text-center">Status</th><th class="px-4 py-3 font-bold text-center">N.F.</th><th class="px-4 py-3 font-bold text-center">Ações</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></div>'; }); c.innerHTML=html; lucide.createIcons(); };
